@@ -66,6 +66,32 @@ const caseStudies = [
   },
 ];
 
+function SectionHeading({
+  kicker,
+  title,
+  description,
+}: {
+  kicker: string;
+  title: string;
+  description?: string;
+}) {
+  return (
+    <div className="mb-12 text-center">
+      <p className="font-mono text-xs uppercase tracking-[0.35em] text-primary">
+        {kicker}
+      </p>
+      <h2 className="mt-3 font-display text-4xl tracking-tight md:text-5xl">
+        {title}
+      </h2>
+      {description ? (
+        <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
+          {description}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
 interface CaseStudyCardProps {
   slug: string;
   title: string;
@@ -82,7 +108,7 @@ function CaseStudyCard({
   return (
     <Link
       href={routes.portfolio.detail(slug)}
-      className="group block overflow-hidden rounded-lg border bg-card shadow-sm transition-colors hover:border-primary/50"
+      className="group block overflow-hidden rounded-xl border-2 border-border bg-card shadow-md transition-all hover:-translate-y-1 hover:border-primary hover:shadow-xl"
     >
       <div className="relative aspect-video">
         <Image
@@ -90,15 +116,21 @@ function CaseStudyCard({
           alt=""
           fill
           unoptimized
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+        <span className="absolute bottom-4 left-4 rounded-full bg-primary px-3 py-1 font-mono text-xs font-semibold uppercase tracking-widest text-primary-foreground">
+          {metric}
+        </span>
       </div>
-      <div className="p-6">
-        <div className="mb-2 text-sm font-semibold text-primary">{metric}</div>
-        <h3 className="text-lg font-semibold group-hover:text-primary">
+      <div className="p-6 md:p-8">
+        <h3 className="font-display text-2xl group-hover:text-primary">
           {title}
         </h3>
-        <p className="mt-2 text-sm text-muted-foreground">{description}</p>
+        <p className="mt-3 text-muted-foreground">{description}</p>
+        <span className="mt-4 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-primary">
+          Read the story <ArrowRight className="h-3.5 w-3.5" />
+        </span>
       </div>
     </Link>
   );
@@ -107,20 +139,23 @@ function CaseStudyCard({
 export default function HomePage() {
   return (
     <MarketingLayout>
-      <SectionContainer className="pb-12 pt-16 md:pt-24">
-        <div className="mx-auto grid max-w-5xl items-center gap-12 md:grid-cols-2">
+      <SectionContainer className="pb-16 pt-20 md:pb-24 md:pt-32">
+        <div className="mx-auto grid max-w-6xl items-center gap-16 md:grid-cols-2">
           <div className="text-center md:text-left">
-            <h1 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
+            <p className="font-mono text-xs uppercase tracking-[0.35em] text-primary">
+              Est. on time, every time
+            </p>
+            <h1 className="mt-6 font-display text-5xl leading-[0.95] tracking-tight md:text-7xl lg:text-8xl">
               Built on time.{" "}
-              <span className="text-primary">Built to last.</span>
+              <span className="italic text-primary">Built to last.</span>
             </h1>
-            <p className="mt-6 text-lg text-muted-foreground md:text-xl">
+            <p className="mx-auto mt-8 max-w-xl text-lg text-muted-foreground md:mx-0 md:text-xl">
               Nothing.Digital ships premium websites, custom software,
               applications, and email marketing — delivered precisely when you
               need it.
             </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-4 md:justify-start">
-              <Button asChild size="lg">
+            <div className="mt-10 flex flex-wrap justify-center gap-4 md:justify-start">
+              <Button asChild size="lg" className="shadow-lg">
                 <Link href={routes.services.index}>
                   Explore services <ArrowRight className="h-4 w-4" />
                 </Link>
@@ -137,12 +172,11 @@ export default function HomePage() {
       </SectionContainer>
 
       <SectionContainer variant="muted" id="services">
-        <div className="mb-10 text-center">
-          <h2 className="text-3xl font-bold tracking-tight">Services</h2>
-          <p className="mt-3 text-muted-foreground">
-            End-to-end digital expertise.
-          </p>
-        </div>
+        <SectionHeading
+          kicker="What we do"
+          title="Services"
+          description="End-to-end digital expertise."
+        />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {services.map((service) => (
             <ServiceCard key={service.href} {...service} />
@@ -151,15 +185,12 @@ export default function HomePage() {
       </SectionContainer>
 
       <SectionContainer id="portfolio">
-        <div className="mb-10 text-center">
-          <h2 className="text-3xl font-bold tracking-tight">
-            Featured case studies
-          </h2>
-          <p className="mt-3 text-muted-foreground">
-            Real results from recent work.
-          </p>
-        </div>
-        <div className="grid gap-6 md:grid-cols-2">
+        <SectionHeading
+          kicker="Proof of work"
+          title="Featured case studies"
+          description="Real results from recent work."
+        />
+        <div className="grid gap-8 md:grid-cols-2">
           {caseStudies.map((study) => (
             <CaseStudyCard key={study.slug} {...study} />
           ))}
@@ -168,13 +199,16 @@ export default function HomePage() {
 
       <SectionContainer variant="primary" id="newsletter">
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight">
+          <p className="font-mono text-xs uppercase tracking-[0.35em] text-primary-foreground/70">
+            The monthly dispatch
+          </p>
+          <h2 className="mt-3 font-display text-4xl tracking-tight md:text-5xl">
             Stay in the loop
           </h2>
-          <p className="mt-3 text-primary-foreground/80">
+          <p className="mt-4 text-primary-foreground/80">
             One email a month. No spam, just insights.
           </p>
-          <div className="mt-6 inline-block text-left">
+          <div className="mt-8 inline-block text-left">
             <NewsletterForm />
           </div>
         </div>
@@ -182,12 +216,17 @@ export default function HomePage() {
 
       <SectionContainer>
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight">Ready to build?</h2>
-          <p className="mt-3 text-muted-foreground">
+          <p className="font-mono text-xs uppercase tracking-[0.35em] text-primary">
+            Your move
+          </p>
+          <h2 className="mt-3 font-display text-4xl tracking-tight md:text-5xl">
+            Ready to build?
+          </h2>
+          <p className="mt-4 text-muted-foreground">
             Tell us what you are making and we will help you ship it.
           </p>
-          <div className="mt-8">
-            <Button size="lg" asChild>
+          <div className="mt-10">
+            <Button size="lg" asChild className="shadow-lg">
               <Link href={routes.contact}>Start a project</Link>
             </Button>
           </div>

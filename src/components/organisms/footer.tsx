@@ -41,9 +41,9 @@ export function Footer({ className }: FooterProps) {
           <div>
             <Link
               href={routes.home}
-              className="text-lg font-bold tracking-tight"
+              className="font-display text-xl tracking-tight"
             >
-              Nothing.Digital
+              Nothing<span className="italic text-primary">.</span>Digital
             </Link>
             <p className="mt-2 text-sm text-muted-foreground">
               Premium digital services for ambitious brands.

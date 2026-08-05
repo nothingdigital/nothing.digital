@@ -32,17 +32,20 @@ export function Navigation({ className }: NavigationProps) {
         className,
       )}
     >
-      <nav className="container mx-auto flex h-14 items-center justify-between px-4 md:px-6 lg:px-8">
-        <Link href="/" className="text-lg font-bold tracking-tight">
-          Nothing.Digital
+      <nav className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6 lg:px-8">
+        <Link
+          href="/"
+          className="font-display text-xl tracking-tight md:text-2xl"
+        >
+          Nothing<span className="italic text-primary">.</span>Digital
         </Link>
 
-        <div className="hidden items-center gap-6 md:flex">
+        <div className="hidden items-center gap-7 md:flex">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+              className="font-mono text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-primary"
             >
               {link.label}
             </Link>
