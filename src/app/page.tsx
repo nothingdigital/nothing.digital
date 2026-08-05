@@ -1,6 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Code, Globe, Mail, Smartphone } from "lucide-react";
+import {
+  ArrowRight,
+  Clock,
+  Code,
+  Globe,
+  Mail,
+  Smartphone,
+  Target,
+  Users,
+} from "lucide-react";
 
 import { MarketingLayout } from "@/components/templates/marketing-layout";
 import { SectionContainer } from "@/components/atoms/section-container";
@@ -45,6 +54,28 @@ const services = [
     description: "Data-driven campaigns that nurture leads and drive revenue.",
     icon: <Mail className="h-6 w-6" />,
     href: routes.services.emailMarketing,
+  },
+];
+
+// ponytail: static differentiator copy; move to CMS when content grows.
+const differentiators = [
+  {
+    title: "Built on time",
+    description:
+      "Fixed timelines agreed up front. Weekly demos, no black-box development, no surprise slips.",
+    icon: <Clock className="h-6 w-6" />,
+  },
+  {
+    title: "Senior only",
+    description:
+      "The people who scope your project are the people who build it. No hand-offs to juniors, no account-manager telephone.",
+    icon: <Users className="h-6 w-6" />,
+  },
+  {
+    title: "Measured outcomes",
+    description:
+      "Every engagement defines success metrics before kickoff — conversion, activation, revenue — and reports against them.",
+    icon: <Target className="h-6 w-6" />,
   },
 ];
 
@@ -180,6 +211,29 @@ export default function HomePage() {
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {services.map((service) => (
             <ServiceCard key={service.href} {...service} />
+          ))}
+        </div>
+      </SectionContainer>
+
+      <SectionContainer id="why-us">
+        <SectionHeading
+          kicker="Why Nothing Digital"
+          title="Small studio. Senior hands."
+        />
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {differentiators.map((item) => (
+            <div
+              key={item.title}
+              className="h-full rounded-xl border-2 border-border bg-card p-6 shadow-md transition-colors hover:border-primary hover:shadow-xl"
+            >
+              <div className="mb-5 inline-flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary ring-1 ring-primary/20">
+                {item.icon}
+              </div>
+              <h3 className="mb-2 font-display text-xl">{item.title}</h3>
+              <p className="text-sm text-muted-foreground">
+                {item.description}
+              </p>
+            </div>
           ))}
         </div>
       </SectionContainer>

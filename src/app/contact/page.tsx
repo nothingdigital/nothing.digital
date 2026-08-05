@@ -48,6 +48,11 @@ const faqs = [
     answer:
       "We start with discovery, move into design and prototyping, then build, test, launch, and support.",
   },
+  {
+    question: "What does a project typically cost?",
+    answer:
+      "Ballparks: marketing websites $5K–$15K, custom software $15K–$60K, web/mobile apps $20K–$80K, ongoing email marketing $1.5K–$5K/month. Every project gets a fixed quote after a free scoping call — no hourly billing, no surprise invoices.",
+  },
 ];
 
 export default function ContactPage() {
