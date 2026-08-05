@@ -12,13 +12,13 @@
     --popover: 40 20% 99%;
     --popover-foreground: 220 30% 11%;
     --primary: 38 72% 46%;
-    --primary-foreground: 40 20% 97%;
+    --primary-foreground: 43 60% 94%;
     --secondary: 40 15% 91%;
     --secondary-foreground: 220 30% 11%;
     --muted: 40 12% 90%;
     --muted-foreground: 220 10% 40%;
     --accent: 38 72% 46%;
-    --accent-foreground: 40 20% 97%;
+    --accent-foreground: 43 60% 94%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
     --border: 40 12% 84%;
@@ -30,17 +30,17 @@
   .dark {
     /* ponytail: clock-themed dark palette — midnight dial with amber hands */
     --background: 220 30% 8%;
-    --foreground: 40 20% 95%;
+    --foreground: 43 40% 90%;
     --card: 220 28% 11%;
-    --card-foreground: 40 20% 95%;
+    --card-foreground: 43 40% 90%;
     --popover: 220 28% 11%;
-    --popover-foreground: 40 20% 95%;
+    --popover-foreground: 43 40% 90%;
     --primary: 43 96% 56%;
     --primary-foreground: 220 30% 8%;
     --secondary: 220 20% 16%;
-    --secondary-foreground: 40 20% 95%;
+    --secondary-foreground: 43 40% 90%;
     --muted: 220 20% 16%;
-    --muted-foreground: 40 10% 65%;
+    --muted-foreground: 43 30% 65%;
     --accent: 43 96% 56%;
     --accent-foreground: 220 30% 8%;
     --destructive: 0 62.8% 30.6%;
