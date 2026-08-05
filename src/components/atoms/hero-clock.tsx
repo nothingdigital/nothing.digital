@@ -1,10 +1,25 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // ponytail: tiny self-contained analog clock; no external chart/animation deps.
 export function HeroClock() {
   const [time, setTime] = useState<Date | null>(null);
+  const tiltRef = useRef<HTMLDivElement>(null);
+
+  // ponytail: direct style mutation, no state churn per mousemove
+  const handleTilt = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = tiltRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    el.style.transform = `perspective(800px) rotateX(${-y * 10}deg) rotateY(${x * 10}deg)`;
+  };
+
+  const resetTilt = () => {
+    tiltRef.current?.style.removeProperty("transform");
+  };
 
   useEffect(() => {
     setTime(new Date());
@@ -31,13 +46,16 @@ export function HeroClock() {
 
   return (
     <div
-      className="relative mx-auto aspect-square w-64 md:w-80 lg:w-96"
+      ref={tiltRef}
+      onMouseMove={handleTilt}
+      onMouseLeave={resetTilt}
+      className="relative mx-auto aspect-square w-64 transition-transform duration-200 ease-out md:w-80 lg:w-96"
       aria-label={`Current time ${time.toLocaleTimeString()}`}
     >
       {/* rotating seal text */}
       <svg
         viewBox="0 0 100 100"
-        className="animate-sweep absolute -left-6 -top-6 h-[calc(100%+3rem)] w-[calc(100%+3rem)] text-primary/70"
+        className="animate-sweep absolute -left-6 -top-6 h-[calc(100%+3rem)] w-[calc(100%+3rem)] text-accent/70"
         aria-hidden="true"
       >
         <defs>

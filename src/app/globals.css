@@ -17,7 +17,7 @@
     --secondary-foreground: 224 42% 10%;
     --muted: 40 16% 88%;
     --muted-foreground: 224 14% 38%;
-    --accent: 36 72% 34%;
+    --accent: 172 48% 30%;
     --accent-foreground: 43 64% 94%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
@@ -41,7 +41,7 @@
     --secondary-foreground: 43 58% 92%;
     --muted: 224 24% 15%;
     --muted-foreground: 43 30% 64%;
-    --accent: 40 88% 56%;
+    --accent: 168 55% 52%;
     --accent-foreground: 224 46% 6%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
@@ -65,8 +65,19 @@
     background-attachment: fixed;
   }
 
+  /* ponytail: film grain via inline SVG turbulence, zero assets */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    pointer-events: none;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
   ::selection {
-    background: hsl(var(--primary) / 0.85);
-    color: hsl(var(--primary-foreground));
+    background: hsl(var(--accent) / 0.85);
+    color: hsl(var(--accent-foreground));
   }
 }
