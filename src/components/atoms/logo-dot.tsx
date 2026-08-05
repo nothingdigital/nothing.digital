@@ -1,22 +1,13 @@
-"use client";
-
-import { useEffect, useState } from "react";
-
-import { cn } from "@/lib/utils";
-
-const DOT_COLORS = [
-  "text-amber-400",
-  "text-sky-500",
-  "text-red-500",
-  "text-emerald-500",
-] as const;
+/**
+ * Picks a logo-dot color once per session and applies it before first paint,
+ * so refresh keeps the same color with no yellow flash.
+ */
+export const logoDotColorScript = `(function(){var c=["#fbbf24","#0ea5e9","#ef4444","#10b981"],k="nd-logo-dot",v=sessionStorage.getItem(k);if(!v||c.indexOf(v)<0){v=c[Math.floor(Math.random()*c.length)];sessionStorage.setItem(k,v)}document.documentElement.style.setProperty("--logo-dot",v)})();`;
 
 export function LogoDot() {
-  const [colorClass, setColorClass] = useState<string>(DOT_COLORS[0]);
-
-  useEffect(() => {
-    setColorClass(DOT_COLORS[Math.floor(Math.random() * DOT_COLORS.length)]);
-  }, []);
-
-  return <span className={cn("italic", colorClass)}>.</span>;
+  return (
+    <span className="italic" style={{ color: "var(--logo-dot)" }}>
+      .
+    </span>
+  );
 }
