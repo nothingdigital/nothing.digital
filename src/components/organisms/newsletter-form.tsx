@@ -1,0 +1,85 @@
+"use client";
+
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { FormField } from "@/components/molecules/form-field";
+import { routes } from "@/lib/routes";
+import {
+  newsletterSchema,
+  type NewsletterInput,
+} from "@/lib/validations/newsletter";
+
+interface NewsletterFormProps {
+  onSuccess?: () => void;
+}
+
+export function NewsletterForm({ onSuccess }: NewsletterFormProps) {
+  const [status, setStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
+
+  const { control, handleSubmit, reset } = useForm<NewsletterInput>({
+    resolver: zodResolver(newsletterSchema),
+    defaultValues: { email: "" },
+  });
+
+  const onSubmit = async (data: NewsletterInput) => {
+    setStatus("loading");
+
+    try {
+      const response = await fetch(routes.api.newsletter, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) throw new Error("Subscribe failed");
+
+      setStatus("success");
+      reset();
+      onSuccess?.();
+    } catch {
+      setStatus("error");
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <FormField
+          name="email"
+          label="Email"
+          control={control}
+          render={(field) => (
+            <Input
+              id="email"
+              type="email"
+              placeholder="you@company.com"
+              className="min-w-[16rem]"
+              {...field}
+            />
+          )}
+        />
+        <Button
+          type="submit"
+          disabled={status === "loading"}
+          className="sm:self-end"
+        >
+          {status === "loading" ? "Subscribing..." : "Subscribe"}
+        </Button>
+      </div>
+      {status === "success" && (
+        <p className="text-sm text-green-600">Thanks for subscribing!</p>
+      )}
+      {status === "error" && (
+        <p className="text-sm text-destructive">
+          Something went wrong. Please try again.
+        </p>
+      )}
+    </form>
+  );
+}

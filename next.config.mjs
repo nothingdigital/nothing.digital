@@ -3,9 +3,12 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     formats: ['image/avif', 'image/webp'],
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'inline',
     remotePatterns: [
       { protocol: 'https', hostname: 'images.nothing.digital' },
       { protocol: 'https', hostname: '*.supabase.co' },
+      { protocol: 'https', hostname: 'placehold.co' },
     ],
   },
   async redirects() {

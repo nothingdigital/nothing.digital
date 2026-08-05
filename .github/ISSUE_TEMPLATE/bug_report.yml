@@ -1,0 +1,29 @@
+name: Bug Report
+description: File a bug report
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: "## Bug Report"
+  - type: input
+    id: url
+    attributes:
+      label: URL
+      placeholder: https://nothing.digital/...
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction Steps
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - Low
+        - Medium
+        - High
+        - Critical

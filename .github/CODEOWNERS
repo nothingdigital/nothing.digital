@@ -1,0 +1,12 @@
+# Global fallback
+*                           @nothing-digital/frontend-leads
+
+# Critical paths
+/apps/web/app/api/          @nothing-digital/backend-leads @nothing-digital/security
+/apps/web/middleware.ts     @nothing-digital/security
+/infra/                     @nothing-digital/devops
+/supabase/migrations/       @nothing-digital/backend-leads
+/.github/workflows/         @nothing-digital/devops
+
+# Docs
+/docs/runbooks/             @nothing-digital/devops

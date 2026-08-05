@@ -1,0 +1,144 @@
+import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+
+import {
+  contactConfirmationEmailTemplate,
+  teamNotificationEmailTemplate,
+} from "@/lib/email/templates";
+import { getRateLimiter } from "@/lib/rate-limit";
+import { getResendClient } from "@/lib/resend";
+import { getServiceRoleClient } from "@/lib/supabase/server";
+import { contactSchema, type ContactInput } from "@/lib/validations/contact";
+
+const FROM_EMAIL = "Nothing.Digital <hello@nothing.digital>";
+const TEAM_EMAIL = "team@nothing.digital";
+
+function isHoneypotTriggered(data: ContactInput): boolean {
+  return Boolean(data.website && data.website.length > 0);
+}
+
+function formatZodErrors(
+  error: z.ZodError,
+): Array<{ path: PropertyKey[]; message: string }> {
+  return error.issues.map((issue) => ({
+    path: issue.path,
+    message: issue.message,
+  }));
+}
+
+async function storeSubmission(data: ContactInput) {
+  const supabase = getServiceRoleClient();
+  if (!supabase) return null;
+
+  const { data: submission, error } = await supabase
+    .from("contact_submissions")
+    .insert({
+      name: data.name,
+      email: data.email,
+      company: data.company ?? null,
+      service: data.service ?? null,
+      budget: data.budget ?? null,
+      message: data.message,
+      status: "new",
+    })
+    .select("id")
+    .single();
+
+  if (error) {
+    console.error("[contact] Supabase insert failed:", error.message);
+    return null;
+  }
+
+  return submission.id;
+}
+
+async function sendConfirmationEmail(data: ContactInput) {
+  const resend = getResendClient();
+  if (!resend) return;
+
+  await resend.emails.send({
+    from: FROM_EMAIL,
+    to: data.email,
+    subject: "We received your message — Nothing.Digital",
+    html: contactConfirmationEmailTemplate(data),
+  });
+}
+
+async function sendTeamNotification(
+  data: ContactInput,
+  submissionId: string | null,
+) {
+  const resend = getResendClient();
+  if (!resend || !submissionId) return;
+
+  await resend.emails.send({
+    from: FROM_EMAIL,
+    to: TEAM_EMAIL,
+    subject: `New contact submission from ${data.name}`,
+    html: teamNotificationEmailTemplate(data, submissionId),
+  });
+}
+
+function getClientIp(request: NextRequest): string {
+  return (
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+    request.headers.get("x-real-ip") ??
+    "unknown"
+  );
+}
+
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  let data: unknown;
+
+  try {
+    data = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  }
+
+  const parseResult = contactSchema.safeParse(data);
+  if (!parseResult.success) {
+    return NextResponse.json(
+      {
+        error: "Validation failed",
+        details: formatZodErrors(parseResult.error),
+      },
+      { status: 400 },
+    );
+  }
+
+  const validated = parseResult.data;
+
+  if (isHoneypotTriggered(validated)) {
+    return NextResponse.json(
+      { success: true, message: "Submission received" },
+      { status: 201 },
+    );
+  }
+
+  const limiter = getRateLimiter();
+  const rateLimit = await limiter.limit(`contact:${getClientIp(request)}`);
+
+  if (!rateLimit.success) {
+    return NextResponse.json(
+      { error: "Rate limit exceeded. Please try again later." },
+      { status: 429 },
+    );
+  }
+
+  const submissionId = await storeSubmission(validated);
+
+  if (!submissionId) {
+    console.warn(
+      "[contact] Stored without Supabase (key missing or insert failed).",
+    );
+  }
+
+  await sendConfirmationEmail(validated);
+  await sendTeamNotification(validated, submissionId);
+
+  return NextResponse.json(
+    { success: true, message: "Submission received" },
+    { status: 201 },
+  );
+}

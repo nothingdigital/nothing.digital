@@ -1,0 +1,54 @@
+import { MetadataRoute } from "next";
+
+import { listMdxFiles } from "@/lib/mdx";
+import { routes } from "@/lib/routes";
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://nothing.digital";
+
+function url(path: string): string {
+  return `${SITE_URL}${path}`;
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const [portfolioSlugs, blogSlugs] = await Promise.all([
+    listMdxFiles("portfolio"),
+    listMdxFiles("blog"),
+  ]);
+
+  const staticPages = [
+    routes.home,
+    routes.services.index,
+    routes.services.websiteDevelopment,
+    routes.services.softwareSolutions,
+    routes.services.applications,
+    routes.services.emailMarketing,
+    routes.portfolio.index,
+    routes.about,
+    routes.blog.index,
+    routes.contact,
+    "/privacy",
+    "/terms",
+    "/accessibility",
+  ];
+
+  return [
+    ...staticPages.map((path) => ({
+      url: url(path),
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: path === routes.home ? 1 : 0.7,
+    })),
+    ...portfolioSlugs.map((slug) => ({
+      url: url(routes.portfolio.detail(slug)),
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    })),
+    ...blogSlugs.map((slug) => ({
+      url: url(routes.blog.post(slug)),
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    })),
+  ];
+}

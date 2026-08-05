@@ -1,0 +1,58 @@
+# Monitoring Runbook
+
+## Overview
+
+Monitoring stack for Nothing.Digital:
+
+| Layer     | Tool                              | Purpose                             |
+| --------- | --------------------------------- | ----------------------------------- |
+| Uptime    | UptimeRobot                       | External HTTP checks + alerting     |
+| Analytics | Vercel Analytics + Speed Insights | Traffic + Core Web Vitals           |
+| Errors    | Sentry                            | Error tracking + performance traces |
+
+## UptimeRobot
+
+- URL: `https://nothing.digital`
+- Interval: 1 minute
+- Alert channels: Email + Slack (#alerts)
+- Expected response: `200 OK` from Vercel edge
+
+## Vercel Analytics
+
+- Enable in project dashboard: Analytics → Web Analytics → Enable
+- Enable Speed Insights for Core Web Vitals
+- Targets:
+  - LCP ≤ 2.5s
+  - INP ≤ 200ms
+  - CLS ≤ 0.1
+  - TTFB ≤ 600ms
+
+## Sentry
+
+- DSN configured via `SENTRY_DSN` env var
+- Source maps uploaded with `SENTRY_AUTH_TOKEN` (build secret)
+- Alert rules:
+  - New issue in `production` → Slack #alerts
+  - Error rate > 1% in 5 min → PagerDuty on-call
+  - First appearance of error → Email team lead
+
+## Runbooks
+
+### Site down
+
+1. Check UptimeRobot + Vercel status page
+2. Inspect Sentry for recent errors
+3. If deployment caused it, roll back in Vercel dashboard
+4. Post incident update in #incidents
+
+### Error spike
+
+1. Open Sentry → Issues → filter by `production`
+2. Identify release/tag that introduced error
+3. Revert offending PR or hotfix
+4. Verify fix via Sentry resolved issues
+
+## On-call
+
+- Primary: DevOps Engineer
+- Escalation: Engineering lead
