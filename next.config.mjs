@@ -11,16 +11,6 @@ const nextConfig = {
       { protocol: 'https', hostname: 'placehold.co' },
     ],
   },
-  async redirects() {
-    return [
-      {
-        source: '/:path*',
-        has: [{ type: 'host', value: 'www.nothing.digital' }],
-        destination: 'https://nothing.digital/:path*',
-        permanent: true,
-      },
-    ];
-  },
   async headers() {
     return [
       {
