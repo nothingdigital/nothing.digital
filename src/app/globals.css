@@ -25,6 +25,7 @@
     --input: 38 22% 78%;
     --ring: 36 72% 34%;
     --radius: 0.5rem;
+    --logo-dot: #fbbf24;
   }
 
   .dark {
