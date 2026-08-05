@@ -4,9 +4,10 @@ import { MarketingLayout } from "@/components/templates/marketing-layout";
 import { SectionContainer } from "@/components/atoms/section-container";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — Nothing.Digital",
+  title: "Privacy Policy",
   description:
     "Read the Nothing.Digital privacy policy to understand how we collect, use, and protect your information.",
+  alternates: { canonical: "/privacy" },
 };
 
 export default function PrivacyPage() {
@@ -63,8 +64,16 @@ export default function PrivacyPage() {
               4. Cookies and analytics
             </h2>
             <p>
-              We use cookies and analytics tools to understand how visitors use
-              our site. You can control cookies through your browser settings.
+              This site uses cookieless analytics from Vercel Analytics and
+              Vercel Speed Insights. These tools help us understand aggregate
+              traffic and page performance. They do not set tracking cookies or
+              store personal identifiers on your device, so we do not show a
+              cookie consent banner.
+            </p>
+            <p className="mt-3">
+              Essential cookies may still be set by your browser or our hosting
+              platform for security and basic site operation. You can control
+              cookies through your browser settings.
             </p>
           </section>
 

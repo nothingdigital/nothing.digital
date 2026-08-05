@@ -4,9 +4,10 @@ import { MarketingLayout } from "@/components/templates/marketing-layout";
 import { SectionContainer } from "@/components/atoms/section-container";
 
 export const metadata: Metadata = {
-  title: "Terms of Service — Nothing.Digital",
+  title: "Terms of Service",
   description:
     "Review the Nothing.Digital terms of service governing the use of our website and services.",
+  alternates: { canonical: "/terms" },
 };
 
 export default function TermsPage() {

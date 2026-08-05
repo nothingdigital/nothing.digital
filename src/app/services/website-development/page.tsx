@@ -5,14 +5,15 @@ import { MarketingLayout } from "@/components/templates/marketing-layout";
 import { routes } from "@/lib/routes";
 
 export const metadata: Metadata = {
-  title: "Website Development — Nothing.Digital",
+  title: "Website Development",
   description:
     "Custom, responsive websites built for performance, accessibility, and conversion.",
+  alternates: { canonical: routes.services.websiteDevelopment },
   openGraph: {
-    title: "Website Development — Nothing.Digital",
+    title: "Website Development",
     description:
       "Custom, responsive websites built for performance, accessibility, and conversion.",
-    url: "https://nothing.digital/services/website-development",
+    url: routes.services.websiteDevelopment,
     type: "website",
   },
 };
@@ -24,6 +25,28 @@ const features = [
   "SEO-ready structure and metadata",
   "CMS integration when you need it",
   "Analytics and conversion tracking",
+];
+
+const techStack = [
+  {
+    name: "Next.js",
+    rationale:
+      "Static HTML by default so Core Web Vitals stay strong without a fight.",
+  },
+  {
+    name: "React",
+    rationale:
+      "Component model that keeps complex UIs maintainable as you grow.",
+  },
+  {
+    name: "TypeScript",
+    rationale:
+      "Catches regressions early and makes handoffs safer for your team.",
+  },
+  {
+    name: "Tailwind CSS",
+    rationale: "Fast iteration on design systems without CSS debt.",
+  },
 ];
 
 const processSteps = [
@@ -79,6 +102,7 @@ export default function WebsiteDevelopmentPage() {
         problem="A slow, outdated, or hard-to-manage website quietly costs you leads and credibility."
         solution="We design and build fast, accessible websites that communicate your value and turn visitors into customers."
         features={features}
+        techStack={techStack}
         processSteps={processSteps}
         faqItems={faqItems}
         jsonLd={jsonLd}

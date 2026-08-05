@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { cn } from "@/lib/utils";
 import { routes } from "@/lib/routes";
+import { siteConfig, socialLinks } from "@/lib/site";
 import { NewsletterForm } from "./newsletter-form";
 
 const serviceLinks = [
@@ -15,7 +16,7 @@ const serviceLinks = [
 
 const companyLinks = [
   { label: "Services", href: routes.services.index },
-  { label: "Portfolio", href: routes.portfolio.index },
+  { label: "Pricing", href: routes.pricing },
   { label: "About", href: routes.about },
   { label: "Blog", href: routes.blog.index },
   { label: "Contact", href: routes.contact },
@@ -46,12 +47,30 @@ export function Footer({ className }: FooterProps) {
               Nothing<span className="italic text-primary">.</span>Digital
             </Link>
             <p className="mt-2 text-sm text-muted-foreground">
-              Premium digital services for ambitious brands.
+              {siteConfig.tagline}
             </p>
+            {socialLinks.length > 0 ? (
+              <ul className="mt-4 flex flex-wrap gap-3">
+                {socialLinks.map((link) => (
+                  <li key={link.href}>
+                    <a
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-mono text-xs uppercase tracking-widest text-muted-foreground transition-colors hover:text-primary"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold">Services</h3>
+            <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.2em]">
+              Services
+            </h3>
             <ul className="mt-3 space-y-2">
               {serviceLinks.map((link) => (
                 <li key={link.href}>
@@ -67,7 +86,9 @@ export function Footer({ className }: FooterProps) {
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold">Company</h3>
+            <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.2em]">
+              Company
+            </h3>
             <ul className="mt-3 space-y-2">
               {companyLinks.map((link) => (
                 <li key={link.href}>
@@ -83,7 +104,9 @@ export function Footer({ className }: FooterProps) {
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold">Newsletter</h3>
+            <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.2em]">
+              Newsletter
+            </h3>
             <p className="mt-3 text-sm text-muted-foreground">
               Get insights delivered to your inbox.
             </p>
@@ -95,7 +118,7 @@ export function Footer({ className }: FooterProps) {
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t pt-8 md:flex-row">
           <p className="text-sm text-muted-foreground">
-            © {currentYear} Nothing.Digital. All rights reserved.
+            © {currentYear} {siteConfig.name}. All rights reserved.
           </p>
           <nav className="flex flex-wrap items-center justify-center gap-4">
             {legalLinks.map((link) => (

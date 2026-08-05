@@ -4,6 +4,7 @@ import { Mail } from "lucide-react";
 
 import { MarketingLayout } from "@/components/templates/marketing-layout";
 import { SectionContainer } from "@/components/atoms/section-container";
+import { JsonLd } from "@/components/atoms/json-ld";
 import {
   Accordion,
   AccordionContent,
@@ -11,11 +12,13 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ContactForm } from "./components/contact-form";
+import { routes } from "@/lib/routes";
 
 export const metadata: Metadata = {
-  title: "Contact — Nothing.Digital",
+  title: "Contact",
   description:
-    "Get in touch with Nothing.Digital. Let's build something meaningful together.",
+    "Book a free scoping call with Nothing.Digital. We reply within one business day.",
+  alternates: { canonical: routes.contact },
 };
 
 const contactInfo = [
@@ -51,17 +54,34 @@ const faqs = [
   {
     question: "What does a project typically cost?",
     answer:
-      "Ballparks: marketing websites $5K–$15K, custom software $15K–$60K, web/mobile apps $20K–$80K, ongoing email marketing $1.5K–$5K/month. Every project gets a fixed quote after a free scoping call — no hourly billing, no surprise invoices.",
+      "See our pricing page for current ranges. Every project gets a fixed quote after a free scoping call — no hourly billing, no surprise invoices.",
   },
 ];
+
+const faqJsonLd = {
+  "@type": "FAQPage",
+  mainEntity: faqs.map((faq) => ({
+    "@type": "Question",
+    name: faq.question,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: faq.answer,
+    },
+  })),
+};
 
 export default function ContactPage() {
   return (
     <MarketingLayout>
+      <JsonLd data={faqJsonLd} />
+
       <SectionContainer>
         <div className="mx-auto max-w-3xl text-center">
-          <h1 className="text-4xl font-bold tracking-tight md:text-5xl">
-            Let&apos;s Build Something
+          <p className="font-mono text-xs uppercase tracking-[0.35em] text-primary">
+            Free scoping call
+          </p>
+          <h1 className="mt-3 font-display text-4xl tracking-tight md:text-5xl">
+            Let&apos;s build something
           </h1>
           <p className="mt-4 text-lg text-muted-foreground">
             Tell us what you are building. We reply within one business day.
@@ -75,11 +95,13 @@ export default function ContactPage() {
             <div className="space-y-6">
               {contactInfo.map((item) => (
                 <div key={item.label} className="flex items-start gap-4">
-                  <div className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <div className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary ring-1 ring-primary/20">
                     {item.icon}
                   </div>
                   <div>
-                    <p className="text-sm font-medium">{item.label}</p>
+                    <p className="font-mono text-xs uppercase tracking-widest">
+                      {item.label}
+                    </p>
                     {item.href ? (
                       <a
                         href={item.href}
@@ -94,9 +116,19 @@ export default function ContactPage() {
                 </div>
               ))}
             </div>
+            <p className="text-sm text-muted-foreground">
+              Looking for ballpark ranges?{" "}
+              <Link
+                href={routes.pricing}
+                className="text-primary underline underline-offset-4 hover:text-primary/80"
+              >
+                See pricing
+              </Link>
+              .
+            </p>
           </div>
 
-          <div className="rounded-lg border bg-background p-6 shadow-sm md:p-8">
+          <div className="rounded-xl border-2 border-border bg-background p-6 shadow-md md:p-8">
             <ContactForm />
           </div>
         </div>
@@ -104,14 +136,31 @@ export default function ContactPage() {
 
       <SectionContainer>
         <div className="mx-auto max-w-3xl">
-          <h2 className="mb-6 text-2xl font-bold tracking-tight">
+          <h2 className="mb-6 font-display text-3xl tracking-tight">
             Frequently asked questions
           </h2>
           <Accordion type="single" collapsible>
             {faqs.map((faq, index) => (
               <AccordionItem key={index} value={`item-${index}`}>
                 <AccordionTrigger>{faq.question}</AccordionTrigger>
-                <AccordionContent>{faq.answer}</AccordionContent>
+                <AccordionContent>
+                  {faq.question === "What does a project typically cost?" ? (
+                    <>
+                      See our{" "}
+                      <Link
+                        href={routes.pricing}
+                        className="text-primary underline underline-offset-4"
+                      >
+                        pricing page
+                      </Link>{" "}
+                      for current ranges. Every project gets a fixed quote after
+                      a free scoping call — no hourly billing, no surprise
+                      invoices.
+                    </>
+                  ) : (
+                    faq.answer
+                  )}
+                </AccordionContent>
               </AccordionItem>
             ))}
           </Accordion>

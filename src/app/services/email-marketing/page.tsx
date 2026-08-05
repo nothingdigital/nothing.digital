@@ -2,16 +2,18 @@ import type { Metadata } from "next";
 
 import { ServicePageTemplate } from "@/components/templates/service-page";
 import { MarketingLayout } from "@/components/templates/marketing-layout";
+import { routes } from "@/lib/routes";
 
 export const metadata: Metadata = {
-  title: "Email Marketing — Nothing.Digital",
+  title: "Email Marketing",
   description:
     "Data-driven email campaigns that nurture leads, retain customers, and drive revenue.",
+  alternates: { canonical: routes.services.emailMarketing },
   openGraph: {
-    title: "Email Marketing — Nothing.Digital",
+    title: "Email Marketing",
     description:
       "Data-driven email campaigns that nurture leads, retain customers, and drive revenue.",
-    url: "https://nothing.digital/services/email-marketing",
+    url: routes.services.emailMarketing,
     type: "website",
   },
 };
@@ -23,6 +25,26 @@ const features = [
   "A/B testing and optimization",
   "Deliverability and compliance",
   "Performance reporting",
+];
+
+const techStack = [
+  {
+    name: "Klaviyo / HubSpot / Mailchimp",
+    rationale:
+      "We meet you on the ESP you already use — or recommend one that fits.",
+  },
+  {
+    name: "HTML email templates",
+    rationale: "Bulletproof markup that renders cleanly across clients.",
+  },
+  {
+    name: "Analytics & attribution",
+    rationale: "Tie opens and clicks to conversions, not vanity metrics.",
+  },
+  {
+    name: "Automation workflows",
+    rationale: "Lifecycle journeys that run without constant manual sends.",
+  },
 ];
 
 const processSteps = [
@@ -75,6 +97,7 @@ export default function EmailMarketingPage() {
         problem="Email lists are valuable, but generic blasts burn trust and leave revenue on the table."
         solution="We create targeted, automated email programs that turn subscribers into loyal customers."
         features={features}
+        techStack={techStack}
         processSteps={processSteps}
         faqItems={faqItems}
         jsonLd={jsonLd}

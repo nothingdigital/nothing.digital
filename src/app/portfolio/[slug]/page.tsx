@@ -33,8 +33,9 @@ export async function generateMetadata({
   );
 
   return {
-    title: `${frontmatter.title} — Nothing.Digital`,
+    title: frontmatter.title,
     description: frontmatter.description,
+    alternates: { canonical: routes.portfolio.detail(slug) },
   };
 }
 

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -79,24 +78,6 @@ const differentiators = [
   },
 ];
 
-// ponytail: hard-coded featured slugs match content/portfolio/*.mdx.
-const caseStudies = [
-  {
-    slug: "acme-launch",
-    title: "Acme Launch Campaign",
-    description:
-      "A full-funnel website and email launch for a direct-to-consumer brand breaking into a crowded market.",
-    metric: "+42% conversion",
-  },
-  {
-    slug: "saas-onboarding",
-    title: "SaaS Onboarding Flow",
-    description:
-      "Redesigning activation for a B2B SaaS product to shorten time-to-value and reduce churn.",
-    metric: "+55% activation",
-  },
-];
-
 function SectionHeading({
   kicker,
   title,
@@ -120,50 +101,6 @@ function SectionHeading({
         </p>
       ) : null}
     </div>
-  );
-}
-
-interface CaseStudyCardProps {
-  slug: string;
-  title: string;
-  description: string;
-  metric: string;
-}
-
-function CaseStudyCard({
-  slug,
-  title,
-  description,
-  metric,
-}: CaseStudyCardProps) {
-  return (
-    <Link
-      href={routes.portfolio.detail(slug)}
-      className="group block overflow-hidden rounded-xl border-2 border-border bg-card shadow-md transition-all hover:-translate-y-1 hover:border-primary hover:shadow-xl"
-    >
-      <div className="relative aspect-video">
-        <Image
-          src="/og/default.svg"
-          alt=""
-          fill
-          unoptimized
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
-        <span className="absolute bottom-4 left-4 rounded-full bg-primary px-3 py-1 font-mono text-xs font-semibold uppercase tracking-widest text-primary-foreground">
-          {metric}
-        </span>
-      </div>
-      <div className="p-6 md:p-8">
-        <h3 className="font-display text-2xl group-hover:text-primary">
-          {title}
-        </h3>
-        <p className="mt-3 text-muted-foreground">{description}</p>
-        <span className="mt-4 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-primary">
-          Read the story <ArrowRight className="h-3.5 w-3.5" />
-        </span>
-      </div>
-    </Link>
   );
 }
 
@@ -192,7 +129,7 @@ export default function HomePage() {
                 </Link>
               </Button>
               <Button variant="outline" size="lg" asChild>
-                <Link href={routes.contact}>Get in touch</Link>
+                <Link href={routes.contact}>Book a free scoping call</Link>
               </Button>
             </div>
           </div>
@@ -238,19 +175,6 @@ export default function HomePage() {
         </div>
       </SectionContainer>
 
-      <SectionContainer id="portfolio">
-        <SectionHeading
-          kicker="Proof of work"
-          title="Featured case studies"
-          description="Real results from recent work."
-        />
-        <div className="grid gap-8 md:grid-cols-2">
-          {caseStudies.map((study) => (
-            <CaseStudyCard key={study.slug} {...study} />
-          ))}
-        </div>
-      </SectionContainer>
-
       <SectionContainer variant="primary" id="newsletter">
         <div className="mx-auto max-w-2xl text-center">
           <p className="font-mono text-xs uppercase tracking-[0.35em] text-primary-foreground/70">
@@ -277,11 +201,12 @@ export default function HomePage() {
             Ready to build?
           </h2>
           <p className="mt-4 text-muted-foreground">
-            Tell us what you are making and we will help you ship it.
+            Book a free scoping call — we will map scope, timeline, and budget
+            before you commit.
           </p>
           <div className="mt-10">
             <Button size="lg" asChild className="shadow-lg">
-              <Link href={routes.contact}>Start a project</Link>
+              <Link href={routes.contact}>Book a free scoping call</Link>
             </Button>
           </div>
         </div>

@@ -10,9 +10,10 @@ import { getAllFrontmatter, type BlogFrontmatter } from "@/lib/mdx";
 import { routes } from "@/lib/routes";
 
 export const metadata: Metadata = {
-  title: "Insights & Articles — Nothing.Digital",
+  title: "Insights & Articles",
   description:
     "Articles on performance, design systems, email automation, and digital strategy.",
+  alternates: { canonical: "/blog" },
 };
 
 const PAGE_SIZE = 6;

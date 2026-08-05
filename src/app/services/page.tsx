@@ -9,14 +9,15 @@ import { MarketingLayout } from "@/components/templates/marketing-layout";
 import { routes } from "@/lib/routes";
 
 export const metadata: Metadata = {
-  title: "Services — Nothing.Digital",
+  title: "Services",
   description:
-    "Explore our digital services: website development, custom software solutions, applications, and email marketing.",
+    "Senior web and software development: websites, custom software, applications, and email marketing.",
+  alternates: { canonical: routes.services.index },
   openGraph: {
-    title: "Services — Nothing.Digital",
+    title: "Services",
     description:
-      "Explore our digital services: website development, custom software solutions, applications, and email marketing.",
-    url: "https://nothing.digital/services",
+      "Senior web and software development: websites, custom software, applications, and email marketing.",
+    url: routes.services.index,
     type: "website",
   },
 };
@@ -74,8 +75,11 @@ export default function ServicesPage() {
     <MarketingLayout>
       <SectionContainer className="pt-24 md:pt-32">
         <div className="mx-auto max-w-3xl text-center">
-          <h1 className="text-4xl font-bold tracking-tight md:text-5xl">
-            What We Do
+          <p className="font-mono text-xs uppercase tracking-[0.35em] text-primary">
+            What we do
+          </p>
+          <h1 className="mt-3 font-display text-4xl tracking-tight md:text-5xl">
+            Services
           </h1>
           <p className="mt-4 text-lg text-muted-foreground">
             End-to-end digital services for brands that want to move fast and
@@ -93,17 +97,19 @@ export default function ServicesPage() {
       </SectionContainer>
 
       <SectionContainer variant="muted">
-        <h2 className="mb-8 text-center text-2xl font-semibold">How we work</h2>
+        <h2 className="mb-8 text-center font-display text-3xl tracking-tight">
+          How we work
+        </h2>
         <ol className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {processSteps.map((step, index) => (
             <li
               key={step.title}
-              className="relative rounded-lg border bg-background p-6 text-center shadow-sm"
+              className="relative rounded-xl border-2 border-border bg-card p-6 text-center shadow-md"
             >
-              <span className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary text-base font-bold text-primary-foreground">
+              <span className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary font-mono text-base font-bold text-primary-foreground">
                 {index + 1}
               </span>
-              <h3 className="mb-2 text-lg font-semibold">{step.title}</h3>
+              <h3 className="mb-2 font-display text-lg">{step.title}</h3>
               <p className="text-sm text-muted-foreground">
                 {step.description}
               </p>
@@ -113,12 +119,14 @@ export default function ServicesPage() {
       </SectionContainer>
 
       <SectionContainer className="text-center">
-        <h2 className="mb-4 text-2xl font-semibold">Not sure what you need?</h2>
+        <h2 className="mb-4 font-display text-3xl tracking-tight">
+          Not sure what you need?
+        </h2>
         <p className="mb-6 text-muted-foreground">
-          Book a free discovery call and we will recommend the right approach.
+          Book a free scoping call and we will recommend the right approach.
         </p>
-        <Button asChild>
-          <Link href={routes.contact}>Discuss your project</Link>
+        <Button asChild size="lg" className="shadow-lg">
+          <Link href={routes.contact}>Book a free scoping call</Link>
         </Button>
       </SectionContainer>
     </MarketingLayout>

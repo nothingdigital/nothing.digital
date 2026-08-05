@@ -32,8 +32,9 @@ export async function generateMetadata({
   const { frontmatter } = await readMdxFile<BlogFrontmatter>("blog", slug);
 
   return {
-    title: `${frontmatter.title} — Nothing.Digital`,
+    title: frontmatter.title,
     description: frontmatter.description,
+    alternates: { canonical: routes.blog.post(slug) },
   };
 }
 

@@ -9,9 +9,9 @@ it("renders sitemap links", () => {
     "href",
     "/services",
   );
-  expect(screen.getByRole("link", { name: /portfolio/i })).toHaveAttribute(
+  expect(screen.getByRole("link", { name: /pricing/i })).toHaveAttribute(
     "href",
-    "/portfolio",
+    "/pricing",
   );
   expect(screen.getByRole("link", { name: /about/i })).toHaveAttribute(
     "href",

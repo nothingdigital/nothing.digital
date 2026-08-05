@@ -2,16 +2,18 @@ import type { Metadata } from "next";
 
 import { ServicePageTemplate } from "@/components/templates/service-page";
 import { MarketingLayout } from "@/components/templates/marketing-layout";
+import { routes } from "@/lib/routes";
 
 export const metadata: Metadata = {
-  title: "Applications — Nothing.Digital",
+  title: "Applications",
   description:
     "Mobile and web applications built for scale, engagement, and long-term maintainability.",
+  alternates: { canonical: routes.services.applications },
   openGraph: {
-    title: "Applications — Nothing.Digital",
+    title: "Applications",
     description:
       "Mobile and web applications built for scale, engagement, and long-term maintainability.",
-    url: "https://nothing.digital/services/applications",
+    url: routes.services.applications,
     type: "website",
   },
 };
@@ -23,6 +25,25 @@ const features = [
   "Authentication and user management",
   "Offline support and sync",
   "App store publishing assistance",
+];
+
+const techStack = [
+  {
+    name: "React Native / Expo",
+    rationale: "Ship iOS and Android from one codebase without doubling cost.",
+  },
+  {
+    name: "Next.js",
+    rationale: "Progressive web apps and companion web UIs with strong SEO.",
+  },
+  {
+    name: "Node.js",
+    rationale: "APIs and realtime services that scale with your user base.",
+  },
+  {
+    name: "PostgreSQL",
+    rationale: "Solid data layer for auth, sync, and product analytics.",
+  },
 ];
 
 const processSteps = [
@@ -78,6 +99,7 @@ export default function ApplicationsPage() {
         problem="Users expect fast, reliable apps. A poor mobile experience loses engagement and market share."
         solution="We design and build web and mobile applications that keep users engaged and your engineering team sane."
         features={features}
+        techStack={techStack}
         processSteps={processSteps}
         faqItems={faqItems}
         jsonLd={jsonLd}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 
@@ -8,10 +8,10 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/atoms/theme-toggle";
 
-// ponytail: inline mobile menu; upgrade to Radix Dialog/Sheet for accessibility + focus trap if expanded.
+// ponytail: lightweight accessible mobile menu (aria + Escape); Sheet if we grow complexity.
 const navLinks = [
   { label: "Services", href: "/services" },
-  { label: "Portfolio", href: "/portfolio" },
+  { label: "Pricing", href: "/pricing" },
   { label: "About", href: "/about" },
   { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/contact" },
@@ -23,7 +23,26 @@ export interface NavigationProps {
 
 export function Navigation({ className }: NavigationProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const toggleMenu = () => setIsOpen((prev) => !prev);
+  const menuId = useId();
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+        toggleRef.current?.focus();
+      }
+    }
+
+    document.addEventListener("keydown", onKeyDown);
+    const firstLink = panelRef.current?.querySelector("a");
+    firstLink?.focus();
+
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [isOpen]);
 
   return (
     <header
@@ -32,7 +51,10 @@ export function Navigation({ className }: NavigationProps) {
         className,
       )}
     >
-      <nav className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6 lg:px-8">
+      <nav
+        className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6 lg:px-8"
+        aria-label="Primary"
+      >
         <Link
           href="/"
           className="font-display text-xl tracking-tight md:text-2xl"
@@ -56,24 +78,31 @@ export function Navigation({ className }: NavigationProps) {
         <div className="flex items-center gap-2 md:hidden">
           <ThemeToggle />
           <Button
+            ref={toggleRef}
             variant="ghost"
             size="icon"
-            onClick={toggleMenu}
-            aria-label="Toggle menu"
+            onClick={() => setIsOpen((prev) => !prev)}
+            aria-label={isOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isOpen}
+            aria-controls={menuId}
           >
             {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
         </div>
       </nav>
 
-      {isOpen && (
-        <div className="border-t bg-background px-4 py-4 md:hidden">
+      {isOpen ? (
+        <div
+          id={menuId}
+          ref={panelRef}
+          className="border-t bg-background px-4 py-4 md:hidden"
+        >
           <ul className="space-y-3">
             {navLinks.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="block text-sm font-medium text-muted-foreground hover:text-foreground"
+                  className="block font-mono text-sm uppercase tracking-widest text-muted-foreground hover:text-foreground"
                   onClick={() => setIsOpen(false)}
                 >
                   {link.label}
@@ -82,7 +111,7 @@ export function Navigation({ className }: NavigationProps) {
             ))}
           </ul>
         </div>
-      )}
+      ) : null}
     </header>
   );
 }

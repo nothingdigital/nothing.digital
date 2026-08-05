@@ -12,6 +12,7 @@ export const routes = {
     detail: (slug: string) => `/portfolio/${slug}`,
   },
   about: "/about",
+  pricing: "/pricing",
   blog: {
     index: "/blog",
     post: (slug: string) => `/blog/${slug}`,

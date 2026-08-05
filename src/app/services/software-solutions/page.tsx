@@ -2,16 +2,18 @@ import type { Metadata } from "next";
 
 import { ServicePageTemplate } from "@/components/templates/service-page";
 import { MarketingLayout } from "@/components/templates/marketing-layout";
+import { routes } from "@/lib/routes";
 
 export const metadata: Metadata = {
-  title: "Software Solutions — Nothing.Digital",
+  title: "Software Solutions",
   description:
     "Bespoke software and automation tools that streamline operations and unlock growth.",
+  alternates: { canonical: routes.services.softwareSolutions },
   openGraph: {
-    title: "Software Solutions — Nothing.Digital",
+    title: "Software Solutions",
     description:
       "Bespoke software and automation tools that streamline operations and unlock growth.",
-    url: "https://nothing.digital/services/software-solutions",
+    url: routes.services.softwareSolutions,
     type: "website",
   },
 };
@@ -23,6 +25,27 @@ const features = [
   "Data pipelines and reporting",
   "Scalable cloud architecture",
   "Ongoing support and maintenance",
+];
+
+const techStack = [
+  {
+    name: "Node.js",
+    rationale: "Reliable server runtime for APIs, jobs, and integrations.",
+  },
+  {
+    name: "PostgreSQL",
+    rationale:
+      "Relational data with integrity when your workflows get complex.",
+  },
+  {
+    name: "TypeScript",
+    rationale: "Shared types across client and server reduce integration bugs.",
+  },
+  {
+    name: "Next.js",
+    rationale:
+      "Admin UIs and dashboards that ship with the same stack as the API.",
+  },
 ];
 
 const processSteps = [
@@ -78,6 +101,7 @@ export default function SoftwareSolutionsPage() {
         problem="Off-the-shelf tools force your team into rigid workflows, creating manual work and missed opportunities."
         solution="We build custom software and automations that fit your exact process, saving time and reducing errors."
         features={features}
+        techStack={techStack}
         processSteps={processSteps}
         faqItems={faqItems}
         jsonLd={jsonLd}

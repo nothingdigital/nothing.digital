@@ -28,6 +28,11 @@ export interface ProcessStep {
   description: string;
 }
 
+export interface TechStackItem {
+  name: string;
+  rationale: string;
+}
+
 export interface ServicePageTemplateProps {
   title: string;
   description: string;
@@ -36,6 +41,7 @@ export interface ServicePageTemplateProps {
   features: string[];
   processSteps: ProcessStep[];
   faqItems: FaqItem[];
+  techStack?: TechStackItem[];
   caseStudies?: CaseStudy[];
   ctaText?: string;
   image?: string;
@@ -53,7 +59,10 @@ function HeroSection({
   return (
     <SectionContainer className="pt-24 md:pt-32">
       <div className="mx-auto max-w-3xl text-center">
-        <h1 className="text-4xl font-bold tracking-tight md:text-5xl">
+        <p className="font-mono text-xs uppercase tracking-[0.35em] text-primary">
+          Service
+        </p>
+        <h1 className="mt-3 font-display text-4xl tracking-tight md:text-5xl">
           {title}
         </h1>
         <p className="mt-4 text-lg text-muted-foreground">{description}</p>
@@ -73,11 +82,11 @@ function ProblemSolutionSection({
     <SectionContainer variant="muted">
       <div className="grid gap-8 md:grid-cols-2">
         <div>
-          <h2 className="mb-4 text-2xl font-semibold">The challenge</h2>
+          <h2 className="mb-4 font-display text-2xl">The challenge</h2>
           <p className="text-muted-foreground">{problem}</p>
         </div>
         <div>
-          <h2 className="mb-4 text-2xl font-semibold">How we help</h2>
+          <h2 className="mb-4 font-display text-2xl">How we help</h2>
           <p className="text-muted-foreground">{solution}</p>
         </div>
       </div>
@@ -90,14 +99,41 @@ function FeaturesSection({ features }: { features: string[] }) {
 
   return (
     <SectionContainer>
-      <h2 className="mb-8 text-center text-2xl font-semibold">What you get</h2>
+      <h2 className="mb-8 text-center font-display text-3xl tracking-tight">
+        What you get
+      </h2>
       <ul className="grid gap-4 sm:grid-cols-2">
         {features.map((feature) => (
           <li
             key={feature}
-            className="rounded-lg border bg-card p-4 text-card-foreground shadow-sm"
+            className="rounded-xl border-2 border-border bg-card p-4 text-card-foreground shadow-md"
           >
             {feature}
+          </li>
+        ))}
+      </ul>
+    </SectionContainer>
+  );
+}
+
+function TechStackSection({ items }: { items?: TechStackItem[] }) {
+  if (!items || items.length === 0) return null;
+
+  return (
+    <SectionContainer variant="muted">
+      <h2 className="mb-8 text-center font-display text-3xl tracking-tight">
+        Technologies we use
+      </h2>
+      <ul className="mx-auto grid max-w-4xl gap-4 sm:grid-cols-2">
+        {items.map((item) => (
+          <li
+            key={item.name}
+            className="rounded-xl border-2 border-border bg-card p-5 shadow-md"
+          >
+            <h3 className="font-display text-xl">{item.name}</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {item.rationale}
+            </p>
           </li>
         ))}
       </ul>
@@ -109,18 +145,20 @@ function ProcessSection({ steps }: { steps: ProcessStep[] }) {
   if (steps.length === 0) return null;
 
   return (
-    <SectionContainer variant="muted">
-      <h2 className="mb-8 text-center text-2xl font-semibold">Our process</h2>
+    <SectionContainer>
+      <h2 className="mb-8 text-center font-display text-3xl tracking-tight">
+        Our process
+      </h2>
       <ol className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {steps.map((step, index) => (
           <li
             key={step.title}
-            className="relative rounded-lg border bg-background p-6 shadow-sm"
+            className="relative rounded-xl border-2 border-border bg-card p-6 shadow-md"
           >
-            <span className="mb-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
+            <span className="mb-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary font-mono text-sm font-bold text-primary-foreground">
               {index + 1}
             </span>
-            <h3 className="mb-2 font-semibold">{step.title}</h3>
+            <h3 className="mb-2 font-display text-lg">{step.title}</h3>
             <p className="text-sm text-muted-foreground">{step.description}</p>
           </li>
         ))}
@@ -133,16 +171,18 @@ function CaseStudiesSection({ caseStudies }: { caseStudies?: CaseStudy[] }) {
   if (!caseStudies || caseStudies.length === 0) return null;
 
   return (
-    <SectionContainer>
-      <h2 className="mb-8 text-center text-2xl font-semibold">Related work</h2>
+    <SectionContainer variant="muted">
+      <h2 className="mb-8 text-center font-display text-3xl tracking-tight">
+        Related work
+      </h2>
       <div className="grid gap-6 sm:grid-cols-2">
         {caseStudies.map((study) => (
           <Link
             key={study.title}
             href={study.href}
-            className="group rounded-lg border bg-card p-6 shadow-sm transition-colors hover:border-primary/50"
+            className="group rounded-xl border-2 border-border bg-card p-6 shadow-md transition-colors hover:border-primary"
           >
-            <h3 className="mb-2 font-semibold group-hover:text-primary">
+            <h3 className="mb-2 font-display text-xl group-hover:text-primary">
               {study.title}
             </h3>
             <p className="text-sm text-muted-foreground">{study.description}</p>
@@ -156,9 +196,22 @@ function CaseStudiesSection({ caseStudies }: { caseStudies?: CaseStudy[] }) {
 function FaqSection({ items }: { items: FaqItem[] }) {
   if (items.length === 0) return null;
 
+  const faqJsonLd = {
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+
   return (
     <SectionContainer variant="muted">
-      <h2 className="mb-8 text-center text-2xl font-semibold">
+      <JsonLd data={faqJsonLd} />
+      <h2 className="mb-8 text-center font-display text-3xl tracking-tight">
         Frequently asked questions
       </h2>
       <Accordion type="single" collapsible className="mx-auto max-w-2xl">
@@ -176,12 +229,16 @@ function FaqSection({ items }: { items: FaqItem[] }) {
 function CtaSection({ ctaText }: { ctaText: string }) {
   return (
     <SectionContainer className="text-center">
-      <h2 className="mb-4 text-2xl font-semibold">Ready to start?</h2>
-      <p className="mb-6 text-muted-foreground">
-        Tell us about your project and we will get back to you within one
-        business day.
+      <p className="font-mono text-xs uppercase tracking-[0.35em] text-primary">
+        Next step
       </p>
-      <Button asChild>
+      <h2 className="mt-3 mb-4 font-display text-3xl tracking-tight">
+        Ready to start?
+      </h2>
+      <p className="mb-6 text-muted-foreground">
+        Book a free scoping call — we reply within one business day.
+      </p>
+      <Button asChild size="lg" className="shadow-lg">
         <Link href={routes.contact}>{ctaText}</Link>
       </Button>
     </SectionContainer>
@@ -190,8 +247,7 @@ function CtaSection({ ctaText }: { ctaText: string }) {
 
 function PlaceholderImage({ src, alt }: { src: string; alt: string }) {
   return (
-    <div className="relative aspect-video w-full overflow-hidden rounded-lg border">
-      {/* ponytail: using existing default.svg as placeholder until final assets arrive. */}
+    <div className="relative aspect-video w-full overflow-hidden rounded-xl border-2 border-border">
       <Image
         src={src}
         alt={alt}
@@ -212,9 +268,10 @@ export function ServicePageTemplate({
   features,
   processSteps,
   faqItems,
+  techStack,
   caseStudies,
-  ctaText = "Discuss your project",
-  image = "/og/default.svg",
+  ctaText = "Book a free scoping call",
+  image = "/og/default.png",
   imageAlt,
   jsonLd,
 }: ServicePageTemplateProps) {
@@ -227,6 +284,7 @@ export function ServicePageTemplate({
       </SectionContainer>
       <ProblemSolutionSection problem={problem} solution={solution} />
       <FeaturesSection features={features} />
+      <TechStackSection items={techStack} />
       <ProcessSection steps={processSteps} />
       <CaseStudiesSection caseStudies={caseStudies} />
       <FaqSection items={faqItems} />

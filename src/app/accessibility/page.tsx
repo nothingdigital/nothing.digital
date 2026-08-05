@@ -4,9 +4,10 @@ import { MarketingLayout } from "@/components/templates/marketing-layout";
 import { SectionContainer } from "@/components/atoms/section-container";
 
 export const metadata: Metadata = {
-  title: "Accessibility Statement — Nothing.Digital",
+  title: "Accessibility Statement",
   description:
     "Learn how Nothing.Digital approaches web accessibility and ongoing improvements.",
+  alternates: { canonical: "/accessibility" },
 };
 
 export default function AccessibilityPage() {

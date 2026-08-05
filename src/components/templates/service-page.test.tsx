@@ -28,7 +28,7 @@ it("renders features, process steps, FAQ, and a contact CTA", () => {
   expect(screen.getByText("Step one")).toBeInTheDocument();
   expect(screen.getByText("First question?")).toBeInTheDocument();
 
-  const cta = screen.getByRole("link", { name: /discuss your project/i });
+  const cta = screen.getByRole("link", { name: /book a free scoping call/i });
   expect(cta).toHaveAttribute("href", "/contact");
 });
 
@@ -55,7 +55,7 @@ it("renders related case studies when provided", () => {
         {
           title: "Acme Launch",
           description: "Great results.",
-          href: "/portfolio/acme-launch",
+          href: "/portfolio/example-project",
         },
       ]}
     />,
@@ -63,6 +63,23 @@ it("renders related case studies when provided", () => {
 
   expect(screen.getByText("Acme Launch")).toBeInTheDocument();
   expect(screen.getByText("Great results.")).toBeInTheDocument();
+});
+
+it("renders tech stack when provided", () => {
+  render(
+    <ServicePageTemplate
+      {...defaultProps}
+      techStack={[
+        {
+          name: "Next.js",
+          rationale: "Static by default.",
+        },
+      ]}
+    />,
+  );
+
+  expect(screen.getByText("Next.js")).toBeInTheDocument();
+  expect(screen.getByText("Static by default.")).toBeInTheDocument();
 });
 
 it("renders JSON-LD schema when provided", () => {

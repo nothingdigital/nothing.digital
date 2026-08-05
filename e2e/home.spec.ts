@@ -31,7 +31,7 @@ test("home page CTA links to contact", async ({ page }) => {
   await openHome(page);
 
   await expect(
-    page.getByRole("link", { name: /get in touch/i }),
+    page.getByRole("link", { name: /book a free scoping call/i }).first(),
   ).toHaveAttribute("href", "/contact");
 });
 
