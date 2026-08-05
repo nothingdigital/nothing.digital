@@ -49,56 +49,96 @@ ALTER TABLE newsletter_subscribers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE portfolio_items ENABLE ROW LEVEL SECURITY;
 
 -- Anon can insert contact submissions (from public website form)
-CREATE POLICY contact_submissions_anon_insert
-  ON contact_submissions
-  FOR INSERT
-  TO anon
-  WITH CHECK (true);
+DO $$
+BEGIN
+  CREATE POLICY contact_submissions_anon_insert
+    ON contact_submissions
+    FOR INSERT
+    TO anon
+    WITH CHECK (true);
+EXCEPTION WHEN duplicate_object THEN
+  NULL;
+END $$;
 
 -- Anon can insert newsletter subscribers
-CREATE POLICY newsletter_subscribers_anon_insert
-  ON newsletter_subscribers
-  FOR INSERT
-  TO anon
-  WITH CHECK (true);
+DO $$
+BEGIN
+  CREATE POLICY newsletter_subscribers_anon_insert
+    ON newsletter_subscribers
+    FOR INSERT
+    TO anon
+    WITH CHECK (true);
+EXCEPTION WHEN duplicate_object THEN
+  NULL;
+END $$;
 
 -- No public reads on any table
-CREATE POLICY contact_submissions_no_public_select
-  ON contact_submissions
-  FOR SELECT
-  TO anon
-  USING (false);
+DO $$
+BEGIN
+  CREATE POLICY contact_submissions_no_public_select
+    ON contact_submissions
+    FOR SELECT
+    TO anon
+    USING (false);
+EXCEPTION WHEN duplicate_object THEN
+  NULL;
+END $$;
 
-CREATE POLICY newsletter_subscribers_no_public_select
-  ON newsletter_subscribers
-  FOR SELECT
-  TO anon
-  USING (false);
+DO $$
+BEGIN
+  CREATE POLICY newsletter_subscribers_no_public_select
+    ON newsletter_subscribers
+    FOR SELECT
+    TO anon
+    USING (false);
+EXCEPTION WHEN duplicate_object THEN
+  NULL;
+END $$;
 
-CREATE POLICY portfolio_items_no_public_select
-  ON portfolio_items
-  FOR SELECT
-  TO anon
-  USING (false);
+DO $$
+BEGIN
+  CREATE POLICY portfolio_items_no_public_select
+    ON portfolio_items
+    FOR SELECT
+    TO anon
+    USING (false);
+EXCEPTION WHEN duplicate_object THEN
+  NULL;
+END $$;
 
 -- Service role has full access (used by server-side API routes)
-CREATE POLICY contact_submissions_service_all
-  ON contact_submissions
-  FOR ALL
-  TO service_role
-  USING (true)
-  WITH CHECK (true);
+DO $$
+BEGIN
+  CREATE POLICY contact_submissions_service_all
+    ON contact_submissions
+    FOR ALL
+    TO service_role
+    USING (true)
+    WITH CHECK (true);
+EXCEPTION WHEN duplicate_object THEN
+  NULL;
+END $$;
 
-CREATE POLICY newsletter_subscribers_service_all
-  ON newsletter_subscribers
-  FOR ALL
-  TO service_role
-  USING (true)
-  WITH CHECK (true);
+DO $$
+BEGIN
+  CREATE POLICY newsletter_subscribers_service_all
+    ON newsletter_subscribers
+    FOR ALL
+    TO service_role
+    USING (true)
+    WITH CHECK (true);
+EXCEPTION WHEN duplicate_object THEN
+  NULL;
+END $$;
 
-CREATE POLICY portfolio_items_service_all
-  ON portfolio_items
-  FOR ALL
-  TO service_role
-  USING (true)
-  WITH CHECK (true);
+DO $$
+BEGIN
+  CREATE POLICY portfolio_items_service_all
+    ON portfolio_items
+    FOR ALL
+    TO service_role
+    USING (true)
+    WITH CHECK (true);
+EXCEPTION WHEN duplicate_object THEN
+  NULL;
+END $$;
