@@ -37,7 +37,7 @@ export function HeroClock() {
       {/* rotating seal text */}
       <svg
         viewBox="0 0 100 100"
-        className="animate-sweep absolute -inset-6 h-auto w-auto text-primary/70"
+        className="animate-sweep absolute -left-6 -top-6 h-[calc(100%+3rem)] w-[calc(100%+3rem)] text-primary/70"
         aria-hidden="true"
       >
         <defs>
