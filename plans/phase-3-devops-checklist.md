@@ -8,9 +8,9 @@
 
 - [ ] **Vercel**
   - [x] Fix deploy workflows (`vercel/action-deploy@v1` does not exist; using `pnpm dlx vercel@latest`).
-  - [ ] Create project `nothing-digital` and connect GitHub repo.
+  - [x] Create project and connect GitHub repo `nothingdigital/nothing.digital`.
+  - [x] First preview/production deployment live at https://nothing-digital.vercel.app/.
   - [ ] Add `NEXT_PUBLIC_SITE_URL`, `RESEND_API_KEY`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` to project env vars.
-  - [ ] Enable GitHub deployments (preview + production).
   - [ ] Add custom domain `nothing.digital` and `www.nothing.digital` redirect.
 
 - [ ] **Cloudflare**

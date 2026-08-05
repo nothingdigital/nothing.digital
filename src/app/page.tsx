@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import dynamic from "next/dynamic";
 
 import { ServiceCard } from "@/components/molecules/service-card";
+import { HeroClock } from "@/components/atoms/hero-clock";
 import { routes } from "@/lib/routes";
 
 // ponytail: lazy-load newsletter form because it sits below the fold and bundles react-hook-form.
@@ -107,23 +108,30 @@ export default function HomePage() {
   return (
     <MarketingLayout>
       <SectionContainer className="pb-12 pt-16 md:pt-24">
-        <div className="mx-auto max-w-3xl text-center">
-          <h1 className="text-4xl font-bold tracking-tight md:text-6xl">
-            Nothing.Digital builds what matters.
-          </h1>
-          <p className="mt-6 text-lg text-muted-foreground md:text-xl">
-            Premium websites, custom software, applications, and email marketing
-            for ambitious brands.
-          </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <Button asChild size="lg">
-              <Link href={routes.services.index}>
-                Explore services <ArrowRight className="h-4 w-4" />
-              </Link>
-            </Button>
-            <Button variant="outline" size="lg" asChild>
-              <Link href={routes.contact}>Get in touch</Link>
-            </Button>
+        <div className="mx-auto grid max-w-5xl items-center gap-12 md:grid-cols-2">
+          <div className="text-center md:text-left">
+            <h1 className="text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl">
+              Built on time.{" "}
+              <span className="text-primary">Built to last.</span>
+            </h1>
+            <p className="mt-6 text-lg text-muted-foreground md:text-xl">
+              Nothing.Digital ships premium websites, custom software,
+              applications, and email marketing — delivered precisely when you
+              need it.
+            </p>
+            <div className="mt-8 flex flex-wrap justify-center gap-4 md:justify-start">
+              <Button asChild size="lg">
+                <Link href={routes.services.index}>
+                  Explore services <ArrowRight className="h-4 w-4" />
+                </Link>
+              </Button>
+              <Button variant="outline" size="lg" asChild>
+                <Link href={routes.contact}>Get in touch</Link>
+              </Button>
+            </div>
+          </div>
+          <div className="flex justify-center">
+            <HeroClock />
           </div>
         </div>
       </SectionContainer>

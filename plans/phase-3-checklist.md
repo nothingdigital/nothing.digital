@@ -80,8 +80,8 @@
 ## External Dependencies / Blockers
 
 - [x] Vercel deploy workflows fixed — `vercel/action-deploy@v1` did not exist; replaced with direct CLI
-- [ ] Vercel project connected to repo — blocked: no `VERCEL_TOKEN`/`ORG_ID` in environment
-- [ ] DNS + SSL configured — blocked: no Vercel project records yet (domain registered at sav.com)
+- [x] Vercel project connected to repo `nothingdigital/nothing.digital` and first deployment live
+- [ ] DNS + SSL configured for `nothing.digital` — pending domain setup in Vercel
 - [ ] Supabase project ready with RLS policies — blocked: no Supabase project credentials
 - [ ] Resend domain verified — blocked: no Resend API key
 - [ ] Production env vars set — blocked: cannot set secrets without service credentials
