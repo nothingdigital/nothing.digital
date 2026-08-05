@@ -262,7 +262,18 @@ export function ContactForm() {
 
       <FormField
         name="privacyAccepted"
-        label="I agree to the Privacy Policy"
+        label={
+          <>
+            I agree to the{" "}
+            <a
+              href="/privacy"
+              target="_blank"
+              className="text-primary underline underline-offset-4 hover:text-primary/80"
+            >
+              Privacy Policy
+            </a>
+          </>
+        }
         control={control}
         error={errors.privacyAccepted}
         render={(field) => (

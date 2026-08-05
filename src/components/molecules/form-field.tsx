@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 
 export interface FormFieldProps<T extends FieldValues> {
   name: Path<T>;
-  label: string;
+  label: React.ReactNode;
   control: Control<T>;
   error?: FieldError;
   render: (field: ControllerRenderProps<T, Path<T>>) => React.ReactElement;
