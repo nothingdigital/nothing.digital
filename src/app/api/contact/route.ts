@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
+import { env } from "@/lib/env";
+
 import {
   contactConfirmationEmailTemplate,
   teamNotificationEmailTemplate,
@@ -11,7 +13,7 @@ import { getServiceRoleClient } from "@/lib/supabase/server";
 import { contactSchema, type ContactInput } from "@/lib/validations/contact";
 
 const FROM_EMAIL = "Nothing.Digital <hello@nothing.digital>";
-const TEAM_EMAIL = "team@nothing.digital";
+const TEAM_EMAIL = env.private.CONTACT_NOTIFY_EMAIL ?? "team@nothing.digital";
 
 function isHoneypotTriggered(data: ContactInput): boolean {
   return Boolean(data.website && data.website.length > 0);
@@ -54,7 +56,7 @@ async function storeSubmission(data: ContactInput) {
 
 async function sendConfirmationEmail(data: ContactInput) {
   const resend = getResendClient();
-  if (!resend) return;
+  if (!resend) throw new Error("Resend client unavailable (missing API key)");
 
   await resend.emails.send({
     from: FROM_EMAIL,
@@ -64,12 +66,9 @@ async function sendConfirmationEmail(data: ContactInput) {
   });
 }
 
-async function sendTeamNotification(
-  data: ContactInput,
-  submissionId: string | null,
-) {
+async function sendTeamNotification(data: ContactInput, submissionId: string) {
   const resend = getResendClient();
-  if (!resend || !submissionId) return;
+  if (!resend) throw new Error("Resend client unavailable (missing API key)");
 
   await resend.emails.send({
     from: FROM_EMAIL,
@@ -129,13 +128,22 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const submissionId = await storeSubmission(validated);
 
   if (!submissionId) {
-    console.warn(
-      "[contact] Stored without Supabase (key missing or insert failed).",
+    return NextResponse.json(
+      { error: "Failed to store submission. Please try again later." },
+      { status: 500 },
     );
   }
 
-  await sendConfirmationEmail(validated);
-  await sendTeamNotification(validated, submissionId);
+  try {
+    await sendConfirmationEmail(validated);
+    await sendTeamNotification(validated, submissionId);
+  } catch (error) {
+    console.error("[contact] Email delivery failed:", error);
+    return NextResponse.json(
+      { error: "Failed to send notification. Please try again later." },
+      { status: 500 },
+    );
+  }
 
   return NextResponse.json(
     { success: true, message: "Submission received" },
