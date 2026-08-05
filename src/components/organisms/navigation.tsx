@@ -6,6 +6,7 @@ import { Menu, X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { LogoDot } from "@/components/atoms/logo-dot";
 import { ThemeToggle } from "@/components/atoms/theme-toggle";
 
 // ponytail: lightweight accessible mobile menu (aria + Escape); Sheet if we grow complexity.
@@ -59,7 +60,9 @@ export function Navigation({ className }: NavigationProps) {
           href="/"
           className="font-display text-xl tracking-tight md:text-2xl"
         >
-          Nothing<span className="italic text-primary">.</span>Digital
+          Nothing
+          <LogoDot />
+          Digital
         </Link>
 
         <div className="hidden items-center gap-7 md:flex">
