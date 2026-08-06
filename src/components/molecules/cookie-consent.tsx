@@ -30,15 +30,13 @@ export function CookieConsent({ useUmami }: { useUmami: boolean }) {
 
   return (
     <>
-      {consent === "accepted" &&
-        (useUmami ? (
-          <UmamiScript />
-        ) : (
-          <>
-            <Analytics />
-            <SpeedInsights />
-          </>
-        ))}
+      {consent === "accepted" && (
+        <>
+          {/* ponytail: Speed Insights stays; Umami replaces Vercel Analytics only */}
+          {useUmami ? <UmamiScript /> : <Analytics />}
+          <SpeedInsights />
+        </>
+      )}
 
       {consent === null && (
         <div className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-card/95 backdrop-blur">

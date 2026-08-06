@@ -30,6 +30,9 @@ export function getAdminToolLinks() {
     site: env.public.NEXT_PUBLIC_SITE_URL ?? "https://nothing.digital",
     calendly: env.private.CALENDLY_URL,
     umami: env.private.UMAMI_DASHBOARD_URL,
+    listmonk: env.private.LISTMONK_DASHBOARD_URL,
+    n8n: env.private.N8N_DASHBOARD_URL,
+    kuma: env.private.KUMA_DASHBOARD_URL,
     vercel: "https://vercel.com/dashboard",
     sentry: "https://sentry.io",
   };

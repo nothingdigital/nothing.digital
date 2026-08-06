@@ -2,7 +2,7 @@
 
 > **Version:** 1.0  
 > **Date:** 2026-08-04  
-> **Status:** Phase 3 code complete · Phase 4 skipped · Phase 6 in progress (admin + Calendly CTA shipped; Umami ops next)  
+> **Status:** Phase 3 code complete · Phase 4 skipped · Phase 6 in progress (admin + Calendly CTA shipped; Umami ops next) · Growth tactics triage shipped — see `docs/growth-tactics.md`  
 > **General Contractor:** Kimi (Orchestration Agent)  
 > **Specialist Agents:** Principal Architect · DevOps Engineer · QA Engineer · Gap Analyst  
 > **Domain:** `nothing.digital`
@@ -351,13 +351,13 @@ Nothing.Digital is a digital services company specializing in website developmen
 
 ### 6.3 Homepage
 
-| Step | Task                                                  | Owner    | Effort | Status |
-| ---- | ----------------------------------------------------- | -------- | ------ | ------ |
-| 2.16 | Hero Section (headline, subheadline, CTA, background) | Frontend | M      | 🔲     |
-| 2.17 | Services Overview (4-card grid with icons)            | Frontend | M      | 🔲     |
-| 2.18 | Featured Case Studies (2 highlighted with metrics)    | Frontend | M      | 🔲     |
-| 2.19 | Trust Indicators (client logos, stats, testimonials)  | Frontend | M      | 🔲     |
-| 2.20 | Newsletter Signup section                             | Frontend | S      | 🔲     |
+| Step | Task                                                  | Owner    | Effort | Status                                               |
+| ---- | ----------------------------------------------------- | -------- | ------ | ---------------------------------------------------- |
+| 2.16 | Hero Section (headline, subheadline, CTA, background) | Frontend | M      | 🔲                                                   |
+| 2.17 | Services Overview (4-card grid with icons)            | Frontend | M      | 🔲                                                   |
+| 2.18 | Featured Case Studies (2 highlighted with metrics)    | Frontend | M      | ✅ (2026-08-06; anonymized MDX + home Selected work) |
+| 2.19 | Trust Indicators (client logos, stats, testimonials)  | Frontend | M      | 🔲 logos later; quotes in case studies               |
+| 2.20 | Newsletter Signup section                             | Frontend | S      | 🔲                                                   |
 
 ### 6.4 Service Pages
 
@@ -371,12 +371,12 @@ Nothing.Digital is a digital services company specializing in website developmen
 
 ### 6.5 Portfolio Page
 
-| Step | Task                                                | Owner    | Effort | Status |
-| ---- | --------------------------------------------------- | -------- | ------ | ------ |
-| 2.26 | Create case study MDX files with frontmatter schema | Content  | M      | 🔲     |
-| 2.27 | Build filterable grid with client-side filtering    | Frontend | M      | 🔲     |
-| 2.28 | Build portfolio detail page (`/portfolio/[slug]`)   | Frontend | M      | 🔲     |
-| 2.29 | Add client testimonials section                     | Frontend | S      | 🔲     |
+| Step | Task                                                | Owner    | Effort | Status                                   |
+| ---- | --------------------------------------------------- | -------- | ------ | ---------------------------------------- |
+| 2.26 | Create case study MDX files with frontmatter schema | Content  | M      | ✅ (3 anonymized studies, 2026-08-06)    |
+| 2.27 | Build filterable grid with client-side filtering    | Frontend | M      | 🔲                                       |
+| 2.28 | Build portfolio detail page (`/portfolio/[slug]`)   | Frontend | M      | 🔲                                       |
+| 2.29 | Add client testimonials section                     | Frontend | S      | ✅ (per case study; named clients LATER) |
 
 ### 6.6 About Page
 
@@ -663,24 +663,24 @@ Applies to **all phases**:
 
 ### Done vs next vs later
 
-|           | Work                                                                                                                               |
-| --------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| **Done**  | `/admin` (inbox, newsletter list, health, settings, magic link); Calendly CTA on `/contact`; Umami client wiring + privacy/consent |
-| **Next**  | Umami pod + `analytics.nothing.digital` + Vercel env; cut Vercel Web Analytics                                                     |
-| **Later** | Listmonk (campaign gate); Calendly webhook/`bookings`; n8n; Kuma; secretary roles; secondary pods                                  |
+|           | Work                                                                                                                |
+| --------- | ------------------------------------------------------------------------------------------------------------------- |
+| **Done**  | `/admin`; Calendly CTA; Umami client wiring; Listmonk/n8n/Kuma **code ready** (env-gated helpers + admin launchers) |
+| **Next**  | Umami pod + `analytics.nothing.digital` + Vercel env; cut Vercel Web Analytics                                      |
+| **Later** | Listmonk/n8n **ops** (set env when pods live); Calendly webhook/`bookings`; Kuma pod; secretary roles               |
 
 ### Scope (ponytail order)
 
-| Step | Work                                              | Est. $/mo | Gate                                  |
-| ---- | ------------------------------------------------- | --------- | ------------------------------------- |
-| 6.1  | Owner `/admin` inbox (Supabase Auth magic link)   | $0        | ✅ code; gate: Auth + `ADMIN_EMAILS`  |
-| 6.2  | Umami on PikaPods → drop Vercel Analytics         | ~$1.80    | ✅ code; 🔲 pod + DNS + env           |
-| 6.3  | Calendly on `/contact` (+ webhook when volume)    | $0–10     | ✅ CTA; webhook deferred              |
-| 6.4  | Listmonk when campaigns start                     | ~$2–3     | Double opt-in + broadcasts            |
-| 6.5  | n8n when Slack/Listmonk fan-out needed            | ~$4–5     | Fire-and-forget webhooks only         |
-| 6.6  | Uptime Kuma only if free UptimeRobot insufficient | ~$1.80    | Status page / sub-min checks          |
-| 6.7  | Secretary role (Phase B) on hire                  | $0        | Least-privilege staff login           |
-| 6.8  | Secondary pods (FreeScout, etc.)                  | defer     | See §6 of detail doc — default **no** |
+| Step | Work                                              | Est. $/mo | Gate                                    |
+| ---- | ------------------------------------------------- | --------- | --------------------------------------- |
+| 6.1  | Owner `/admin` inbox (Supabase Auth magic link)   | $0        | ✅ code; gate: Auth + `ADMIN_EMAILS`    |
+| 6.2  | Umami on PikaPods → drop Vercel Analytics         | ~$1.80    | ✅ code; 🔲 pod + DNS + env             |
+| 6.3  | Calendly on `/contact` (+ webhook when volume)    | $0–10     | ✅ CTA; webhook deferred                |
+| 6.4  | Listmonk when campaigns start                     | ~$2–3     | 🟡 code ready; 🔲 pod + env             |
+| 6.5  | n8n when Slack/Listmonk fan-out needed            | ~$4–5     | 🟡 code ready; 🔲 pod + webhook env     |
+| 6.6  | Uptime Kuma only if free UptimeRobot insufficient | ~$1.80    | 🟡 admin link ready; prefer UptimeRobot |
+| 6.7  | Secretary role (Phase B) on hire                  | $0        | Least-privilege staff login             |
+| 6.8  | Secondary pods (FreeScout, etc.)                  | defer     | See §6 of detail doc — default **no**   |
 
 **Year-1 recommended pack:** Admin + Umami + Listmonk ≈ **$5–15/mo** incremental.
 
@@ -698,6 +698,7 @@ Applies to **all phases**:
 | **QA Strategy**              | `/plans/03-qa-engineer.md`           | Testing pyramid, a11y compliance, performance budgets, E2E specs                     |
 | **Gap Analysis**             | `/plans/04-gap-analysis.md`          | 67 gaps, risk register, stakeholder questions, compliance requirements               |
 | **PikaPods & Ops Backend**   | `/plans/05-pikapods-integrations.md` | Sidecar OSS pods (Umami/Listmonk/n8n/Kuma), cost rollup, `/admin` + secretary phases |
+| **Growth Tactics**           | `/docs/growth-tactics.md`            | Full yes/no/later triage, cadence, drips, ballpark ranges                            |
 | **Master Document**          | `/plans/00-master-document.md`       | This document — single source of truth                                               |
 
 ---
@@ -716,4 +717,4 @@ Applies to **all phases**:
 ---
 
 _Document maintained by the General Contractor. Updated after each phase completion._  
-_Last Updated: 2026-08-05 — Phase 6 status: admin + Calendly CTA done; Umami ops next; Listmonk deferred_
+_Last Updated: 2026-08-06 — Growth tactics triage + case studies/CTAs/pricing; Umami ops next; Listmonk deferred (see docs/growth-tactics.md)_

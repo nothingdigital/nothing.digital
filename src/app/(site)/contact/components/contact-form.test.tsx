@@ -59,6 +59,16 @@ it("submits the form and shows a success message", async () => {
     ).toBeInTheDocument();
   });
 
+  expect(
+    screen.getByRole("link", { name: /review ballpark pricing ranges/i }),
+  ).toHaveAttribute("href", "/pricing");
+  expect(
+    screen.getByRole("link", { name: /browse our services/i }),
+  ).toHaveAttribute("href", "/services");
+  expect(
+    screen.getByRole("link", { name: /browse recent articles/i }),
+  ).toHaveAttribute("href", "/blog");
+
   expect(fetchMock).toHaveBeenCalledTimes(1);
   const request = fetchMock.mock.calls[0];
   expect(request[0]).toBe("/api/contact");

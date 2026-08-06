@@ -64,6 +64,9 @@ export function Navigation() {
               {link.label}
             </Link>
           ))}
+          <Button asChild size="sm">
+            <Link href="/contact">Book a call</Link>
+          </Button>
           <ThemeToggle />
         </div>
 
@@ -94,7 +97,7 @@ export function Navigation() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="block font-mono text-sm uppercase tracking-widest text-muted-foreground hover:text-foreground"
+                  className="block min-h-11 py-2 font-mono text-sm uppercase tracking-widest text-muted-foreground hover:text-foreground"
                   onClick={() => setIsOpen(false)}
                 >
                   {link.label}
@@ -102,6 +105,11 @@ export function Navigation() {
               </li>
             ))}
           </ul>
+          <Button asChild className="mt-4 w-full min-h-11">
+            <Link href="/contact" onClick={() => setIsOpen(false)}>
+              Book a call
+            </Link>
+          </Button>
         </div>
       ) : null}
     </header>

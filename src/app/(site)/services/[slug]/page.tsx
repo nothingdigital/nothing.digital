@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import { ServicePageTemplate } from "@/components/templates/service-page";
 import { serviceSlugs, type ServiceSlug } from "@/lib/routes";
-import { serviceDetails } from "@/lib/services";
+import { serviceDetails, serviceSummaries } from "@/lib/services";
 
 export function generateStaticParams() {
   return serviceSlugs.map((slug) => ({ slug }));
@@ -17,6 +17,17 @@ function getService(slug: string) {
   return serviceSlugs.includes(slug as ServiceSlug)
     ? serviceDetails[slug as ServiceSlug]
     : null;
+}
+
+function relatedFor(slug: ServiceSlug) {
+  return serviceSummaries
+    .filter((item) => item.slug !== slug)
+    .slice(0, 3)
+    .map((item) => ({
+      title: item.title,
+      href: item.href,
+      description: item.description,
+    }));
 }
 
 export async function generateMetadata({
@@ -54,6 +65,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
       techStack={service.techStack}
       processSteps={service.processSteps}
       faqItems={service.faqItems}
+      relatedServices={relatedFor(service.slug)}
       jsonLd={service.jsonLd}
     />
   );

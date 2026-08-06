@@ -31,7 +31,9 @@ export function ServiceCard({
         <h3 className="mb-2 font-display text-xl group-hover:text-primary">
           {title}
         </h3>
-        <p className="text-sm text-muted-foreground">{description}</p>
+        <p className="text-sm leading-relaxed text-muted-foreground">
+          {description}
+        </p>
       </motion.div>
     </Link>
   );

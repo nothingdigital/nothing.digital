@@ -30,6 +30,21 @@ export default async function AdminHealthPage() {
       note: tools.umami ? "configured" : "env missing",
     },
     {
+      label: "Listmonk",
+      href: tools.listmonk,
+      note: tools.listmonk ? "configured" : "env missing",
+    },
+    {
+      label: "n8n",
+      href: tools.n8n,
+      note: tools.n8n ? "configured" : "env missing",
+    },
+    {
+      label: "Uptime Kuma",
+      href: tools.kuma,
+      note: tools.kuma ? "configured" : "env missing",
+    },
+    {
       label: "Calendly",
       href: tools.calendly,
       note: tools.calendly ? "configured" : "env missing",

@@ -74,7 +74,7 @@ export default function AboutPage() {
           <h2 className="mb-4 font-display text-3xl tracking-tight">
             Our story
           </h2>
-          <div className="space-y-4 text-muted-foreground">
+          <div className="space-y-4 leading-relaxed text-muted-foreground">
             <p>
               Nothing.Digital was founded on a simple idea: most digital work is
               unnecessarily complicated. We wanted to build a studio that cuts
@@ -99,10 +99,10 @@ export default function AboutPage() {
             {values.map((value) => (
               <div
                 key={value.title}
-                className="rounded-xl border-2 border-border bg-card p-6 shadow-md transition-colors hover:border-primary hover:shadow-xl"
+                className="rounded-xl border-2 border-border bg-card p-6 shadow-md transition hover:-translate-y-0.5 hover:border-primary hover:shadow-xl"
               >
                 <h3 className="mb-2 font-display text-xl">{value.title}</h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm leading-relaxed text-muted-foreground">
                   {value.description}
                 </p>
               </div>
@@ -123,7 +123,9 @@ export default function AboutPage() {
                   className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-primary"
                   aria-hidden
                 />
-                <span className="text-muted-foreground">{reason}</span>
+                <span className="leading-relaxed text-muted-foreground">
+                  {reason}
+                </span>
               </li>
             ))}
           </ul>

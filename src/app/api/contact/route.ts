@@ -7,6 +7,7 @@ import {
   contactConfirmationEmailTemplate,
   teamNotificationEmailTemplate,
 } from "@/lib/email/templates";
+import { notifyN8n } from "@/lib/n8n";
 import { getRateLimiter } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/request";
 import { getResendClient } from "@/lib/resend";
@@ -128,6 +129,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       { status: 500 },
     );
   }
+
+  // ponytail: optional fan-out after critical path; never blocks 201.
+  void notifyN8n("contact", {
+    id: submissionId,
+    name: validated.name,
+    email: validated.email,
+    company: validated.company ?? null,
+    service: validated.service ?? null,
+  });
 
   return NextResponse.json(
     { success: true, message: "Submission received" },

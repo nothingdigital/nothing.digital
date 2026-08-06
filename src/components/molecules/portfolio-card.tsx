@@ -26,7 +26,7 @@ export function PortfolioCard({
   return (
     <Link
       href={routes.portfolio.detail(slug)}
-      className="group block overflow-hidden rounded-lg border bg-card shadow-sm transition-colors hover:border-primary/50 hover:shadow-md"
+      className="group block overflow-hidden rounded-lg border bg-card shadow-sm transition hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-md"
     >
       <div className="relative aspect-[16/10] w-full overflow-hidden bg-muted">
         <Image

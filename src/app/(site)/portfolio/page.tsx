@@ -12,6 +12,14 @@ export const metadata: Metadata = {
   title: "Our Work",
   description:
     "Selected client work from Nothing.Digital — websites, software, and campaigns.",
+  alternates: { canonical: routes.portfolio.index },
+  openGraph: {
+    title: "Our Work",
+    description:
+      "Selected client work from Nothing.Digital — websites, software, and campaigns.",
+    url: routes.portfolio.index,
+    type: "website",
+  },
 };
 
 export default async function PortfolioPage() {

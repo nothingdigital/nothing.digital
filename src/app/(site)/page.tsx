@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { ArrowRight, Clock, Target, Users } from "lucide-react";
+import dynamic from "next/dynamic";
 
 import { SectionContainer } from "@/components/atoms/section-container";
 import { Button } from "@/components/ui/button";
-import dynamic from "next/dynamic";
-
 import { ServiceCard } from "@/components/molecules/service-card";
+import { PortfolioCard } from "@/components/molecules/portfolio-card";
 import { HeroClock } from "@/components/atoms/hero-clock";
+import { getAllFrontmatter, type PortfolioFrontmatter } from "@/lib/mdx";
 import { routes } from "@/lib/routes";
 import { serviceSummaries } from "@/lib/services";
 
@@ -57,7 +58,7 @@ function SectionHeading({
         {title}
       </h2>
       {description ? (
-        <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
+        <p className="mx-auto mt-4 max-w-xl leading-relaxed text-muted-foreground">
           {description}
         </p>
       ) : null}
@@ -65,7 +66,19 @@ function SectionHeading({
   );
 }
 
-export default function HomePage() {
+function selectFeaturedWork(
+  items: PortfolioFrontmatter[],
+  limit = 3,
+): PortfolioFrontmatter[] {
+  const featured = items.filter((item) => item.featured);
+  const pool = featured.length > 0 ? featured : items;
+  return pool.slice(0, limit);
+}
+
+export default async function HomePage() {
+  const portfolio = await getAllFrontmatter<PortfolioFrontmatter>("portfolio");
+  const featuredWork = selectFeaturedWork(portfolio);
+
   return (
     <>
       <SectionContainer className="pb-16 pt-20 md:pb-24 md:pt-32">
@@ -82,23 +95,28 @@ export default function HomePage() {
               Built on time.{" "}
               <span className="italic text-primary">Built to last.</span>
             </h1>
-            <p className="relative mx-auto mt-8 max-w-xl text-lg text-muted-foreground md:mx-0 md:text-xl">
+            <p className="relative mx-auto mt-8 max-w-xl text-lg leading-relaxed text-muted-foreground md:mx-0 md:text-xl">
               Nothing.Digital ships premium websites, custom software,
               applications, and email marketing — delivered precisely when you
               need it.
             </p>
-            <div className="relative mt-10 flex flex-wrap justify-center gap-4 md:justify-start">
+            <div className="relative mt-10 flex w-full flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center md:justify-start">
               <Button
                 asChild
                 size="lg"
-                className="shadow-[0_10px_40px_-12px_hsl(var(--primary)/0.55)]"
+                className="w-full shadow-[0_10px_40px_-12px_hsl(var(--primary)/0.55)] sm:w-auto"
               >
-                <Link href={routes.services.index}>
-                  Explore services <ArrowRight className="h-4 w-4" />
+                <Link href={routes.contact}>
+                  Book a free scoping call <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
-              <Button variant="outline" size="lg" asChild>
-                <Link href={routes.contact}>Book a free scoping call</Link>
+              <Button
+                variant="outline"
+                size="lg"
+                asChild
+                className="w-full sm:w-auto"
+              >
+                <Link href={routes.services.index}>Explore services</Link>
               </Button>
             </div>
           </div>
@@ -127,6 +145,34 @@ export default function HomePage() {
         </div>
       </SectionContainer>
 
+      {featuredWork.length > 0 ? (
+        <SectionContainer id="work">
+          <SectionHeading
+            kicker="Selected work"
+            title="Outcomes, not decks"
+            description="Anonymized composites until named clients approve public quotes."
+          />
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {featuredWork.map((item) => (
+              <PortfolioCard
+                key={item.slug}
+                slug={item.slug}
+                title={item.title}
+                client={item.client}
+                industry={item.industry}
+                services={item.services}
+                coverImage={item.coverImage}
+              />
+            ))}
+          </div>
+          <div className="mt-10 text-center">
+            <Button variant="outline" asChild>
+              <Link href={routes.portfolio.index}>See all work</Link>
+            </Button>
+          </div>
+        </SectionContainer>
+      ) : null}
+
       <SectionContainer id="why-us">
         <SectionHeading
           kicker="Why Nothing Digital"
@@ -136,13 +182,13 @@ export default function HomePage() {
           {differentiators.map((item) => (
             <div
               key={item.title}
-              className="h-full rounded-xl border-2 border-border bg-card p-6 shadow-md transition-colors hover:border-primary hover:shadow-xl"
+              className="h-full rounded-xl border-2 border-border bg-card p-6 shadow-md transition hover:-translate-y-0.5 hover:border-primary hover:shadow-xl"
             >
               <div className="mb-5 inline-flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary ring-1 ring-primary/20">
                 {item.icon}
               </div>
               <h3 className="mb-2 font-display text-xl">{item.title}</h3>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm leading-relaxed text-muted-foreground">
                 {item.description}
               </p>
             </div>
@@ -161,7 +207,7 @@ export default function HomePage() {
           <p className="mt-4 text-primary-foreground/80">
             One email a month. No spam, just insights.
           </p>
-          <div className="mt-8 inline-block text-left">
+          <div className="mt-8 inline-block w-full max-w-md text-left">
             <NewsletterForm />
           </div>
         </div>
@@ -175,7 +221,7 @@ export default function HomePage() {
           <h2 className="mt-3 font-display text-4xl tracking-tight md:text-5xl">
             Ready to build?
           </h2>
-          <p className="mt-4 text-muted-foreground">
+          <p className="mt-4 leading-relaxed text-muted-foreground">
             Book a free scoping call — we will map scope, timeline, and budget
             before you commit.
           </p>
@@ -183,7 +229,7 @@ export default function HomePage() {
             <Button
               size="lg"
               asChild
-              className="shadow-[0_10px_40px_-12px_hsl(var(--primary)/0.55)]"
+              className="w-full shadow-[0_10px_40px_-12px_hsl(var(--primary)/0.55)] sm:w-auto"
             >
               <Link href={routes.contact}>Book a free scoping call</Link>
             </Button>

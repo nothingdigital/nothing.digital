@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Calendar, Mail } from "lucide-react";
 
 import { SectionContainer } from "@/components/atoms/section-container";
@@ -56,10 +57,21 @@ const faqs: {
   },
   {
     question: "What does a project typically cost?",
-    answer:
-      "Every project is scoped and quoted individually. Book a free scoping call and we'll come back with a fixed quote — no hourly billing, no surprise invoices.",
+    answer: (
+      <>
+        Ballpark ranges live on our{" "}
+        <Link
+          href={routes.pricing}
+          className="text-primary underline underline-offset-4"
+        >
+          pricing page
+        </Link>
+        : websites $5K–$15K, software $15K–$60K, apps $20K–$80K, email marketing
+        $1.5K–$5K/mo. Every project still gets a fixed quote after scoping.
+      </>
+    ),
     answerText:
-      "Every project is scoped and quoted individually. Book a free scoping call and we'll come back with a fixed quote — no hourly billing, no surprise invoices.",
+      "Ballpark ranges: websites $5K–$15K, software $15K–$60K, apps $20K–$80K, email marketing $1.5K–$5K/mo. Every project gets a fixed quote after scoping. See https://nothing.digital/pricing.",
   },
 ];
 

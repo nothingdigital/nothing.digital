@@ -30,6 +30,29 @@ export default async function AdminSettingsPage() {
       value: tools.umami ?? "not set",
     },
     {
+      key: "LISTMONK_DASHBOARD_URL",
+      value: tools.listmonk ?? "not set",
+    },
+    {
+      key: "N8N_DASHBOARD_URL",
+      value: tools.n8n ?? "not set",
+    },
+    {
+      key: "KUMA_DASHBOARD_URL",
+      value: tools.kuma ?? "not set",
+    },
+    {
+      key: "LISTMONK subscribe",
+      value:
+        env.private.LISTMONK_URL && env.private.LISTMONK_LIST_UUID
+          ? "configured"
+          : "not set (using Supabase)",
+    },
+    {
+      key: "N8N_WEBHOOK_URL",
+      value: env.private.N8N_WEBHOOK_URL ? "configured" : "not set",
+    },
+    {
       key: "Supabase URL",
       value: env.public.NEXT_PUBLIC_SUPABASE_URL ? "configured" : "missing",
     },

@@ -29,7 +29,7 @@ export function BlogCard({
   return (
     <Link
       href={routes.blog.post(slug)}
-      className="group flex flex-col overflow-hidden rounded-lg border bg-card shadow-sm transition-colors hover:border-primary/50 hover:shadow-md"
+      className="group flex flex-col overflow-hidden rounded-lg border bg-card shadow-sm transition hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-md"
     >
       <div className="relative aspect-[16/9] w-full overflow-hidden bg-muted">
         <Image
@@ -52,7 +52,7 @@ export function BlogCard({
         <h3 className="mt-3 text-lg font-semibold group-hover:text-primary">
           {title}
         </h3>
-        <p className="mt-2 flex-1 text-sm text-muted-foreground line-clamp-3">
+        <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground line-clamp-3">
           {excerpt}
         </p>
         <p className="mt-4 text-xs text-muted-foreground">

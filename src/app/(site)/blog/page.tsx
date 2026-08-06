@@ -10,6 +10,13 @@ export const metadata: Metadata = {
   description:
     "Articles on performance, design systems, email automation, and digital strategy.",
   alternates: { canonical: "/blog" },
+  openGraph: {
+    title: "Insights & Articles",
+    description:
+      "Articles on performance, design systems, email automation, and digital strategy.",
+    url: "/blog",
+    type: "website",
+  },
 };
 
 function collectTags(items: BlogFrontmatter[]): string[] {

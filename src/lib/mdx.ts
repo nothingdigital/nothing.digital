@@ -28,6 +28,7 @@ export interface PortfolioFrontmatter extends BaseFrontmatter {
   services: string[];
   duration: string;
   coverImage?: string;
+  featured?: boolean;
   results: Array<{ label: string; value: string }>;
   testimonial?: { quote: string; author: string; role: string };
 }

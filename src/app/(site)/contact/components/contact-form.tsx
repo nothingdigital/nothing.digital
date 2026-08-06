@@ -10,7 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FormField } from "@/components/molecules/form-field";
 import { contactSchema, type ContactInput } from "@/lib/validations/contact";
-import { serviceSlugs } from "@/lib/routes";
+import { routes, serviceSlugs } from "@/lib/routes";
+import { serviceSummaries } from "@/lib/services";
 
 // ponytail: extend server schema client-side for phone/privacy; strip before POST.
 const contactFormSchema = contactSchema.extend({
@@ -53,6 +54,9 @@ export function ContactForm() {
     "idle" | "loading" | "success" | "error"
   >("idle");
   const [errorMessage, setErrorMessage] = React.useState<string>("");
+  const [submittedService, setSubmittedService] = React.useState<
+    string | undefined
+  >();
 
   const {
     control,
@@ -97,6 +101,7 @@ export function ContactForm() {
           );
         }
 
+        setSubmittedService(data.service);
         setStatus("success");
         reset();
       } catch (error) {
@@ -113,6 +118,58 @@ export function ContactForm() {
     const firstError = Object.keys(errors)[0] as keyof FormValues | undefined;
     if (firstError) setFocus(firstError);
   }, [errors, setFocus]);
+
+  const relatedService = serviceSummaries.find(
+    (item) => item.slug === submittedService,
+  );
+
+  if (status === "success") {
+    return (
+      <div className="space-y-4 rounded-xl border-2 border-border bg-card p-6">
+        <p className="text-sm font-medium text-green-800 dark:text-green-100">
+          Thanks — we will be in touch soon. We reply within one business day.
+        </p>
+        <p className="text-sm text-muted-foreground">While you wait:</p>
+        <ul className="space-y-2 text-sm">
+          <li>
+            <a
+              href={routes.pricing}
+              className="text-primary underline underline-offset-4 hover:text-primary/80"
+            >
+              Review ballpark pricing ranges
+            </a>
+          </li>
+          {relatedService ? (
+            <li>
+              <a
+                href={relatedService.href}
+                className="text-primary underline underline-offset-4 hover:text-primary/80"
+              >
+                Read more about {relatedService.title}
+              </a>
+            </li>
+          ) : (
+            <li>
+              <a
+                href={routes.services.index}
+                className="text-primary underline underline-offset-4 hover:text-primary/80"
+              >
+                Browse our services
+              </a>
+            </li>
+          )}
+          <li>
+            <a
+              href={routes.blog.index}
+              className="text-primary underline underline-offset-4 hover:text-primary/80"
+            >
+              Browse recent articles
+            </a>
+          </li>
+        </ul>
+      </div>
+    );
+  }
 
   return (
     <form
@@ -289,12 +346,6 @@ export function ContactForm() {
         )}
       />
 
-      {status === "success" && (
-        <p className="rounded-md bg-green-100 px-4 py-3 text-sm font-medium text-green-800 dark:bg-green-900 dark:text-green-100">
-          Thanks — we will be in touch soon.
-        </p>
-      )}
-
       {status === "error" && (
         <p className="rounded-md bg-destructive/10 px-4 py-3 text-sm font-medium text-destructive">
           {errorMessage || "Something went wrong. Please try again."}
@@ -304,7 +355,7 @@ export function ContactForm() {
       <Button
         type="submit"
         disabled={status === "loading"}
-        className="w-full sm:w-auto"
+        className="min-h-11 w-full sm:w-auto"
       >
         {status === "loading" ? "Sending..." : "Send message"}
       </Button>

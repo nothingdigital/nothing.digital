@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 
 import { SectionContainer } from "@/components/atoms/section-container";
 import { JsonLd } from "@/components/atoms/json-ld";
@@ -15,6 +16,12 @@ import {
 } from "@/lib/mdx";
 import { routes } from "@/lib/routes";
 import { formatDate } from "@/lib/utils";
+
+const NewsletterForm = dynamic(() =>
+  import("@/components/organisms/newsletter-form").then(
+    (m) => m.NewsletterForm,
+  ),
+);
 
 export async function generateStaticParams() {
   const slugs = await listMdxFiles("blog");
@@ -35,6 +42,13 @@ export async function generateMetadata({
     title: frontmatter.title,
     description: frontmatter.description,
     alternates: { canonical: routes.blog.post(slug) },
+    openGraph: {
+      title: frontmatter.title,
+      description: frontmatter.description,
+      url: routes.blog.post(slug),
+      type: "article",
+      publishedTime: frontmatter.date,
+    },
   };
 }
 
@@ -109,7 +123,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <h1 className="mt-4 text-4xl font-bold tracking-tight md:text-5xl">
             {frontmatter.title}
           </h1>
-          <p className="mt-4 text-lg text-muted-foreground">
+          <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
             {frontmatter.description}
           </p>
 
@@ -175,9 +189,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <p className="mt-3 text-primary-foreground/80">
             Join our newsletter for articles on performance, design, and growth.
           </p>
-          <Button variant="secondary" size="lg" asChild className="mt-6">
-            <Link href={routes.contact}>Subscribe</Link>
-          </Button>
+          <div className="mt-8 inline-block w-full max-w-md text-left">
+            <NewsletterForm />
+          </div>
         </div>
       </SectionContainer>
     </>

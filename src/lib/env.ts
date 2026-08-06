@@ -14,6 +14,14 @@ const envSchema = z.object({
   ADMIN_EMAILS: z.string().optional(),
   CALENDLY_URL: z.string().url().optional(),
   UMAMI_DASHBOARD_URL: z.string().url().optional(),
+  // PikaPods sidecars — omit until pods live; helpers no-op / fallback.
+  LISTMONK_URL: z.string().url().optional(),
+  LISTMONK_LIST_UUID: z.string().uuid().optional(),
+  LISTMONK_DASHBOARD_URL: z.string().url().optional(),
+  N8N_WEBHOOK_URL: z.string().url().optional(),
+  N8N_WEBHOOK_SECRET: z.string().min(1).optional(),
+  N8N_DASHBOARD_URL: z.string().url().optional(),
+  KUMA_DASHBOARD_URL: z.string().url().optional(),
 });
 
 const result = envSchema.safeParse({
@@ -28,6 +36,13 @@ const result = envSchema.safeParse({
   ADMIN_EMAILS: process.env.ADMIN_EMAILS,
   CALENDLY_URL: process.env.CALENDLY_URL,
   UMAMI_DASHBOARD_URL: process.env.UMAMI_DASHBOARD_URL,
+  LISTMONK_URL: process.env.LISTMONK_URL,
+  LISTMONK_LIST_UUID: process.env.LISTMONK_LIST_UUID,
+  LISTMONK_DASHBOARD_URL: process.env.LISTMONK_DASHBOARD_URL,
+  N8N_WEBHOOK_URL: process.env.N8N_WEBHOOK_URL,
+  N8N_WEBHOOK_SECRET: process.env.N8N_WEBHOOK_SECRET,
+  N8N_DASHBOARD_URL: process.env.N8N_DASHBOARD_URL,
+  KUMA_DASHBOARD_URL: process.env.KUMA_DASHBOARD_URL,
 });
 
 if (!result.success) {
@@ -51,5 +66,22 @@ export const env = {
     ADMIN_EMAILS: parsed.ADMIN_EMAILS,
     CALENDLY_URL: parsed.CALENDLY_URL,
     UMAMI_DASHBOARD_URL: parsed.UMAMI_DASHBOARD_URL,
+    LISTMONK_URL: parsed.LISTMONK_URL,
+    LISTMONK_LIST_UUID: parsed.LISTMONK_LIST_UUID,
+    LISTMONK_DASHBOARD_URL: parsed.LISTMONK_DASHBOARD_URL,
+    N8N_WEBHOOK_URL: parsed.N8N_WEBHOOK_URL,
+    N8N_WEBHOOK_SECRET: parsed.N8N_WEBHOOK_SECRET,
+    N8N_DASHBOARD_URL: parsed.N8N_DASHBOARD_URL,
+    KUMA_DASHBOARD_URL: parsed.KUMA_DASHBOARD_URL,
   },
 };
+
+/** True when Listmonk public subscribe env is fully set. */
+export function isListmonkConfigured(): boolean {
+  return Boolean(env.private.LISTMONK_URL && env.private.LISTMONK_LIST_UUID);
+}
+
+/** True when n8n webhook URL is set (secret optional but recommended). */
+export function isN8nConfigured(): boolean {
+  return Boolean(env.private.N8N_WEBHOOK_URL);
+}

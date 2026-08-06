@@ -91,3 +91,19 @@
     );
   }
 }
+
+@layer components {
+  /* ponytail: gradient hairline between stacked same-variant sections */
+  .section-divider {
+    height: 1px;
+    width: 100%;
+    max-width: 64rem;
+    margin-inline: auto;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--border)),
+      transparent
+    );
+  }
+}

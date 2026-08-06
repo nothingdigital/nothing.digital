@@ -64,6 +64,25 @@ it("renders tech stack when provided", () => {
   expect(screen.getByText("Static by default.")).toBeInTheDocument();
 });
 
+it("renders related services when provided", () => {
+  render(
+    <ServicePageTemplate
+      {...defaultProps}
+      relatedServices={[
+        {
+          title: "Email Marketing",
+          href: "/services/email-marketing",
+          description: "Campaigns that nurture leads.",
+        },
+      ]}
+    />,
+  );
+
+  expect(screen.getByText("Also consider")).toBeInTheDocument();
+  const link = screen.getByRole("link", { name: /email marketing/i });
+  expect(link).toHaveAttribute("href", "/services/email-marketing");
+});
+
 it("renders JSON-LD schema when provided", () => {
   render(
     <ServicePageTemplate

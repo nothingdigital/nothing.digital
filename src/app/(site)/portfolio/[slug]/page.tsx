@@ -35,6 +35,12 @@ export async function generateMetadata({
     title: frontmatter.title,
     description: frontmatter.description,
     alternates: { canonical: routes.portfolio.detail(slug) },
+    openGraph: {
+      title: frontmatter.title,
+      description: frontmatter.description,
+      url: routes.portfolio.detail(slug),
+      type: "article",
+    },
   };
 }
 

@@ -18,7 +18,7 @@ export default function PrivacyPage() {
             Privacy Policy
           </h1>
           <p className="mt-4 text-muted-foreground">
-            Last updated: August 4, 2026
+            Last updated: August 5, 2026
           </p>
         </div>
       </SectionContainer>
@@ -63,16 +63,16 @@ export default function PrivacyPage() {
               4. Cookies and analytics
             </h2>
             <p>
-              This site uses cookieless analytics via Umami (self-hosted) and
-              Vercel Speed Insights. These tools help us understand aggregate
-              traffic and page performance. They do not set tracking cookies or
-              store personal identifiers on your device, so we do not show a
-              cookie consent banner.
+              This site uses privacy-friendly analytics (Umami when configured,
+              otherwise Vercel Analytics) plus Vercel Speed Insights for Core
+              Web Vitals. Analytics load only after you accept the consent
+              banner. Umami is cookieless and does not store personal
+              identifiers on your device.
             </p>
             <p className="mt-3">
               Essential cookies may still be set by your browser or our hosting
-              platform for security and basic site operation. You can control
-              cookies through your browser settings.
+              platform for security and basic site operation. You can change or
+              clear your choice by clearing site data in your browser.
             </p>
           </section>
 

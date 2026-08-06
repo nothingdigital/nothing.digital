@@ -4,11 +4,11 @@
 
 Monitoring stack for Nothing.Digital:
 
-| Layer     | Tool                              | Purpose                             |
-| --------- | --------------------------------- | ----------------------------------- |
-| Uptime    | UptimeRobot                       | External HTTP checks + alerting     |
-| Analytics | Umami (PikaPods) + Speed Insights | Owned traffic + Core Web Vitals     |
-| Errors    | Sentry                            | Error tracking + performance traces |
+| Layer     | Tool                              | Purpose                             | Status                                |
+| --------- | --------------------------------- | ----------------------------------- | ------------------------------------- |
+| Uptime    | UptimeRobot                       | External HTTP checks + alerting     | ⬜ Ops                                |
+| Analytics | Umami (PikaPods) + Speed Insights | Owned traffic + Core Web Vitals     | 🟡 Code ready; Umami pod/DNS/env open |
+| Errors    | Sentry                            | Error tracking + performance traces | 🟡 Code present; confirm env          |
 
 ## UptimeRobot
 
@@ -20,9 +20,14 @@ Monitoring stack for Nothing.Digital:
 ## Umami
 
 - Host: PikaPods → `https://analytics.nothing.digital`
-- Env: `NEXT_PUBLIC_UMAMI_WEBSITE_ID`, `NEXT_PUBLIC_UMAMI_SCRIPT_URL`
-- Until env is set, layout falls back to Vercel Analytics
-- Cut Vercel Web Analytics the same deploy Umami goes live
+- Env: `NEXT_PUBLIC_UMAMI_WEBSITE_ID`, `NEXT_PUBLIC_UMAMI_SCRIPT_URL`, `UMAMI_DASHBOARD_URL`
+- App: `UmamiScript` + cookie consent; Speed Insights always loads after Accept
+- Until Umami env is set, layout falls back to Vercel Analytics
+- Cutover checklist:
+  1. Create pod + DNS
+  2. Set Vercel env + redeploy
+  3. Accept cookies → confirm pageview in Umami <30s
+  4. Disable Vercel Web Analytics (dashboard) + remove `@vercel/analytics` when stable
 
 ## Vercel Speed Insights
 
@@ -62,3 +67,8 @@ Monitoring stack for Nothing.Digital:
 
 - Primary: DevOps Engineer
 - Escalation: Engineering lead
+
+## Related
+
+- Phase 6 plan: [`plans/05-pikapods-integrations.md`](../../plans/05-pikapods-integrations.md)
+- DevOps checklist: [`plans/phase-3-devops-checklist.md`](../../plans/phase-3-devops-checklist.md)

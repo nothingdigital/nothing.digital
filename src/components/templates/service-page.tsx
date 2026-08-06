@@ -37,6 +37,7 @@ export interface ServicePageTemplateProps {
   processSteps: ProcessStep[];
   faqItems: FaqItem[];
   techStack?: TechStackItem[];
+  relatedServices?: { title: string; href: string; description: string }[];
   jsonLd?: Record<string, unknown>;
 }
 
@@ -169,6 +170,37 @@ function FaqSection({ items }: { items: FaqItem[] }) {
   );
 }
 
+function RelatedServicesSection({
+  items,
+}: {
+  items?: { title: string; href: string; description: string }[];
+}) {
+  if (!items || items.length === 0) return null;
+
+  return (
+    <SectionContainer>
+      <h2 className="mb-8 text-center font-display text-3xl tracking-tight">
+        Also consider
+      </h2>
+      <ul className="mx-auto grid max-w-4xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {items.map((item) => (
+          <li key={item.href}>
+            <Link
+              href={item.href}
+              className="block h-full rounded-xl border-2 border-border bg-card p-5 shadow-md transition hover:border-primary"
+            >
+              <h3 className="font-display text-xl">{item.title}</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                {item.description}
+              </p>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </SectionContainer>
+  );
+}
+
 function CtaSection() {
   return (
     <SectionContainer className="text-center">
@@ -201,6 +233,7 @@ export function ServicePageTemplate({
   processSteps,
   faqItems,
   techStack,
+  relatedServices,
   jsonLd,
 }: ServicePageTemplateProps) {
   return (
@@ -224,6 +257,7 @@ export function ServicePageTemplate({
       <TechStackSection items={techStack} />
       <ProcessSection steps={processSteps} />
       <FaqSection items={faqItems} />
+      <RelatedServicesSection items={relatedServices} />
       <CtaSection />
     </>
   );

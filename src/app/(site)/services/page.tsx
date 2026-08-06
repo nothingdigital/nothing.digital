@@ -50,6 +50,8 @@ export default function ServicesPage() {
         description="End-to-end digital services for brands that want to move fast and look good doing it."
       />
 
+      <div aria-hidden className="section-divider" />
+
       <SectionContainer>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {serviceSummaries.map((service) => (
@@ -78,7 +80,7 @@ export default function ServicesPage() {
                 {index + 1}
               </span>
               <h3 className="mb-2 font-display text-lg">{step.title}</h3>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm leading-relaxed text-muted-foreground">
                 {step.description}
               </p>
             </li>
@@ -90,7 +92,7 @@ export default function ServicesPage() {
         <h2 className="mb-4 font-display text-3xl tracking-tight">
           Not sure what you need?
         </h2>
-        <p className="mb-6 text-muted-foreground">
+        <p className="mb-6 leading-relaxed text-muted-foreground">
           Book a free scoping call and we will recommend the right approach.
         </p>
         <Button

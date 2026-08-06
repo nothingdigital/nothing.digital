@@ -20,7 +20,7 @@ export function PageHero({ kicker, title, description }: PageHeroProps) {
         <h1 className="relative mt-3 font-display text-4xl tracking-tight md:text-5xl">
           {title}
         </h1>
-        <p className="relative mt-4 text-lg text-muted-foreground">
+        <p className="relative mt-4 text-lg leading-relaxed text-muted-foreground">
           {description}
         </p>
       </div>

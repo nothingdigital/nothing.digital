@@ -4,13 +4,21 @@ import Link from "next/link";
 import { SectionContainer } from "@/components/atoms/section-container";
 import { PageHero } from "@/components/molecules/page-hero";
 import { Button } from "@/components/ui/button";
+import { pricingBallparks } from "@/lib/pricing";
 import { routes } from "@/lib/routes";
 
 export const metadata: Metadata = {
   title: "Pricing",
   description:
-    "Every project is scoped and quoted individually. Book a free scoping call to get a fixed quote for your website, software, app, or email marketing project.",
+    "Ballpark ranges for websites ($5K–$15K), software ($15K–$60K), apps ($20K–$80K), and email marketing ($1.5K–$5K/mo). Fixed quote after a free scoping call.",
   alternates: { canonical: routes.pricing },
+  openGraph: {
+    title: "Pricing",
+    description:
+      "Ballpark ranges for websites, software, apps, and email marketing. Fixed quote after scoping.",
+    url: routes.pricing,
+    type: "website",
+  },
 };
 
 export default function PricingPage() {
@@ -19,8 +27,35 @@ export default function PricingPage() {
       <PageHero
         kicker="Investment"
         title="Pricing"
-        description="No two projects are alike, so we don't publish one-size-fits-all prices. Tell us what you're building and we'll come back with a fixed quote — no hourly billing, no surprise invoices."
+        description="Starting ranges so you can self-qualify. Every project still gets a fixed quote after scoping — no hourly billing, no surprise invoices."
       />
+
+      <SectionContainer>
+        <p className="mb-8 text-center font-mono text-xs uppercase tracking-[0.35em] text-primary">
+          Ballpark ranges
+        </p>
+        <div className="grid gap-6 sm:grid-cols-2">
+          {pricingBallparks.map((item) => (
+            <Link
+              key={item.slug}
+              href={item.href}
+              className="rounded-xl border-2 border-border bg-card p-6 shadow-md transition hover:-translate-y-0.5 hover:border-primary hover:shadow-xl"
+            >
+              <div className="flex items-baseline justify-between gap-4">
+                <h2 className="font-display text-2xl">{item.title}</h2>
+                <p className="font-mono text-lg text-primary">{item.range}</p>
+              </div>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                {item.summary}
+              </p>
+            </Link>
+          ))}
+        </div>
+        <p className="mx-auto mt-8 max-w-2xl text-center text-sm text-muted-foreground">
+          Ranges are starting points. Scope, timeline, and budget are confirmed
+          on a free scoping call before you commit.
+        </p>
+      </SectionContainer>
 
       <SectionContainer variant="muted" className="text-center">
         <p className="font-mono text-xs uppercase tracking-[0.35em] text-primary">
@@ -37,7 +72,7 @@ export default function PricingPage() {
           <Button
             asChild
             size="lg"
-            className="shadow-[0_10px_40px_-12px_hsl(var(--primary)/0.55)]"
+            className="w-full shadow-[0_10px_40px_-12px_hsl(var(--primary)/0.55)] sm:w-auto"
           >
             <Link href={routes.contact}>Book a free scoping call</Link>
           </Button>
