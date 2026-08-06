@@ -519,16 +519,16 @@ Nothing.Digital is a digital services company specializing in website developmen
 
 ### 9.1 Pre-Launch Checklist
 
-| Step | Task                                                      | Owner  | Effort | Status                                                    |
-| ---- | --------------------------------------------------------- | ------ | ------ | --------------------------------------------------------- |
-| 5.1  | Final DNS propagation check (dnschecker.org)              | DevOps | S      | 🔲                                                        |
-| 5.2  | SSL Labs rating A+ verification                           | DevOps | S      | 🔲                                                        |
-| 5.3  | End-to-end form submission test (contact + newsletter)    | QA     | S      | ✅ (contact verified live 2026-08-05; newsletter pending) |
-| 5.4  | Email delivery test (confirmation + team notification)    | QA     | S      | ✅ (both delivered, 2026-08-05)                           |
-| 5.5  | Calendly embed functionality test                         | QA     | S      | 🔲 CTA link smoke when `CALENDLY_URL` set                 |
-| 5.6  | Social share link preview test (OG images, meta tags)     | QA     | S      | 🔲                                                        |
-| 5.7  | 404 and 500 error page test                               | QA     | S      | 🔲                                                        |
-| 5.8  | Cookie consent banner test (accept/reject/essential-only) | QA     | S      | ✅ (shipped 2026-08-06; gates analytics on accept)        |
+| Step | Task                                                      | Owner  | Effort | Status                                                                    |
+| ---- | --------------------------------------------------------- | ------ | ------ | ------------------------------------------------------------------------- |
+| 5.1  | Final DNS propagation check (dnschecker.org)              | DevOps | S      | 🔲                                                                        |
+| 5.2  | SSL Labs rating A+ verification                           | DevOps | S      | 🔲                                                                        |
+| 5.3  | End-to-end form submission test (contact + newsletter)    | QA     | S      | ✅ (contact verified live 2026-08-05; newsletter pending)                 |
+| 5.4  | Email delivery test (confirmation + team notification)    | QA     | S      | ✅ (both delivered, 2026-08-05)                                           |
+| 5.5  | Calendly embed functionality test                         | QA     | S      | 🔲 CTA link smoke when `CALENDLY_URL` set                                 |
+| 5.6  | Social share link preview test (OG images, meta tags)     | QA     | S      | 🔲                                                                        |
+| 5.7  | 404 and 500 error page test                               | QA     | S      | ✅ Custom error layout + component tests + 404 E2E; global-error UI ready |
+| 5.8  | Cookie consent banner test (accept/reject/essential-only) | QA     | S      | ✅ (shipped 2026-08-06; gates analytics on accept)                        |
 
 ### 9.2 Launch Day
 
