@@ -2,7 +2,7 @@
 
 > **Document:** `05-pikapods-integrations.md`  
 > **Date:** 2026-08-05  
-> **Status:** In progress — Pack F admin + Calendly CTA + Umami + Listmonk live; n8n/Kuma deferred
+> **Status:** In progress — Pack F admin + Pack H client ops shipped; Calendly/Umami/Listmonk live; n8n/Kuma deferred
 > **Parent:** [`00-master-document.md`](./00-master-document.md)  
 > **Standards:** ponytail (YAGNI), SOLID, never-nesting, caveman prose in summaries  
 > **Agents:** [Umami](d5b86a08-a858-4671-8bfc-46a836b2a6fa) · [Listmonk](ccabcb50-5c94-4409-b8a7-5edad7f7c2ee) · [n8n](e212eb16-7dba-4f32-84ea-31bc8afada76) · [Uptime Kuma](b8134db9-9505-453c-ba52-826f8e521d62) · [Secondary](cadea115-b2ad-44b4-a465-9791b6c3d93d) · [Admin](ec11bd9c-fba7-4764-b3e9-40c8a0ea5e74) · [Secretary](2dc1953e-9bed-4ac6-a85a-4f66312813c3)
@@ -18,6 +18,7 @@ Client site stays on Vercel. PikaPods hosts **sidecar OSS tools**. Admin/ops liv
 | Track                            | Status                   | Notes                                                                                                                                       |
 | -------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Pack F — `/admin`**            | ✅ Code shipped          | Inbox, newsletter list, health, settings, magic-link auth. Live gate: Supabase Auth + `ADMIN_EMAILS`.                                       |
+| **Pack H — Client ops**          | ✅ Code shipped          | Clients, billing, assets, work. Admin-only. Migration `002_client_ops.sql`. No portal / Stripe / live client monitors.                      |
 | **Pack A — Umami**               | ✅ Live                  | Pod live at `analytics.nothing.digital`; Vercel env set; Vercel Web Analytics disabled; `@vercel/analytics` removed.                        |
 | **Calendly**                     | ✅ Live                  | `CALENDLY_URL` set; CTA on `/contact` + admin Health/Settings. `/admin/bookings` removed (Calendly SoT). Webhook/`bookings` table deferred. |
 | **Pack B — Listmonk**            | ✅ Live                  | Pod live at `newsletter.nothing.digital`; `LISTMONK_*` env set; `/api/newsletter` proxies; admin launcher ready.                            |
@@ -43,6 +44,9 @@ Client site stays on Vercel. PikaPods hosts **sidecar OSS tools**. Admin/ops liv
 6. UptimeRobot free → Kuma (~$1.80/mo) only if free fails you
 7. Secondary pods — defer (see §6)
 8. Secretary role — when hire exists
+9. ~~Pack H client ops (accounts + billing + assets + work)~~ ✅ code
+10. Client-site uptime links on assets — later (wave 3)
+11. IT asset monitoring — later (wave 4)
 
 ---
 
@@ -224,7 +228,7 @@ Pages compose; queries own SQL; no god context.
 
 **Still open (admin polish, not blockers for Pack A):** newsletter CSV, admin unsubscribe, optional restore of a dedicated bookings page after webhook.
 
-**Not v1:** CRM kanban, AI, billing, Realtime, multi-role.
+**Not v1 (Pack F):** CRM kanban, AI, Realtime, multi-role. Billing moved to Pack H.
 
 ---
 
@@ -250,6 +254,16 @@ Pages compose; queries own SQL; no god context.
 **Tables (Phase B/C):** `profiles`, `clients`, `bookings`, `client_notes`, `client_tasks` + RLS `is_staff()` / `is_owner()`.
 
 **Audit log:** Skip — notes + `author_id` enough until compliance force.
+
+### Pack H — Client ops (shipped)
+
+**Status:** ✅ Code shipped. Apply `supabase/migrations/002_client_ops.sql`.
+
+Admin-only: no client portal, no Stripe. Routes: `/admin/clients`, `/admin/billing`, `/admin/work`. Tables: `clients`, `invoices`, `client_assets`, `client_work_items`.
+
+**Deferred:** client URL monitor links on assets (wave 3); IT assets (wave 4).
+
+**Runbook:** [`docs/runbooks/client-ops.md`](../docs/runbooks/client-ops.md)
 
 ---
 

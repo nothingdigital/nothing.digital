@@ -2,7 +2,7 @@
 
 > **Version:** 1.0  
 > **Date:** 2026-08-04  
-> **Status:** Phase 3 code complete · Phase 4 skipped · Phase 6 in progress (admin + Calendly CTA shipped; Umami ops next) · Growth tactics triage shipped — see `docs/growth-tactics.md`  
+> **Status:** Phase 3 code complete · Phase 4 skipped · Phase 6 in progress · Phase 7 Pack H client ops shipped · Growth tactics triage shipped — see `docs/growth-tactics.md`  
 > **General Contractor:** Kimi (Orchestration Agent)  
 > **Specialist Agents:** Principal Architect · DevOps Engineer · QA Engineer · Gap Analyst  
 > **Domain:** `nothing.digital`
@@ -657,17 +657,17 @@ Applies to **all phases**:
 
 ## 12. Phase 6: PikaPods & Ops Backend
 
-> **Status:** In progress — 6.1 `/admin` live; 6.2 Umami live; 6.3 Calendly live; 6.4 Listmonk live; 6.5 n8n deferred
+> **Status:** In progress — 6.1–6.4 live; 6.5 n8n deferred; **Pack H client ops shipped**
 > **Detail doc:** [`05-pikapods-integrations.md`](./05-pikapods-integrations.md)  
 > **Goal:** Sidecar open-source tools on PikaPods + owner/secretary management software alongside the client-facing site.
 
 ### Done vs next vs later
 
-|           | Work                                                                                                      |
-| --------- | --------------------------------------------------------------------------------------------------------- |
-| **Done**  | `/admin`; Umami + Calendly + Listmonk live; n8n/Kuma **code ready** (env-gated helpers + admin launchers) |
-| **Next**  | n8n pod + webhook env (only if Slack/Listmonk fan-out needed); CSP allowlist for Umami                    |
-| **Later** | Calendly webhook/`bookings`; Kuma pod (only if UptimeRobot free fails); secretary roles                   |
+|           | Work                                                                                                                 |
+| --------- | -------------------------------------------------------------------------------------------------------------------- |
+| **Done**  | `/admin`; Umami + Calendly + Listmonk live; n8n/Kuma code ready; **Pack H** clients/billing/assets/work (admin-only) |
+| **Next**  | Apply `002_client_ops.sql` on Supabase if needed; n8n only if Slack fan-out needed; CSP allowlist for Umami          |
+| **Later** | Calendly webhook/`bookings`; Kuma; secretary roles; client URL monitors; IT monitoring                               |
 
 ### Scope (ponytail order)
 
@@ -681,10 +681,16 @@ Applies to **all phases**:
 | 6.6  | Uptime Kuma only if free UptimeRobot insufficient | ~$1.80    | 🟡 admin link ready; prefer UptimeRobot |
 | 6.7  | Secretary role (Phase B) on hire                  | $0        | Least-privilege staff login             |
 | 6.8  | Secondary pods (FreeScout, etc.)                  | defer     | See §6 of detail doc — default **no**   |
+| 7.1  | Pack H client accounts + manual billing           | $0        | ✅ code; apply `002_client_ops.sql`     |
+| 7.2  | Pack H assets + work queue                        | $0        | ✅ code                                 |
+| 7.3  | Client URL uptime links on assets                 | $0–2      | ⬜ Deferred                             |
+| 7.4  | IT asset monitoring                               | defer     | ⬜ When IT retainers exist              |
 
 **Year-1 recommended pack:** Admin + Umami + Listmonk ≈ **$5–15/mo** incremental.
 
 **Standards:** SOLID module boundaries, never-nesting critical paths, YAGNI on secondary pods and first-party booking until volume hurts.
+
+**Client ops runbook:** [`docs/runbooks/client-ops.md`](../docs/runbooks/client-ops.md)
 
 ---
 
