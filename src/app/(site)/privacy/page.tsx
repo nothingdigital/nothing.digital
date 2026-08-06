@@ -63,11 +63,10 @@ export default function PrivacyPage() {
               4. Cookies and analytics
             </h2>
             <p>
-              This site uses privacy-friendly analytics (Umami when configured,
-              otherwise Vercel Analytics) plus Vercel Speed Insights for Core
-              Web Vitals. Analytics load only after you accept the consent
-              banner. Umami is cookieless and does not store personal
-              identifiers on your device.
+              This site uses privacy-friendly Umami analytics plus Vercel Speed
+              Insights for Core Web Vitals. Analytics load only after you accept
+              the consent banner. Umami is cookieless and does not store
+              personal identifiers on your device.
             </p>
             <p className="mt-3">
               Essential cookies may still be set by your browser or our hosting

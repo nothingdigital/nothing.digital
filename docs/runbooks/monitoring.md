@@ -4,11 +4,11 @@
 
 Monitoring stack for Nothing.Digital:
 
-| Layer     | Tool                              | Purpose                             | Status                                |
-| --------- | --------------------------------- | ----------------------------------- | ------------------------------------- |
-| Uptime    | UptimeRobot                       | External HTTP checks + alerting     | ⬜ Ops                                |
-| Analytics | Umami (PikaPods) + Speed Insights | Owned traffic + Core Web Vitals     | 🟡 Code ready; Umami pod/DNS/env open |
-| Errors    | Sentry                            | Error tracking + performance traces | 🟡 Code present; confirm env          |
+| Layer     | Tool                              | Purpose                             | Status                       |
+| --------- | --------------------------------- | ----------------------------------- | ---------------------------- |
+| Uptime    | UptimeRobot                       | External HTTP checks + alerting     | ⬜ Ops                       |
+| Analytics | Umami (PikaPods) + Speed Insights | Owned traffic + Core Web Vitals     | ✅ Live                      |
+| Errors    | Sentry                            | Error tracking + performance traces | 🟡 Code present; confirm env |
 
 ## UptimeRobot
 
@@ -21,13 +21,9 @@ Monitoring stack for Nothing.Digital:
 
 - Host: PikaPods → `https://analytics.nothing.digital`
 - Env: `NEXT_PUBLIC_UMAMI_WEBSITE_ID`, `NEXT_PUBLIC_UMAMI_SCRIPT_URL`, `UMAMI_DASHBOARD_URL`
-- App: `UmamiScript` + cookie consent; Speed Insights always loads after Accept
-- Until Umami env is set, layout falls back to Vercel Analytics
-- Cutover checklist:
-  1. Create pod + DNS
-  2. Set Vercel env + redeploy
-  3. Accept cookies → confirm pageview in Umami <30s
-  4. Disable Vercel Web Analytics (dashboard) + remove `@vercel/analytics` when stable
+- App: `UmamiScript` + cookie consent; Speed Insights loads after Accept
+- `@vercel/analytics` removed — keep Speed Insights only
+- Verify: Accept cookies → pageview in Umami <30s; no Vercel Web Analytics requests
 
 ## Vercel Speed Insights
 
