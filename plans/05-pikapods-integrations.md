@@ -277,11 +277,12 @@ Pages compose; queries own SQL; no god context.
 
 ### Done
 
-- [x] Phase F: Ship `/admin` inbox + magic link (Pack F) — code; needs Supabase Auth + `ADMIN_EMAILS` live
+- [x] Phase F: Ship `/admin` inbox + magic link (Pack F) — live; Supabase Auth + `ADMIN_EMAILS` verified
 - [x] Phase A code: `UmamiScript` + env schema + consent gate + privacy + Speed Insights kept with Umami
 - [x] Calendly CTA on `/contact` (env-gated `CALENDLY_URL`) + admin Health/Settings link
 - [x] Drop `/admin/bookings` page — Calendly external SoT until volume
-- [x] Code ready for Listmonk / n8n / Kuma — env-gated helpers + admin launchers (pods optional)
+- [x] Phase B ops: Listmonk pod live at `newsletter.nothing.digital`; `LISTMONK_URL` + `LISTMONK_LIST_UUID` set; newsletter route proxies to Listmonk; privacy policy updated
+- [x] Code ready for n8n / Kuma — env-gated helpers + admin launchers (pods optional)
 
 ### Next (ops — Pack A)
 
@@ -296,7 +297,6 @@ Pages compose; queries own SQL; no god context.
 - [ ] Set `CALENDLY_URL` in Vercel if not already (CTA hidden until set)
 - [ ] Webhook → `bookings` table — defer until >50 bookings/mo or secretary needs list
 - [ ] Admin newsletter CSV export + unsubscribe action (or retire after Listmonk)
-- [ ] Phase B ops: Listmonk pod + set `LISTMONK_URL` / `LISTMONK_LIST_UUID` / dashboard URL (~+$2–3)
 - [ ] Phase C ops: n8n pod + set `N8N_WEBHOOK_*` / dashboard URL (~+$5)
 - [ ] Keep UptimeRobot free; set `KUMA_DASHBOARD_URL` only if Kuma is live
 - [ ] Phase Secretary B only on hire day
