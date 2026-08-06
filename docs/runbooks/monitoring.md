@@ -24,6 +24,10 @@ Monitors live:
 
 Alert contact: `alexander@nothing.digital`.
 
+### Admin launcher
+
+Optional env `UPTIMEROBOT_DASHBOARD_URL` deep-links the UptimeRobot dashboard from `/admin/health` and Settings. No API key — Open link only.
+
 To add more monitors later:
 
 1. Sign up / log in at <https://uptimerobot.com>.

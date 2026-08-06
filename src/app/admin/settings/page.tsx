@@ -42,6 +42,10 @@ export default async function AdminSettingsPage() {
       value: tools.kuma ?? "not set",
     },
     {
+      key: "UPTIMEROBOT_DASHBOARD_URL",
+      value: tools.uptimerobot ?? "not set",
+    },
+    {
       key: "LISTMONK subscribe",
       value:
         env.private.LISTMONK_URL && env.private.LISTMONK_LIST_UUID
