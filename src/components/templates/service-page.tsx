@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { JsonLd } from "@/components/atoms/json-ld";
 import { SectionContainer } from "@/components/atoms/section-container";
+import { PageHero } from "@/components/molecules/page-hero";
 import {
   Accordion,
   AccordionContent,
@@ -11,12 +12,6 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { routes } from "@/lib/routes";
-
-export interface CaseStudy {
-  title: string;
-  description: string;
-  href: string;
-}
 
 export interface FaqItem {
   question: string;
@@ -42,33 +37,7 @@ export interface ServicePageTemplateProps {
   processSteps: ProcessStep[];
   faqItems: FaqItem[];
   techStack?: TechStackItem[];
-  caseStudies?: CaseStudy[];
-  ctaText?: string;
-  image?: string;
-  imageAlt?: string;
   jsonLd?: Record<string, unknown>;
-}
-
-function HeroSection({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}) {
-  return (
-    <SectionContainer className="pt-24 md:pt-32">
-      <div className="mx-auto max-w-3xl text-center">
-        <p className="font-mono text-xs uppercase tracking-[0.35em] text-primary">
-          Service
-        </p>
-        <h1 className="mt-3 font-display text-4xl tracking-tight md:text-5xl">
-          {title}
-        </h1>
-        <p className="mt-4 text-lg text-muted-foreground">{description}</p>
-      </div>
-    </SectionContainer>
-  );
 }
 
 function ProblemSolutionSection({
@@ -167,32 +136,6 @@ function ProcessSection({ steps }: { steps: ProcessStep[] }) {
   );
 }
 
-function CaseStudiesSection({ caseStudies }: { caseStudies?: CaseStudy[] }) {
-  if (!caseStudies || caseStudies.length === 0) return null;
-
-  return (
-    <SectionContainer variant="muted">
-      <h2 className="mb-8 text-center font-display text-3xl tracking-tight">
-        Related work
-      </h2>
-      <div className="grid gap-6 sm:grid-cols-2">
-        {caseStudies.map((study) => (
-          <Link
-            key={study.title}
-            href={study.href}
-            className="group rounded-xl border-2 border-border bg-card p-6 shadow-md transition-colors hover:border-primary"
-          >
-            <h3 className="mb-2 font-display text-xl group-hover:text-primary">
-              {study.title}
-            </h3>
-            <p className="text-sm text-muted-foreground">{study.description}</p>
-          </Link>
-        ))}
-      </div>
-    </SectionContainer>
-  );
-}
-
 function FaqSection({ items }: { items: FaqItem[] }) {
   if (items.length === 0) return null;
 
@@ -226,7 +169,7 @@ function FaqSection({ items }: { items: FaqItem[] }) {
   );
 }
 
-function CtaSection({ ctaText }: { ctaText: string }) {
+function CtaSection() {
   return (
     <SectionContainer className="text-center">
       <p className="font-mono text-xs uppercase tracking-[0.35em] text-primary">
@@ -239,24 +182,9 @@ function CtaSection({ ctaText }: { ctaText: string }) {
         Book a free scoping call — we reply within one business day.
       </p>
       <Button asChild size="lg" className="shadow-lg">
-        <Link href={routes.contact}>{ctaText}</Link>
+        <Link href={routes.contact}>Book a free scoping call</Link>
       </Button>
     </SectionContainer>
-  );
-}
-
-function PlaceholderImage({ src, alt }: { src: string; alt: string }) {
-  return (
-    <div className="relative aspect-video w-full overflow-hidden rounded-xl border-2 border-border">
-      <Image
-        src={src}
-        alt={alt}
-        fill
-        className="object-cover"
-        sizes="(max-width: 768px) 100vw, 800px"
-        priority
-      />
-    </div>
   );
 }
 
@@ -269,26 +197,30 @@ export function ServicePageTemplate({
   processSteps,
   faqItems,
   techStack,
-  caseStudies,
-  ctaText = "Book a free scoping call",
-  image = "/og/default.png",
-  imageAlt,
   jsonLd,
 }: ServicePageTemplateProps) {
   return (
     <>
       {jsonLd && <JsonLd data={jsonLd} />}
-      <HeroSection title={title} description={description} />
+      <PageHero kicker="Service" title={title} description={description} />
       <SectionContainer className="py-0">
-        <PlaceholderImage src={image} alt={imageAlt ?? title} />
+        <div className="relative aspect-video w-full overflow-hidden rounded-xl border-2 border-border">
+          <Image
+            src="/og/default.png"
+            alt={title}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 800px"
+            priority
+          />
+        </div>
       </SectionContainer>
       <ProblemSolutionSection problem={problem} solution={solution} />
       <FeaturesSection features={features} />
       <TechStackSection items={techStack} />
       <ProcessSection steps={processSteps} />
-      <CaseStudiesSection caseStudies={caseStudies} />
       <FaqSection items={faqItems} />
-      <CtaSection ctaText={ctaText} />
+      <CtaSection />
     </>
   );
 }

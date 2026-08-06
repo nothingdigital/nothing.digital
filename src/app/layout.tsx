@@ -6,6 +6,9 @@ import { DM_Serif_Display, Inter, JetBrains_Mono } from "next/font/google";
 import { CursorGlow } from "@/components/atoms/cursor-glow";
 import { JsonLd } from "@/components/atoms/json-ld";
 import { logoDotColorScript } from "@/components/atoms/logo-dot";
+import { ScrollToTop } from "@/components/atoms/scroll-to-top";
+import { Footer } from "@/components/organisms/footer";
+import { Navigation } from "@/components/organisms/navigation";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { sameAs, siteConfig } from "@/lib/site";
 import "./globals.css";
@@ -82,7 +85,12 @@ export default function RootLayout({
       <body className="min-h-screen font-sans antialiased">
         <ThemeProvider>
           <CursorGlow />
-          {children}
+          <div className="flex min-h-screen flex-col">
+            <Navigation />
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <ScrollToTop />
+          </div>
           <Analytics />
           <SpeedInsights />
         </ThemeProvider>

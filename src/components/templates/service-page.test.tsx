@@ -47,24 +47,6 @@ it("skips empty sections when no data is provided", () => {
   expect(screen.queryByText("First question?")).not.toBeInTheDocument();
 });
 
-it("renders related case studies when provided", () => {
-  render(
-    <ServicePageTemplate
-      {...defaultProps}
-      caseStudies={[
-        {
-          title: "Acme Launch",
-          description: "Great results.",
-          href: "/portfolio/example-project",
-        },
-      ]}
-    />,
-  );
-
-  expect(screen.getByText("Acme Launch")).toBeInTheDocument();
-  expect(screen.getByText("Great results.")).toBeInTheDocument();
-});
-
 it("renders tech stack when provided", () => {
   render(
     <ServicePageTemplate

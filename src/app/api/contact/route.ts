@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
+import type { Resend } from "resend";
 
 import { env } from "@/lib/env";
 
@@ -8,25 +8,13 @@ import {
   teamNotificationEmailTemplate,
 } from "@/lib/email/templates";
 import { getRateLimiter } from "@/lib/rate-limit";
+import { getClientIp } from "@/lib/request";
 import { getResendClient } from "@/lib/resend";
 import { getServiceRoleClient } from "@/lib/supabase/server";
 import { contactSchema, type ContactInput } from "@/lib/validations/contact";
 
 const FROM_EMAIL = "Nothing.Digital <hello@nothing.digital>";
 const TEAM_EMAIL = env.private.CONTACT_NOTIFY_EMAIL ?? "team@nothing.digital";
-
-function isHoneypotTriggered(data: ContactInput): boolean {
-  return Boolean(data.website && data.website.length > 0);
-}
-
-function formatZodErrors(
-  error: z.ZodError,
-): Array<{ path: PropertyKey[]; message: string }> {
-  return error.issues.map((issue) => ({
-    path: issue.path,
-    message: issue.message,
-  }));
-}
 
 async function storeSubmission(data: ContactInput) {
   const supabase = getServiceRoleClient();
@@ -54,10 +42,7 @@ async function storeSubmission(data: ContactInput) {
   return submission.id;
 }
 
-async function sendConfirmationEmail(data: ContactInput) {
-  const resend = getResendClient();
-  if (!resend) throw new Error("Resend client unavailable (missing API key)");
-
+async function sendConfirmationEmail(resend: Resend, data: ContactInput) {
   await resend.emails.send({
     from: FROM_EMAIL,
     to: data.email,
@@ -66,24 +51,17 @@ async function sendConfirmationEmail(data: ContactInput) {
   });
 }
 
-async function sendTeamNotification(data: ContactInput, submissionId: string) {
-  const resend = getResendClient();
-  if (!resend) throw new Error("Resend client unavailable (missing API key)");
-
+async function sendTeamNotification(
+  resend: Resend,
+  data: ContactInput,
+  submissionId: string,
+) {
   await resend.emails.send({
     from: FROM_EMAIL,
     to: TEAM_EMAIL,
     subject: `New contact submission from ${data.name}`,
     html: teamNotificationEmailTemplate(data, submissionId),
   });
-}
-
-function getClientIp(request: NextRequest): string {
-  return (
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-    request.headers.get("x-real-ip") ??
-    "unknown"
-  );
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -98,17 +76,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const parseResult = contactSchema.safeParse(data);
   if (!parseResult.success) {
     return NextResponse.json(
-      {
-        error: "Validation failed",
-        details: formatZodErrors(parseResult.error),
-      },
+      { error: "Validation failed", details: parseResult.error.issues },
       { status: 400 },
     );
   }
 
   const validated = parseResult.data;
 
-  if (isHoneypotTriggered(validated)) {
+  if (validated.website && validated.website.length > 0) {
     return NextResponse.json(
       { success: true, message: "Submission received" },
       { status: 201 },
@@ -134,9 +109,18 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     );
   }
 
+  const resend = getResendClient();
+  if (!resend) {
+    console.error("[contact] Resend client unavailable (missing API key)");
+    return NextResponse.json(
+      { error: "Failed to send notification. Please try again later." },
+      { status: 500 },
+    );
+  }
+
   try {
-    await sendConfirmationEmail(validated);
-    await sendTeamNotification(validated, submissionId);
+    await sendConfirmationEmail(resend, validated);
+    await sendTeamNotification(resend, validated, submissionId);
   } catch (error) {
     console.error("[contact] Email delivery failed:", error);
     return NextResponse.json(

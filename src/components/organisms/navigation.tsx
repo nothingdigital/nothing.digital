@@ -4,7 +4,6 @@ import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { LogoDot } from "@/components/atoms/logo-dot";
 import { ThemeToggle } from "@/components/atoms/theme-toggle";
@@ -18,11 +17,7 @@ const navLinks = [
   { label: "Contact", href: "/contact" },
 ];
 
-export interface NavigationProps {
-  className?: string;
-}
-
-export function Navigation({ className }: NavigationProps) {
+export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const menuId = useId();
   const toggleRef = useRef<HTMLButtonElement>(null);
@@ -46,12 +41,7 @@ export function Navigation({ className }: NavigationProps) {
   }, [isOpen]);
 
   return (
-    <header
-      className={cn(
-        "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
-        className,
-      )}
-    >
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <nav
         className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6 lg:px-8"
         aria-label="Primary"

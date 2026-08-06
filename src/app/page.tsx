@@ -1,16 +1,6 @@
 import Link from "next/link";
-import {
-  ArrowRight,
-  Clock,
-  Code,
-  Globe,
-  Mail,
-  Smartphone,
-  Target,
-  Users,
-} from "lucide-react";
+import { ArrowRight, Clock, Target, Users } from "lucide-react";
 
-import { MarketingLayout } from "@/components/templates/marketing-layout";
 import { SectionContainer } from "@/components/atoms/section-container";
 import { Button } from "@/components/ui/button";
 import dynamic from "next/dynamic";
@@ -18,6 +8,7 @@ import dynamic from "next/dynamic";
 import { ServiceCard } from "@/components/molecules/service-card";
 import { HeroClock } from "@/components/atoms/hero-clock";
 import { routes } from "@/lib/routes";
+import { serviceSummaries } from "@/lib/services";
 
 // ponytail: lazy-load newsletter form because it sits below the fold and bundles react-hook-form.
 const NewsletterForm = dynamic(() =>
@@ -25,36 +16,6 @@ const NewsletterForm = dynamic(() =>
     (m) => m.NewsletterForm,
   ),
 );
-
-// ponytail: static service placeholders; replace with CMS/config-driven data when content is ready.
-const services = [
-  {
-    title: "Website Development",
-    description:
-      "Custom, responsive websites built for performance and conversion.",
-    icon: <Globe className="h-6 w-6" />,
-    href: routes.services.websiteDevelopment,
-  },
-  {
-    title: "Software Solutions",
-    description:
-      "Bespoke software and automation tools tailored to your workflow.",
-    icon: <Code className="h-6 w-6" />,
-    href: routes.services.softwareSolutions,
-  },
-  {
-    title: "Applications",
-    description: "Mobile and web apps designed for scale and user engagement.",
-    icon: <Smartphone className="h-6 w-6" />,
-    href: routes.services.applications,
-  },
-  {
-    title: "Email Marketing",
-    description: "Data-driven campaigns that nurture leads and drive revenue.",
-    icon: <Mail className="h-6 w-6" />,
-    href: routes.services.emailMarketing,
-  },
-];
 
 // ponytail: static differentiator copy; move to CMS when content grows.
 const differentiators = [
@@ -106,7 +67,7 @@ function SectionHeading({
 
 export default function HomePage() {
   return (
-    <MarketingLayout>
+    <>
       <SectionContainer className="pb-16 pt-20 md:pb-24 md:pt-32">
         <div className="mx-auto grid max-w-6xl items-center gap-16 md:grid-cols-2">
           <div className="text-center md:text-left">
@@ -146,8 +107,14 @@ export default function HomePage() {
           description="End-to-end digital expertise."
         />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {services.map((service) => (
-            <ServiceCard key={service.href} {...service} />
+          {serviceSummaries.map((service) => (
+            <ServiceCard
+              key={service.href}
+              title={service.title}
+              description={service.description}
+              icon={<service.icon className="h-6 w-6" />}
+              href={service.href}
+            />
           ))}
         </div>
       </SectionContainer>
@@ -211,6 +178,6 @@ export default function HomePage() {
           </div>
         </div>
       </SectionContainer>
-    </MarketingLayout>
+    </>
   );
 }

@@ -13,11 +13,7 @@ import {
   type NewsletterInput,
 } from "@/lib/validations/newsletter";
 
-interface NewsletterFormProps {
-  onSuccess?: () => void;
-}
-
-export function NewsletterForm({ onSuccess }: NewsletterFormProps) {
+export function NewsletterForm() {
   const [status, setStatus] = useState<
     "idle" | "loading" | "success" | "error"
   >("idle");
@@ -41,7 +37,6 @@ export function NewsletterForm({ onSuccess }: NewsletterFormProps) {
 
       setStatus("success");
       reset();
-      onSuccess?.();
     } catch {
       setStatus("error");
     }

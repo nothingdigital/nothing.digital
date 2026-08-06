@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 import { routes } from "@/lib/routes";
 
 export interface BlogCardProps {
@@ -15,20 +15,6 @@ export interface BlogCardProps {
   author: string;
   tags: string[];
   coverImage?: string;
-  className?: string;
-}
-
-function formatDate(isoDate: string): string {
-  const [year, month, day] = isoDate.split("-").map(Number);
-  const date = new Date(Date.UTC(year ?? 0, (month ?? 1) - 1, day ?? 1));
-  if (Number.isNaN(date.getTime())) return isoDate;
-
-  return date.toLocaleDateString("en-US", {
-    timeZone: "UTC",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
 }
 
 export function BlogCard({
@@ -39,15 +25,11 @@ export function BlogCard({
   author,
   tags,
   coverImage,
-  className,
 }: BlogCardProps) {
   return (
     <Link
       href={routes.blog.post(slug)}
-      className={cn(
-        "group flex flex-col overflow-hidden rounded-lg border bg-card shadow-sm transition-colors hover:border-primary/50 hover:shadow-md",
-        className,
-      )}
+      className="group flex flex-col overflow-hidden rounded-lg border bg-card shadow-sm transition-colors hover:border-primary/50 hover:shadow-md"
     >
       <div className="relative aspect-[16/9] w-full overflow-hidden bg-muted">
         <Image

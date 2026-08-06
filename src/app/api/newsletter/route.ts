@@ -1,62 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
 
 import { newsletterWelcomeEmailTemplate } from "@/lib/email/templates";
 import { getRateLimiter } from "@/lib/rate-limit";
+import { getClientIp } from "@/lib/request";
 import { getResendClient } from "@/lib/resend";
 import { getServiceRoleClient } from "@/lib/supabase/server";
-import {
-  newsletterSchema,
-  type NewsletterInput,
-} from "@/lib/validations/newsletter";
+import { newsletterSchema } from "@/lib/validations/newsletter";
 
 const FROM_EMAIL = "Nothing.Digital <hello@nothing.digital>";
-
-function formatZodErrors(
-  error: z.ZodError,
-): Array<{ path: PropertyKey[]; message: string }> {
-  return error.issues.map((issue) => ({
-    path: issue.path,
-    message: issue.message,
-  }));
-}
-
-async function findExistingSubscriber(email: string) {
-  const supabase = getServiceRoleClient();
-  if (!supabase) return null;
-
-  const { data, error } = await supabase
-    .from("newsletter_subscribers")
-    .select("id")
-    .eq("email", email)
-    .maybeSingle();
-
-  if (error) {
-    console.error(
-      "[newsletter] Existing subscriber lookup failed:",
-      error.message,
-    );
-    return null;
-  }
-
-  return data;
-}
-
-async function insertSubscriber(email: string) {
-  const supabase = getServiceRoleClient();
-  if (!supabase) return false;
-
-  const { error } = await supabase
-    .from("newsletter_subscribers")
-    .insert({ email });
-
-  if (error) {
-    console.error("[newsletter] Supabase insert failed:", error.message);
-    return false;
-  }
-
-  return true;
-}
 
 async function sendWelcomeEmail(email: string) {
   const resend = getResendClient();
@@ -68,14 +19,6 @@ async function sendWelcomeEmail(email: string) {
     subject: "Welcome to Nothing.Digital newsletter",
     html: newsletterWelcomeEmailTemplate(),
   });
-}
-
-function getClientIp(request: NextRequest): string {
-  return (
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-    request.headers.get("x-real-ip") ??
-    "unknown"
-  );
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -90,10 +33,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const parseResult = newsletterSchema.safeParse(data);
   if (!parseResult.success) {
     return NextResponse.json(
-      {
-        error: "Validation failed",
-        details: formatZodErrors(parseResult.error),
-      },
+      { error: "Validation failed", details: parseResult.error.issues },
       { status: 400 },
     );
   }
@@ -110,19 +50,17 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     );
   }
 
-  const existing = await findExistingSubscriber(email);
-  if (existing) {
-    return NextResponse.json(
-      { success: true, message: "Already subscribed" },
-      { status: 200 },
-    );
-  }
+  const supabase = getServiceRoleClient();
+  if (supabase) {
+    const { error } = await supabase
+      .from("newsletter_subscribers")
+      .upsert({ email }, { onConflict: "email", ignoreDuplicates: true });
 
-  const inserted = await insertSubscriber(email);
-  if (!inserted) {
-    console.warn(
-      "[newsletter] Stored without Supabase (key missing or insert failed).",
-    );
+    if (error) {
+      console.error("[newsletter] Supabase upsert failed:", error.message);
+    }
+  } else {
+    console.warn("[newsletter] Stored without Supabase (key missing).");
   }
 
   await sendWelcomeEmail(email);

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { MarketingLayout } from "@/components/templates/marketing-layout";
 import { SectionContainer } from "@/components/atoms/section-container";
 import { JsonLd } from "@/components/atoms/json-ld";
+import { PageHero } from "@/components/molecules/page-hero";
 import { Button } from "@/components/ui/button";
 import { routes } from "@/lib/routes";
 import { sameAs, siteConfig } from "@/lib/site";
@@ -60,23 +60,14 @@ const organizationJsonLd = {
 
 export default function AboutPage() {
   return (
-    <MarketingLayout>
+    <>
       <JsonLd data={organizationJsonLd} />
 
-      <SectionContainer>
-        <div className="mx-auto max-w-3xl text-center">
-          <p className="font-mono text-xs uppercase tracking-[0.35em] text-primary">
-            Who we are
-          </p>
-          <h1 className="mt-3 font-display text-4xl tracking-tight md:text-5xl">
-            About Nothing.Digital
-          </h1>
-          <p className="mt-4 text-lg text-muted-foreground">
-            A small studio of builders, designers, and strategists helping
-            ambitious companies ship great digital products.
-          </p>
-        </div>
-      </SectionContainer>
+      <PageHero
+        kicker="Who we are"
+        title="About Nothing.Digital"
+        description="A small studio of builders, designers, and strategists helping ambitious companies ship great digital products."
+      />
 
       <SectionContainer variant="muted">
         <div className="mx-auto max-w-3xl">
@@ -143,6 +134,6 @@ export default function AboutPage() {
           </div>
         </div>
       </SectionContainer>
-    </MarketingLayout>
+    </>
   );
 }

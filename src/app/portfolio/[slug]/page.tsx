@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 
-import { MarketingLayout } from "@/components/templates/marketing-layout";
 import { SectionContainer } from "@/components/atoms/section-container";
 import { JsonLd } from "@/components/atoms/json-ld";
 import { Badge } from "@/components/ui/badge";
@@ -67,7 +66,7 @@ export default async function PortfolioDetailPage({
   };
 
   return (
-    <MarketingLayout>
+    <>
       <JsonLd data={jsonLd} />
 
       <SectionContainer>
@@ -140,6 +139,6 @@ export default async function PortfolioDetailPage({
           )}
         </div>
       </SectionContainer>
-    </MarketingLayout>
+    </>
   );
 }

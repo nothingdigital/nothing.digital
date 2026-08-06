@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { MarketingLayout } from "@/components/templates/marketing-layout";
 import { SectionContainer } from "@/components/atoms/section-container";
-import { PortfolioFilter } from "@/components/molecules/portfolio-filter";
+import { PageHero } from "@/components/molecules/page-hero";
+import { PortfolioCard } from "@/components/molecules/portfolio-card";
 import { Button } from "@/components/ui/button";
 import { getAllFrontmatter, type PortfolioFrontmatter } from "@/lib/mdx";
 import { routes } from "@/lib/routes";
@@ -18,20 +18,14 @@ export default async function PortfolioPage() {
   const items = await getAllFrontmatter<PortfolioFrontmatter>("portfolio");
 
   return (
-    <MarketingLayout>
-      <SectionContainer>
-        <div className="mb-10 text-center">
-          <p className="font-mono text-xs uppercase tracking-[0.35em] text-primary">
-            Selected work
-          </p>
-          <h1 className="mt-3 font-display text-4xl tracking-tight md:text-5xl">
-            Our Work
-          </h1>
-          <p className="mt-4 text-lg text-muted-foreground">
-            Projects we are proud to put our name on.
-          </p>
-        </div>
+    <>
+      <PageHero
+        kicker="Selected work"
+        title="Our Work"
+        description="Projects we are proud to put our name on."
+      />
 
+      <SectionContainer>
         {items.length === 0 ? (
           <div className="mx-auto max-w-lg rounded-xl border-2 border-dashed border-border py-16 text-center">
             <p className="text-muted-foreground">
@@ -45,9 +39,21 @@ export default async function PortfolioPage() {
             </div>
           </div>
         ) : (
-          <PortfolioFilter items={items} />
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {items.map((item) => (
+              <PortfolioCard
+                key={item.slug}
+                slug={item.slug}
+                title={item.title}
+                client={item.client}
+                industry={item.industry}
+                services={item.services}
+                coverImage={item.coverImage}
+              />
+            ))}
+          </div>
         )}
       </SectionContainer>
-    </MarketingLayout>
+    </>
   );
 }

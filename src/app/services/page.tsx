@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Code, Globe, Mail, Smartphone } from "lucide-react";
 import Link from "next/link";
 
 import { SectionContainer } from "@/components/atoms/section-container";
+import { PageHero } from "@/components/molecules/page-hero";
 import { Button } from "@/components/ui/button";
 import { ServiceCard } from "@/components/molecules/service-card";
-import { MarketingLayout } from "@/components/templates/marketing-layout";
 import { routes } from "@/lib/routes";
+import { serviceSummaries } from "@/lib/services";
 
 export const metadata: Metadata = {
   title: "Services",
@@ -21,35 +21,6 @@ export const metadata: Metadata = {
     type: "website",
   },
 };
-
-const services = [
-  {
-    title: "Website Development",
-    description:
-      "Custom, responsive websites built for performance and conversion.",
-    icon: <Globe className="h-6 w-6" />,
-    href: routes.services.websiteDevelopment,
-  },
-  {
-    title: "Software Solutions",
-    description:
-      "Bespoke software and automation tools tailored to your workflow.",
-    icon: <Code className="h-6 w-6" />,
-    href: routes.services.softwareSolutions,
-  },
-  {
-    title: "Applications",
-    description: "Mobile and web apps designed for scale and user engagement.",
-    icon: <Smartphone className="h-6 w-6" />,
-    href: routes.services.applications,
-  },
-  {
-    title: "Email Marketing",
-    description: "Data-driven campaigns that nurture leads and drive revenue.",
-    icon: <Mail className="h-6 w-6" />,
-    href: routes.services.emailMarketing,
-  },
-];
 
 const processSteps = [
   {
@@ -72,26 +43,23 @@ const processSteps = [
 
 export default function ServicesPage() {
   return (
-    <MarketingLayout>
-      <SectionContainer className="pt-24 md:pt-32">
-        <div className="mx-auto max-w-3xl text-center">
-          <p className="font-mono text-xs uppercase tracking-[0.35em] text-primary">
-            What we do
-          </p>
-          <h1 className="mt-3 font-display text-4xl tracking-tight md:text-5xl">
-            Services
-          </h1>
-          <p className="mt-4 text-lg text-muted-foreground">
-            End-to-end digital services for brands that want to move fast and
-            look good doing it.
-          </p>
-        </div>
-      </SectionContainer>
+    <>
+      <PageHero
+        kicker="What we do"
+        title="Services"
+        description="End-to-end digital services for brands that want to move fast and look good doing it."
+      />
 
       <SectionContainer>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {services.map((service) => (
-            <ServiceCard key={service.href} {...service} />
+          {serviceSummaries.map((service) => (
+            <ServiceCard
+              key={service.href}
+              title={service.title}
+              description={service.description}
+              icon={<service.icon className="h-6 w-6" />}
+              href={service.href}
+            />
           ))}
         </div>
       </SectionContainer>
@@ -129,6 +97,6 @@ export default function ServicesPage() {
           <Link href={routes.contact}>Book a free scoping call</Link>
         </Button>
       </SectionContainer>
-    </MarketingLayout>
+    </>
   );
 }

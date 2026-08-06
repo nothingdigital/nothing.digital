@@ -19,21 +19,15 @@ export const routes = {
   },
   contact: "/contact",
   api: {
-    contact: "/api/contact",
     newsletter: "/api/newsletter",
-    health: "/api/health",
   },
 } as const;
 
-export type ServiceSlug =
-  | "website-development"
-  | "software-solutions"
-  | "applications"
-  | "email-marketing";
-
-export const serviceSlugs: ServiceSlug[] = [
+export const serviceSlugs = [
   "website-development",
   "software-solutions",
   "applications",
   "email-marketing",
-];
+] as const;
+
+export type ServiceSlug = (typeof serviceSlugs)[number];

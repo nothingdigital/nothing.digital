@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { MarketingLayout } from "@/components/templates/marketing-layout";
 import { SectionContainer } from "@/components/atoms/section-container";
+import { PageHero } from "@/components/molecules/page-hero";
 import { Button } from "@/components/ui/button";
 import { routes } from "@/lib/routes";
 
@@ -44,22 +44,12 @@ const tiers = [
 
 export default function PricingPage() {
   return (
-    <MarketingLayout>
-      <SectionContainer className="pt-24 md:pt-32">
-        <div className="mx-auto max-w-3xl text-center">
-          <p className="font-mono text-xs uppercase tracking-[0.35em] text-primary">
-            Investment
-          </p>
-          <h1 className="mt-3 font-display text-4xl tracking-tight md:text-5xl">
-            Pricing
-          </h1>
-          <p className="mt-4 text-lg text-muted-foreground">
-            Honest ranges so you can qualify fit before we talk. Every project
-            gets a fixed quote after a free scoping call — no hourly billing, no
-            surprise invoices.
-          </p>
-        </div>
-      </SectionContainer>
+    <>
+      <PageHero
+        kicker="Investment"
+        title="Pricing"
+        description="Honest ranges so you can qualify fit before we talk. Every project gets a fixed quote after a free scoping call — no hourly billing, no surprise invoices."
+      />
 
       <SectionContainer variant="muted">
         <div className="mx-auto grid max-w-5xl gap-6 sm:grid-cols-2">
@@ -100,6 +90,6 @@ export default function PricingPage() {
           </Button>
         </div>
       </SectionContainer>
-    </MarketingLayout>
+    </>
   );
 }

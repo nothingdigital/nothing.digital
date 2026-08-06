@@ -67,63 +67,6 @@ type Tables = {
     };
     Relationships: GenericRelationship[];
   };
-  portfolio_items: {
-    Row: {
-      id: string;
-      slug: string;
-      title: string;
-      client: string;
-      industry: string | null;
-      services: string[];
-      summary: string;
-      challenge: string | null;
-      solution: string | null;
-      results: string | null;
-      tech_stack: string[];
-      testimonial: string | null;
-      featured: boolean;
-      published: boolean;
-      created_at: string;
-      updated_at: string;
-    };
-    Insert: {
-      id?: string;
-      slug: string;
-      title: string;
-      client: string;
-      industry?: string | null;
-      services?: string[];
-      summary: string;
-      challenge?: string | null;
-      solution?: string | null;
-      results?: string | null;
-      tech_stack?: string[];
-      testimonial?: string | null;
-      featured?: boolean;
-      published?: boolean;
-      created_at?: string;
-      updated_at?: string;
-    };
-    Update: {
-      id?: string;
-      slug?: string;
-      title?: string;
-      client?: string;
-      industry?: string | null;
-      services?: string[];
-      summary?: string;
-      challenge?: string | null;
-      solution?: string | null;
-      results?: string | null;
-      tech_stack?: string[];
-      testimonial?: string | null;
-      featured?: boolean;
-      published?: boolean;
-      created_at?: string;
-      updated_at?: string;
-    };
-    Relationships: GenericRelationship[];
-  };
 };
 
 type Views = Record<string, never>;

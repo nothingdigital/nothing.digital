@@ -10,15 +10,12 @@ import {
 } from "react-hook-form";
 import * as LabelPrimitive from "@radix-ui/react-label";
 
-import { cn } from "@/lib/utils";
-
 export interface FormFieldProps<T extends FieldValues> {
   name: Path<T>;
   label: React.ReactNode;
   control: Control<T>;
   error?: FieldError;
   render: (field: ControllerRenderProps<T, Path<T>>) => React.ReactElement;
-  className?: string;
 }
 
 export function FormField<T extends FieldValues>({
@@ -27,10 +24,9 @@ export function FormField<T extends FieldValues>({
   control,
   error,
   render,
-  className,
 }: FormFieldProps<T>) {
   return (
-    <div className={cn("space-y-2", className)}>
+    <div className="space-y-2">
       <LabelPrimitive.Root
         htmlFor={name}
         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"

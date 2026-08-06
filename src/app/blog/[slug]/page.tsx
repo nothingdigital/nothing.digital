@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 
-import { MarketingLayout } from "@/components/templates/marketing-layout";
 import { SectionContainer } from "@/components/atoms/section-container";
 import { JsonLd } from "@/components/atoms/json-ld";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +14,7 @@ import {
   type BlogFrontmatter,
 } from "@/lib/mdx";
 import { routes } from "@/lib/routes";
+import { formatDate } from "@/lib/utils";
 
 export async function generateStaticParams() {
   const slugs = await listMdxFiles("blog");
@@ -36,18 +36,6 @@ export async function generateMetadata({
     description: frontmatter.description,
     alternates: { canonical: routes.blog.post(slug) },
   };
-}
-
-function formatDate(isoDate: string): string {
-  const date = new Date(isoDate);
-  if (Number.isNaN(date.getTime())) return isoDate;
-
-  return date.toLocaleDateString("en-US", {
-    timeZone: "UTC",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
 }
 
 function findRelatedPosts(
@@ -101,7 +89,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   };
 
   return (
-    <MarketingLayout>
+    <>
       <JsonLd data={jsonLd} />
 
       <SectionContainer>
@@ -192,6 +180,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </Button>
         </div>
       </SectionContainer>
-    </MarketingLayout>
+    </>
   );
 }

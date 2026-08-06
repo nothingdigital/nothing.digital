@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-import { MarketingLayout } from "@/components/templates/marketing-layout";
 import { SectionContainer } from "@/components/atoms/section-container";
 
 export const metadata: Metadata = {
@@ -12,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function AccessibilityPage() {
   return (
-    <MarketingLayout>
+    <>
       <SectionContainer>
         <div className="mx-auto max-w-3xl">
           <h1 className="text-4xl font-bold tracking-tight md:text-5xl">
@@ -88,6 +87,6 @@ export default function AccessibilityPage() {
           </section>
         </div>
       </SectionContainer>
-    </MarketingLayout>
+    </>
   );
 }

@@ -5,14 +5,11 @@ import * as React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
-import { cn } from "@/lib/utils";
-
 export interface ServiceCardProps {
   title: string;
   description: string;
   icon: React.ReactNode;
   href: string;
-  className?: string;
 }
 
 export function ServiceCard({
@@ -20,10 +17,9 @@ export function ServiceCard({
   description,
   icon,
   href,
-  className,
 }: ServiceCardProps) {
   return (
-    <Link href={href} className={cn("group block", className)}>
+    <Link href={href} className="group block">
       <motion.div
         whileHover={{ y: -6 }}
         transition={{ duration: 0.2 }}

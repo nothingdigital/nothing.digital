@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 
-import { cn } from "@/lib/utils";
 import { routes } from "@/lib/routes";
 import { siteConfig, socialLinks } from "@/lib/site";
 import { NewsletterForm } from "./newsletter-form";
@@ -28,15 +27,11 @@ const legalLinks = [
   { label: "Accessibility", href: "/accessibility" },
 ];
 
-export interface FooterProps {
-  className?: string;
-}
-
-export function Footer({ className }: FooterProps) {
+export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className={cn("border-t bg-background", className)}>
+    <footer className="border-t bg-background">
       <div className="container mx-auto px-4 py-12 md:px-6 lg:px-8">
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           <div>
