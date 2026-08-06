@@ -23,13 +23,13 @@
 
 ## 6.3 Homepage
 
-| #    | Task                                                  | Owner    | Status                                 |
-| ---- | ----------------------------------------------------- | -------- | -------------------------------------- |
-| 2.16 | Hero Section (headline, subheadline, CTA, background) | Frontend | ✅                                     |
-| 2.17 | Services Overview (4-card grid with icons)            | Frontend | ✅                                     |
-| 2.18 | Featured Case Studies (2 highlighted with metrics)    | Frontend | ✅ (anonymized MDX + home)             |
-| 2.19 | Trust Indicators (client logos, stats, testimonials)  | Frontend | 🔲 logos LATER; quotes in case studies |
-| 2.20 | Newsletter Signup section                             | Frontend | ✅                                     |
+| #    | Task                                                  | Owner    | Status                                                    |
+| ---- | ----------------------------------------------------- | -------- | --------------------------------------------------------- |
+| 2.16 | Hero Section (headline, subheadline, CTA, background) | Frontend | ✅                                                        |
+| 2.17 | Services Overview (4-card grid with icons)            | Frontend | ✅                                                        |
+| 2.18 | Featured Case Studies (2 highlighted with metrics)    | Frontend | ✅ (anonymized MDX + home)                                |
+| 2.19 | Trust Indicators (client logos, stats, testimonials)  | Frontend | ✅ anonymous client-logo strip on home; named logos LATER |
+| 2.20 | Newsletter Signup section                             | Frontend | ✅                                                        |
 
 ## 6.4 Service Pages
 
@@ -71,12 +71,12 @@
 
 ## 6.8 Contact Page
 
-| #    | Task                                                         | Owner    | Status                                                     |
-| ---- | ------------------------------------------------------------ | -------- | ---------------------------------------------------------- |
-| 2.39 | Contact form (name, email, phone, service dropdown, message) | Frontend | ✅                                                         |
-| 2.40 | Embed Calendly booking widget                                | Frontend | ✅ CTA link on `/contact` (`CALENDLY_URL`); embed deferred |
-| 2.41 | FAQ accordion section                                        | Frontend | ✅                                                         |
-| 2.42 | Contact info + social links                                  | Frontend | ✅                                                         |
+| #    | Task                                                         | Owner    | Status                                                             |
+| ---- | ------------------------------------------------------------ | -------- | ------------------------------------------------------------------ |
+| 2.39 | Contact form (name, email, phone, service dropdown, message) | Frontend | ✅                                                                 |
+| 2.40 | Embed Calendly booking widget                                | Frontend | ✅ CTA link + lazy-loaded iframe embed env-gated by `CALENDLY_URL` |
+| 2.41 | FAQ accordion section                                        | Frontend | ✅                                                                 |
+| 2.42 | Contact info + social links                                  | Frontend | ✅                                                                 |
 
 ## 6.9 Legal Pages
 

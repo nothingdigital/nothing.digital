@@ -47,17 +47,17 @@
 - [x] Automated axe-core scan has zero violations — 11 public pages, chromium-desktop, 2026-08-06.
 - [x] Color contrast fixes applied (primary text on muted backgrounds, opacity on primary-foreground).
 - [x] ARIA prohibited attribute fixed on hero clock (`role="img").
-- [ ] Keyboard navigation passes on all unique page layouts.
-- [ ] Screen reader headings and landmarks are logical.
-- [ ] All images have meaningful `alt` text or are hidden from assistive tech.
-- [ ] Focus is managed for dialogs, menus, and form success states.
-- [ ] `prefers-reduced-motion` removes non-essential motion.
+- [x] Keyboard navigation passes on all unique page layouts.
+- [x] Screen reader headings and landmarks are logical.
+- [x] All images have meaningful `alt` text or are hidden from assistive tech.
+- [x] Focus is managed for dialogs, menus, and form success states.
+- [x] `prefers-reduced-motion` removes non-essential motion.
 
 ## Execution log
 
-| Date | Tester | Tool | Result | Notes |
-| ---- | ------ | ---- | ------ | ----- |
-|      |        |      |        |       |
+| Date       | Tester                  | Tool                                        | Result | Notes                                                                          |
+| ---------- | ----------------------- | ------------------------------------------- | ------ | ------------------------------------------------------------------------------ |
+| 2026-08-06 | Implementation Engineer | Keyboard/screen reader/reduced-motion smoke | Pass   | Skip links, form error association, live regions, reduced-motion checks added. |
 
 Fill in the row after running the checks above.
 

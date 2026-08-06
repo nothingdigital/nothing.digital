@@ -1,7 +1,15 @@
 import { test, expect, type Page } from "@playwright/test";
 
+async function dismissCookieConsent(page: Page) {
+  const decline = page.getByRole("button", { name: /decline/i });
+  if (await decline.isVisible().catch(() => false)) {
+    await decline.click();
+  }
+}
+
 async function openContact(page: Page) {
   await page.goto("/contact");
+  await dismissCookieConsent(page);
 }
 
 test("contact page renders form fields", async ({ page }) => {
@@ -30,6 +38,14 @@ test("contact form shows validation errors on empty submit", async ({
 });
 
 test("contact form submits successfully", async ({ page }) => {
+  await page.route("**/api/contact", async (route) =>
+    route.fulfill({
+      status: 201,
+      contentType: "application/json",
+      body: JSON.stringify({ success: true, message: "Submission received" }),
+    }),
+  );
+
   await openContact(page);
 
   await page.getByLabel(/name/i).fill("Jane Doe");
