@@ -1,21 +1,55 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 
+import { signInAdminWithPassword } from "@/app/admin/login/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
 
+function authCallbackUrl(nextPath: string) {
+  return `${window.location.origin}/auth/callback?next=${encodeURIComponent(nextPath)}`;
+}
+
 export function AdminLoginForm({ nextPath }: { nextPath: string }) {
+  const router = useRouter();
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
-  function onSubmit(event: React.FormEvent) {
-    event.preventDefault();
+  function clearFeedback() {
     setMessage(null);
     setError(null);
+  }
+
+  function onPasswordSubmit(event: React.FormEvent) {
+    event.preventDefault();
+    clearFeedback();
+
+    startTransition(async () => {
+      const result = await signInAdminWithPassword(email, password);
+
+      if (!result.ok) {
+        if (result.error === "config") {
+          setError("Supabase is not configured.");
+        } else if (result.error === "forbidden") {
+          setError("That email is not on the admin allowlist.");
+        } else {
+          setError(result.message ?? "Invalid email or password.");
+        }
+        return;
+      }
+
+      router.replace(nextPath);
+      router.refresh();
+    });
+  }
+
+  function onMagicLink() {
+    clearFeedback();
 
     startTransition(async () => {
       const supabase = createBrowserSupabaseClient();
@@ -24,11 +58,10 @@ export function AdminLoginForm({ nextPath }: { nextPath: string }) {
         return;
       }
 
-      const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent(nextPath)}`;
       const { error: otpError } = await supabase.auth.signInWithOtp({
         email: email.trim(),
         options: {
-          emailRedirectTo: redirectTo,
+          emailRedirectTo: authCallbackUrl(nextPath),
           shouldCreateUser: true,
         },
       });
@@ -42,25 +75,95 @@ export function AdminLoginForm({ nextPath }: { nextPath: string }) {
     });
   }
 
+  function onGoogle() {
+    clearFeedback();
+
+    startTransition(async () => {
+      const supabase = createBrowserSupabaseClient();
+      if (!supabase) {
+        setError("Supabase is not configured.");
+        return;
+      }
+
+      const { error: oauthError } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: authCallbackUrl(nextPath),
+        },
+      });
+
+      if (oauthError) {
+        setError(oauthError.message);
+      }
+    });
+  }
+
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
-      <div className="space-y-2">
-        <label htmlFor="admin-email" className="text-sm font-medium">
-          Admin email
-        </label>
-        <Input
-          id="admin-email"
-          type="email"
-          autoComplete="email"
-          required
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          placeholder="you@nothing.digital"
-        />
+    <div className="space-y-6">
+      <form onSubmit={onPasswordSubmit} className="space-y-4">
+        <div className="space-y-2">
+          <label htmlFor="admin-email" className="text-sm font-medium">
+            Email
+          </label>
+          <Input
+            id="admin-email"
+            type="email"
+            autoComplete="username"
+            required
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            placeholder="you@nothing.digital"
+          />
+        </div>
+        <div className="space-y-2">
+          <label htmlFor="admin-password" className="text-sm font-medium">
+            Password
+          </label>
+          <Input
+            id="admin-password"
+            type="password"
+            autoComplete="current-password"
+            required
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            placeholder="••••••••"
+          />
+        </div>
+        <Button type="submit" className="w-full" disabled={pending}>
+          {pending ? "Signing in…" : "Sign in"}
+        </Button>
+      </form>
+
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center" aria-hidden>
+          <div className="w-full border-t border-border" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase tracking-widest">
+          <span className="bg-background px-2 text-muted-foreground">Or</span>
+        </div>
       </div>
-      <Button type="submit" className="w-full" disabled={pending}>
-        {pending ? "Sending…" : "Send magic link"}
-      </Button>
+
+      <div className="space-y-3">
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full"
+          disabled={pending}
+          onClick={onGoogle}
+        >
+          Continue with Google
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          className="w-full"
+          disabled={pending || !email.trim()}
+          onClick={onMagicLink}
+        >
+          Email me a magic link
+        </Button>
+      </div>
+
       {message ? (
         <p className="text-sm text-muted-foreground" role="status">
           {message}
@@ -71,6 +174,6 @@ export function AdminLoginForm({ nextPath }: { nextPath: string }) {
           {error}
         </p>
       ) : null}
-    </form>
+    </div>
   );
 }

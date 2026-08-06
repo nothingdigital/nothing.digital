@@ -24,7 +24,9 @@
   - [ ] Create project and run migrations from `/supabase/migrations/`.
   - [ ] Enable RLS on all tables (`contact_submissions`, `newsletter_subscribers`).
   - [ ] Create policies: anon INSERT on contact/newsletter tables; authenticated service role SELECT.
-  - [ ] Enable Email Auth (magic link); add redirect URL `https://nothing.digital/auth/callback` (and localhost for dev).
+  - [ ] Enable Email Auth (password + magic link); add redirect URL `https://nothing.digital/auth/callback` (and localhost for dev).
+  - [ ] (Optional) Enable Google provider; add Client ID/Secret; same callback redirect URLs.
+  - [ ] Set a password for each `ADMIN_EMAILS` user (Auth → Users → set password) or invite via Google with that email.
   - [ ] Copy project URL, anon key, and service role key to Vercel env vars.
   - [ ] Set `ADMIN_EMAILS` (comma-separated owner emails) in Vercel + GitHub secrets.
 

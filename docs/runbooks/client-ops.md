@@ -3,8 +3,16 @@
 Admin-only CRM for Nothing.Digital clients, billing, managed assets, and work queue.
 
 **Routes:** `/admin/clients` · `/admin/billing` · `/admin/work`  
-**Auth:** Supabase magic link + `ADMIN_EMAILS` (same as Pack F).  
-**Migration:** `supabase/migrations/002_client_ops.sql` — apply in Supabase SQL editor or CLI before first use.
+**Auth:** Supabase password, Google OAuth, or magic link + `ADMIN_EMAILS` allowlist (same gate as Pack F).
+
+### Admin sign-in setup (one-time)
+
+1. **Supabase → Authentication → Providers**
+   - Email: enable (password + magic link).
+   - Google (optional): enable; paste Google Cloud OAuth Client ID/Secret; authorized redirect `https://<project-ref>.supabase.co/auth/v1/callback`.
+2. **URL config:** Site URL + redirect allowlist include `https://nothing.digital/auth/callback` and `http://localhost:3000/auth/callback`.
+3. **Password users:** Authentication → Users → your admin email → set password (or create user with password). Email must be in `ADMIN_EMAILS`.
+4. **Employees later:** add their email to `ADMIN_EMAILS` (Vercel env), create/invite the user in Supabase Auth, have them set a password or use Google with that same email.
 
 Empty Billing/Work lists are expected until you create clients and items — there is no seed data.
 

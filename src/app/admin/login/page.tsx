@@ -8,9 +8,9 @@ export const metadata: Metadata = {
 };
 
 const ERROR_COPY: Record<string, string> = {
-  missing_code: "Magic link was incomplete. Try again.",
+  missing_code: "Sign-in link was incomplete. Try again.",
   config: "Supabase is not configured.",
-  auth: "Could not verify magic link.",
+  auth: "Could not complete sign-in.",
   forbidden: "That email is not on the admin allowlist.",
 };
 
@@ -31,7 +31,7 @@ export default async function AdminLoginPage({
       <div>
         <h2 className="font-display text-3xl tracking-tight">Sign in</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          Magic link access for allowlisted owners only.
+          Password, Google, or magic link — allowlisted owners only.
         </p>
       </div>
       {errorMessage ? (
