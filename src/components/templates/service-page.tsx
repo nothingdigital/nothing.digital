@@ -53,7 +53,7 @@ function ProblemSolutionSection({
       <div className="grid gap-8 md:grid-cols-2">
         <div>
           <h2 className="mb-4 font-display text-2xl">The challenge</h2>
-          <p className="text-muted-foreground">{problem}</p>
+          <p className="leading-relaxed text-muted-foreground">{problem}</p>
         </div>
         <div>
           <h2 className="mb-4 font-display text-2xl">How we help</h2>

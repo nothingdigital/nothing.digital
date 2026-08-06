@@ -54,7 +54,8 @@ export default function PrivacyPage() {
             <p>
               We do not sell your personal information. We share data only with
               trusted service providers necessary to operate our business, such
-              as email delivery and hosting platforms.
+              as email delivery (Resend), newsletter management (Listmonk), and
+              hosting platforms.
             </p>
           </section>
 

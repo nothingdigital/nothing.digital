@@ -40,7 +40,7 @@ export function Footer() {
             >
               Nothing<span className="italic text-primary">.</span>Digital
             </Link>
-            <p className="mt-2 text-sm text-muted-foreground">
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               {siteConfig.tagline}
             </p>
             {socialLinks.length > 0 ? (

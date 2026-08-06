@@ -36,7 +36,7 @@ export default async function PortfolioPage() {
       <SectionContainer>
         {items.length === 0 ? (
           <div className="mx-auto max-w-lg rounded-xl border-2 border-dashed border-border py-16 text-center">
-            <p className="text-muted-foreground">
+            <p className="leading-relaxed text-muted-foreground">
               No published case studies right now. If you have a project in
               mind, we would rather talk about yours.
             </p>

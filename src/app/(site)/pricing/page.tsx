@@ -51,7 +51,7 @@ export default function PricingPage() {
             </Link>
           ))}
         </div>
-        <p className="mx-auto mt-8 max-w-2xl text-center text-sm text-muted-foreground">
+        <p className="mx-auto mt-8 max-w-2xl text-center text-sm leading-relaxed text-muted-foreground">
           Ranges are starting points. Scope, timeline, and budget are confirmed
           on a free scoping call before you commit.
         </p>

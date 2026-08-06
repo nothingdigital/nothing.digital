@@ -135,7 +135,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       </SectionContainer>
 
       <SectionContainer variant="muted">
-        <article className="mx-auto max-w-3xl space-y-6 leading-7 [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:tracking-tight [&_ul]:list-disc [&_ul]:pl-6 [&_li]:mt-2">
+        <article className="mx-auto max-w-3xl space-y-6 leading-relaxed [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:tracking-tight [&_ul]:list-disc [&_ul]:pl-6 [&_li]:mt-2">
           {content}
         </article>
       </SectionContainer>

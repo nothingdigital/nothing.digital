@@ -87,7 +87,7 @@ export default async function PortfolioDetailPage({
           <h1 className="mt-2 text-4xl font-bold tracking-tight md:text-5xl">
             {frontmatter.title}
           </h1>
-          <p className="mt-4 text-lg text-muted-foreground">
+          <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
             {frontmatter.description}
           </p>
 

@@ -3,6 +3,7 @@ import { ArrowRight, Clock, Target, Users } from "lucide-react";
 import dynamic from "next/dynamic";
 
 import { SectionContainer } from "@/components/atoms/section-container";
+import { Reveal } from "@/components/atoms/reveal";
 import { Button } from "@/components/ui/button";
 import { ServiceCard } from "@/components/molecules/service-card";
 import { PortfolioCard } from "@/components/molecules/portfolio-card";
@@ -127,31 +128,40 @@ export default async function HomePage() {
       </SectionContainer>
 
       <SectionContainer variant="muted" id="services">
-        <SectionHeading
-          kicker="What we do"
-          title="Services"
-          description="End-to-end digital expertise."
-        />
+        <Reveal>
+          <SectionHeading
+            kicker="What we do"
+            title="Services"
+            description="End-to-end digital expertise."
+          />
+        </Reveal>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {serviceSummaries.map((service) => (
-            <ServiceCard
+          {serviceSummaries.map((service, index) => (
+            <Reveal
               key={service.href}
-              title={service.title}
-              description={service.description}
-              icon={<service.icon className="h-6 w-6" />}
-              href={service.href}
-            />
+              delay={index * 0.08}
+              className="h-full [&>a]:h-full"
+            >
+              <ServiceCard
+                title={service.title}
+                description={service.description}
+                icon={<service.icon className="h-6 w-6" />}
+                href={service.href}
+              />
+            </Reveal>
           ))}
         </div>
       </SectionContainer>
 
       {featuredWork.length > 0 ? (
         <SectionContainer id="work">
-          <SectionHeading
-            kicker="Selected work"
-            title="Outcomes, not decks"
-            description="Anonymized composites until named clients approve public quotes."
-          />
+          <Reveal>
+            <SectionHeading
+              kicker="Selected work"
+              title="Outcomes, not decks"
+              description="Anonymized composites until named clients approve public quotes."
+            />
+          </Reveal>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {featuredWork.map((item) => (
               <PortfolioCard
@@ -174,67 +184,72 @@ export default async function HomePage() {
       ) : null}
 
       <SectionContainer id="why-us">
-        <SectionHeading
-          kicker="Why Nothing Digital"
-          title="Small studio. Senior hands."
-        />
+        <Reveal>
+          <SectionHeading
+            kicker="Why Nothing Digital"
+            title="Small studio. Senior hands."
+          />
+        </Reveal>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {differentiators.map((item) => (
-            <div
-              key={item.title}
-              className="h-full rounded-xl border-2 border-border bg-card p-6 shadow-md transition hover:-translate-y-0.5 hover:border-primary hover:shadow-xl"
-            >
-              <div className="mb-5 inline-flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary ring-1 ring-primary/20">
-                {item.icon}
+          {differentiators.map((item, index) => (
+            <Reveal key={item.title} delay={index * 0.08} className="h-full">
+              <div className="h-full rounded-xl border-2 border-border bg-card p-6 shadow-md transition hover:-translate-y-0.5 hover:border-primary hover:shadow-xl">
+                <div className="mb-5 inline-flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary ring-1 ring-primary/20">
+                  {item.icon}
+                </div>
+                <h3 className="mb-2 font-display text-xl">{item.title}</h3>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  {item.description}
+                </p>
               </div>
-              <h3 className="mb-2 font-display text-xl">{item.title}</h3>
-              <p className="text-sm leading-relaxed text-muted-foreground">
-                {item.description}
-              </p>
-            </div>
+            </Reveal>
           ))}
         </div>
       </SectionContainer>
 
       <SectionContainer variant="primary" id="newsletter">
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="font-mono text-xs uppercase tracking-[0.35em] text-primary-foreground/70">
-            The monthly dispatch
-          </p>
-          <h2 className="mt-3 font-display text-4xl tracking-tight md:text-5xl">
-            Stay in the loop
-          </h2>
-          <p className="mt-4 text-primary-foreground/80">
-            One email a month. No spam, just insights.
-          </p>
-          <div className="mt-8 inline-block w-full max-w-md text-left">
-            <NewsletterForm />
+        <Reveal>
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="font-mono text-xs uppercase tracking-[0.35em] text-primary-foreground/70">
+              The monthly dispatch
+            </p>
+            <h2 className="mt-3 font-display text-4xl tracking-tight md:text-5xl">
+              Stay in the loop
+            </h2>
+            <p className="mt-4 text-primary-foreground/80">
+              One email a month. No spam, just insights.
+            </p>
+            <div className="mt-8 inline-block w-full max-w-md text-left">
+              <NewsletterForm />
+            </div>
           </div>
-        </div>
+        </Reveal>
       </SectionContainer>
 
       <SectionContainer>
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="font-mono text-xs uppercase tracking-[0.35em] text-primary">
-            Your move
-          </p>
-          <h2 className="mt-3 font-display text-4xl tracking-tight md:text-5xl">
-            Ready to build?
-          </h2>
-          <p className="mt-4 leading-relaxed text-muted-foreground">
-            Book a free scoping call — we will map scope, timeline, and budget
-            before you commit.
-          </p>
-          <div className="mt-10">
-            <Button
-              size="lg"
-              asChild
-              className="w-full shadow-[0_10px_40px_-12px_hsl(var(--primary)/0.55)] sm:w-auto"
-            >
-              <Link href={routes.contact}>Book a free scoping call</Link>
-            </Button>
+        <Reveal>
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="font-mono text-xs uppercase tracking-[0.35em] text-primary">
+              Your move
+            </p>
+            <h2 className="mt-3 font-display text-4xl tracking-tight md:text-5xl">
+              Ready to build?
+            </h2>
+            <p className="mt-4 leading-relaxed text-muted-foreground">
+              Book a free scoping call — we will map scope, timeline, and budget
+              before you commit.
+            </p>
+            <div className="mt-10">
+              <Button
+                size="lg"
+                asChild
+                className="w-full shadow-[0_10px_40px_-12px_hsl(var(--primary)/0.55)] sm:w-auto"
+              >
+                <Link href={routes.contact}>Book a free scoping call</Link>
+              </Button>
+            </div>
           </div>
-        </div>
+        </Reveal>
       </SectionContainer>
     </>
   );
