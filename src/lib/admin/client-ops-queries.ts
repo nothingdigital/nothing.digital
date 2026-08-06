@@ -321,6 +321,7 @@ export type CreateAssetInput = {
   type: AssetType;
   name: string;
   url?: string | null;
+  monitor_url?: string | null;
   env: AssetEnv;
   managed_by_us: boolean;
   notes?: string | null;
@@ -342,6 +343,7 @@ export async function createClientAsset(
       type: input.type,
       name: input.name,
       url: input.url ?? null,
+      monitor_url: input.monitor_url ?? null,
       env: input.env,
       managed_by_us: input.managed_by_us,
       notes: input.notes ?? null,
@@ -352,6 +354,63 @@ export async function createClientAsset(
 
   if (error) return { row: null, error: error.message };
   return { row: data, error: null };
+}
+
+export async function getClientAsset(
+  id: string,
+): Promise<{ row: ClientAssetRow | null; error: string | null }> {
+  const supabase = getServiceRoleClient();
+  if (!supabase) {
+    return { row: null, error: "Supabase is not configured." };
+  }
+
+  const { data, error } = await supabase
+    .from("client_assets")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) return { row: null, error: error.message };
+  return { row: data, error: null };
+}
+
+export type UpdateAssetInput = {
+  id: string;
+  type: AssetType;
+  name: string;
+  url?: string | null;
+  monitor_url?: string | null;
+  env: AssetEnv;
+  managed_by_us: boolean;
+  notes?: string | null;
+  status: AssetStatus;
+};
+
+export async function updateClientAsset(
+  input: UpdateAssetInput,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const supabase = getServiceRoleClient();
+  if (!supabase) {
+    return { ok: false, error: "Supabase is not configured." };
+  }
+
+  const { error } = await supabase
+    .from("client_assets")
+    .update({
+      type: input.type,
+      name: input.name,
+      url: input.url ?? null,
+      monitor_url: input.monitor_url ?? null,
+      env: input.env,
+      managed_by_us: input.managed_by_us,
+      notes: input.notes ?? null,
+      status: input.status,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", input.id);
+
+  if (error) return { ok: false, error: error.message };
+  return { ok: true };
 }
 
 export async function updateClientAssetStatus(

@@ -577,14 +577,14 @@ Nothing.Digital is a digital services company specializing in website developmen
 
 ### 9.4 Post-Launch Month 1–3
 
-| Step | Task                                                 | Owner   | Effort | Status |
-| ---- | ---------------------------------------------------- | ------- | ------ | ------ |
-| 5.18 | Integrate HubSpot CRM for lead tracking              | Backend | M      | 🔲     |
-| 5.19 | Set up email marketing platform (ConvertKit/Beehiiv) | Content | M      | 🔲     |
-| 5.20 | Publish first post-launch blog post                  | Content | M      | 🔲     |
-| 5.21 | Add new portfolio case study                         | Content | M      | 🔲     |
-| 5.22 | Run first disaster recovery drill                    | DevOps  | S      | 🔲     |
-| 5.23 | Quarterly dependency update (Dependabot PRs)         | DevOps  | S      | 🔲     |
+| Step | Task                                                 | Owner   | Effort | Status                                                |
+| ---- | ---------------------------------------------------- | ------- | ------ | ----------------------------------------------------- |
+| 5.18 | Integrate HubSpot CRM for lead tracking              | Backend | M      | 🔲                                                    |
+| 5.19 | Set up email marketing platform (ConvertKit/Beehiiv) | Content | M      | 🔲                                                    |
+| 5.20 | Publish first post-launch blog post                  | Content | M      | ✅ (`content/blog/soft-launch-notes.mdx`, 2026-08-06) |
+| 5.21 | Add new portfolio case study                         | Content | M      | ✅ (studio launch case study; no invented clients)    |
+| 5.22 | Run first disaster recovery drill                    | DevOps  | S      | 🔲                                                    |
+| 5.23 | Quarterly dependency update (Dependabot PRs)         | DevOps  | S      | 🔲                                                    |
 
 ### Phase 5 Deliverables
 
@@ -697,28 +697,28 @@ Applies to **all phases**:
 
 ### Done vs next vs later
 
-|           | Work                                                                                                                 |
-| --------- | -------------------------------------------------------------------------------------------------------------------- |
-| **Done**  | `/admin`; Umami + Calendly + Listmonk live; n8n/Kuma code ready; **Pack H** clients/billing/assets/work (admin-only) |
-| **Next**  | Apply `002_client_ops.sql` on Supabase if needed; n8n only if Slack fan-out needed; CSP allowlist for Umami          |
-| **Later** | Calendly webhook/`bookings`; Kuma; secretary roles; client URL monitors; IT monitoring                               |
+|           | Work                                                                                                                                                                                                                                |
+| --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Done**  | `/admin`; Umami + Calendly + Listmonk live; n8n/Kuma code ready; **Pack H** clients/billing/assets/work (admin-only); admin follow-ups 1–6 (ops glance, inbox→client, newsletter CSV, work sort, health chips, asset `monitor_url`) |
+| **Next**  | Apply `003_asset_monitor_url.sql` on Supabase; set Listmonk Vercel env if `/api/health` still `listmonk: false`; Resend SPF + GSC/Bing submit — see `docs/runbooks/ops-credentials.md`                                              |
+| **Later** | Calendly webhook/`bookings`; Kuma; secretary roles; n8n Slack fan-out; IT monitoring                                                                                                                                                |
 
 ### Scope (ponytail order)
 
-| Step | Work                                              | Est. $/mo | Gate                                    |
-| ---- | ------------------------------------------------- | --------- | --------------------------------------- |
-| 6.1  | Owner `/admin` inbox (Supabase Auth magic link)   | $0        | ✅ code; gate: Auth + `ADMIN_EMAILS`    |
-| 6.2  | Umami on PikaPods → drop Vercel Analytics         | ~$1.80    | ✅ Live                                 |
-| 6.3  | Calendly on `/contact` (+ webhook when volume)    | $0–10     | ✅ Live; webhook deferred               |
-| 6.4  | Listmonk when campaigns start                     | ~$2–3     | ✅ Live; campaign content pending       |
-| 6.5  | n8n when Slack/Listmonk fan-out needed            | ~$4–5     | 🟡 code ready; 🔲 pod + webhook env     |
-| 6.6  | Uptime Kuma only if free UptimeRobot insufficient | ~$1.80    | 🟡 admin link ready; prefer UptimeRobot |
-| 6.7  | Secretary role (Phase B) on hire                  | $0        | Least-privilege staff login             |
-| 6.8  | Secondary pods (FreeScout, etc.)                  | defer     | See §6 of detail doc — default **no**   |
-| 7.1  | Pack H client accounts + manual billing           | $0        | ✅ code; apply `002_client_ops.sql`     |
-| 7.2  | Pack H assets + work queue                        | $0        | ✅ code                                 |
-| 7.3  | Client URL uptime links on assets                 | $0–2      | ⬜ Deferred                             |
-| 7.4  | IT asset monitoring                               | defer     | ⬜ When IT retainers exist              |
+| Step | Work                                              | Est. $/mo | Gate                                           |
+| ---- | ------------------------------------------------- | --------- | ---------------------------------------------- |
+| 6.1  | Owner `/admin` inbox (Supabase Auth magic link)   | $0        | ✅ code; gate: Auth + `ADMIN_EMAILS`           |
+| 6.2  | Umami on PikaPods → drop Vercel Analytics         | ~$1.80    | ✅ Live                                        |
+| 6.3  | Calendly on `/contact` (+ webhook when volume)    | $0–10     | ✅ Live; webhook deferred                      |
+| 6.4  | Listmonk when campaigns start                     | ~$2–3     | ✅ Live; campaign content pending              |
+| 6.5  | n8n when Slack/Listmonk fan-out needed            | ~$4–5     | 🟡 code ready; 🔲 pod + webhook env            |
+| 6.6  | Uptime Kuma only if free UptimeRobot insufficient | ~$1.80    | 🟡 admin link ready; prefer UptimeRobot        |
+| 6.7  | Secretary role (Phase B) on hire                  | $0        | Least-privilege staff login                    |
+| 6.8  | Secondary pods (FreeScout, etc.)                  | defer     | See §6 of detail doc — default **no**          |
+| 7.1  | Pack H client accounts + manual billing           | $0        | ✅ code; apply `002_client_ops.sql`            |
+| 7.2  | Pack H assets + work queue                        | $0        | ✅ code                                        |
+| 7.3  | Client URL uptime links on assets                 | $0–2      | ✅ `monitor_url` + edit page (migration `003`) |
+| 7.4  | IT asset monitoring                               | defer     | ⬜ When IT retainers exist                     |
 
 **Year-1 recommended pack:** Admin + Umami + Listmonk ≈ **$5–15/mo** incremental.
 

@@ -25,3 +25,11 @@ Last run: 2026-08-06
 - `www` redirect is handled by Vercel CNAME.
 - Google Search Console verification TXT is present.
 - Resend DKIM is present at `dkim._domainkey.nothing.digital`; SPF still needs `include:_spf.resend.com` before `?all` for full Resend alignment.
+
+**Target SPF (apply at DNS provider):**
+
+```text
+v=spf1 include:spf.messagingengine.com include:_spf.resend.com ?all
+```
+
+See [ops-credentials.md](./ops-credentials.md) for the full post-launch credential queue.

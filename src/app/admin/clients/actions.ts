@@ -21,6 +21,7 @@ import {
   createWorkItem,
   deleteWorkItem,
   updateClient,
+  updateClientAsset,
   updateClientAssetStatus,
   updateInvoice,
   updateInvoiceStatus,
@@ -283,6 +284,7 @@ export async function createAssetAction(formData: FormData): Promise<void> {
     type,
     name,
     url: formOptional(formData, "url"),
+    monitor_url: formOptional(formData, "monitor_url"),
     env,
     managed_by_us,
     notes: formOptional(formData, "notes"),
@@ -291,6 +293,44 @@ export async function createAssetAction(formData: FormData): Promise<void> {
 
   if (result.error || !result.row) {
     throw new Error(result.error ?? "Create failed.");
+  }
+
+  revalidatePath(`/admin/clients/${client_id}`);
+  redirect(`/admin/clients/${client_id}?tab=assets`);
+}
+
+export async function updateAssetAction(formData: FormData): Promise<void> {
+  await requireAdmin();
+
+  const id = formString(formData, "id");
+  const client_id = formString(formData, "client_id");
+  const type = formString(formData, "type");
+  const name = formString(formData, "name");
+  const env = formString(formData, "env");
+  const status = formString(formData, "status");
+  const managed_by_us = formData.get("managed_by_us") === "on";
+
+  if (!id || !client_id || !name) {
+    throw new Error("Asset, client, and name are required.");
+  }
+  if (!isAssetType(type) || !isAssetEnv(env) || !isAssetStatus(status)) {
+    throw new Error("Invalid asset fields.");
+  }
+
+  const result = await updateClientAsset({
+    id,
+    type,
+    name,
+    url: formOptional(formData, "url"),
+    monitor_url: formOptional(formData, "monitor_url"),
+    env,
+    managed_by_us,
+    notes: formOptional(formData, "notes"),
+    status,
+  });
+
+  if (!result.ok) {
+    throw new Error(result.error);
   }
 
   revalidatePath(`/admin/clients/${client_id}`);

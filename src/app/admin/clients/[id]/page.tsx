@@ -372,6 +372,14 @@ export default async function AdminClientDetailPage({
             <AdminField label="URL" htmlFor="url">
               <Input id="url" name="url" type="url" placeholder="https://" />
             </AdminField>
+            <AdminField label="Monitor URL (optional)" htmlFor="monitor_url">
+              <Input
+                id="monitor_url"
+                name="monitor_url"
+                type="url"
+                placeholder="https://uptimerobot.com/…"
+              />
+            </AdminField>
             <label className="flex items-center gap-2 text-sm">
               <input
                 type="checkbox"
@@ -423,13 +431,34 @@ export default async function AdminClientDetailPage({
                         </a>
                       </>
                     ) : null}
+                    {asset.monitor_url ? (
+                      <>
+                        {" · "}
+                        <a
+                          href={asset.monitor_url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-primary underline-offset-4 hover:underline"
+                        >
+                          monitor
+                        </a>
+                      </>
+                    ) : null}
                   </p>
                 </div>
-                <AssetStatusSelect
-                  id={asset.id}
-                  status={asset.status}
-                  clientId={id}
-                />
+                <div className="flex items-center gap-2">
+                  <Link
+                    href={`/admin/clients/${id}/assets/${asset.id}/edit`}
+                    className="text-sm text-primary underline-offset-4 hover:underline"
+                  >
+                    Edit
+                  </Link>
+                  <AssetStatusSelect
+                    id={asset.id}
+                    status={asset.status}
+                    clientId={id}
+                  />
+                </div>
               </li>
             ))}
           </ul>

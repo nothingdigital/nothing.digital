@@ -167,6 +167,7 @@ type Tables = {
       type: string;
       name: string;
       url: string | null;
+      monitor_url: string | null;
       env: string;
       managed_by_us: boolean;
       notes: string | null;
@@ -180,6 +181,7 @@ type Tables = {
       type: string;
       name: string;
       url?: string | null;
+      monitor_url?: string | null;
       env?: string;
       managed_by_us?: boolean;
       notes?: string | null;
@@ -193,6 +195,7 @@ type Tables = {
       type?: string;
       name?: string;
       url?: string | null;
+      monitor_url?: string | null;
       env?: string;
       managed_by_us?: boolean;
       notes?: string | null;
