@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { createClientFromInboxAction } from "@/app/admin/inbox/actions";
+import { adminControlClass } from "@/components/admin/admin-form";
 import { StatusSelect } from "@/components/admin/status-select";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { INBOX_STATUSES, isInboxStatus } from "@/lib/admin/config";
 import { listContactSubmissions } from "@/lib/admin/queries";
 
@@ -96,6 +99,27 @@ export default async function AdminInboxPage({
               </div>
             </dl>
             <p className="mt-3 whitespace-pre-wrap text-sm">{row.message}</p>
+            <form
+              action={createClientFromInboxAction}
+              className="mt-4 flex flex-wrap items-end gap-2 border-t border-border pt-3"
+            >
+              <input type="hidden" name="submission_id" value={row.id} />
+              <label className="flex flex-col gap-1 text-xs text-muted-foreground">
+                After create
+                <select
+                  name="mark_status"
+                  defaultValue="replied"
+                  className={adminControlClass}
+                >
+                  <option value="">Leave status</option>
+                  <option value="replied">Mark replied</option>
+                  <option value="archived">Mark archived</option>
+                </select>
+              </label>
+              <Button type="submit" size="sm" variant="secondary">
+                Create client
+              </Button>
+            </form>
           </li>
         ))}
       </ul>
