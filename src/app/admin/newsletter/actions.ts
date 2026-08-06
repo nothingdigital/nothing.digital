@@ -7,17 +7,18 @@ import { unsubscribeNewsletterSubscriber } from "@/lib/admin/queries";
 
 export async function unsubscribeNewsletterAction(
   formData: FormData,
-): Promise<{ ok: true } | { ok: false; error: string }> {
+): Promise<void> {
   await requireAdmin();
 
   const id = String(formData.get("id") ?? "").trim();
   if (!id) {
-    return { ok: false, error: "Subscriber id is required." };
+    throw new Error("Subscriber id is required.");
   }
 
   const result = await unsubscribeNewsletterSubscriber(id);
-  if (result.ok) {
-    revalidatePath("/admin/newsletter");
+  if (!result.ok) {
+    throw new Error(result.error);
   }
-  return result;
+
+  revalidatePath("/admin/newsletter");
 }
