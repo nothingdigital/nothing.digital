@@ -22,6 +22,9 @@ Empty Billing/Work lists are expected until you create clients and items — the
 2. **Invoice** → `/admin/billing` → New invoice (pick client) **or** client detail → Billing → New invoice → set status `draft`/`sent`; mark `paid` when money lands; set `void` to cancel (no delete).
 3. **Asset** → client detail → Assets → add website/app/domain you manage (URL optional).
 4. **Work** → `/admin/work` Add work (pick client) **or** client detail → Work; use global `/admin/work` for open items across clients (Open excludes `done`).
+   - **Sort chips** (`?sort=`): `due` (default — earliest due first, nulls last), `priority` (high → med → low), `created` (newest first). Status chips preserve the current sort; Open preserves non-default sort.
+   - **Emphasis:** `blocked` rows get a destructive tint + `· blocked` meta; otherwise items due within 7 days (or overdue) get an amber tint + `· due soon`.
+   - No assignees or kanban in v1 — status chips + sort only.
 
 ## First invoice checklist
 
@@ -37,6 +40,7 @@ Empty Billing/Work lists are expected until you create clients and items — the
 2. On `/admin/work`, use **Add work** (pick client) or open the client → Work tab.
 3. Confirm the item appears on Open (default Open filter hides `done`).
 4. Change status from the list dropdown, or open **Edit** to change fields / delete permanently.
+5. Use sort chips (`due` / `priority` / `created`) to reorder; blocked and due-soon rows are visually emphasized.
 
 ## Billing rules (v1)
 
