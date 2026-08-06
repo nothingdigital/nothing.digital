@@ -61,17 +61,37 @@ Plan: **UptimeRobot free** — 5-minute interval, 50 monitors, email alerts.
 
 ## Search engine submission
 
-1. **Google Search Console**
-   - Open <https://search.google.com/search-console>.
-   - Choose **Domain** property and enter `nothing.digital`.
-   - Copy the provided `TXT` verification record.
-   - In Cloudflare DNS, add a `TXT` record on `@` with that value.
-   - Click **Verify** in Search Console.
-   - Go to **Sitemaps** → enter `https://nothing.digital/sitemap.xml` and submit.
-2. **Bing Webmaster Tools**
-   - Open <https://www.bing.com/webmasters>.
-   - Add site — use **Import from Google Search Console** if available, otherwise verify by DNS `TXT` record.
-   - Submit sitemap `https://nothing.digital/sitemap.xml`.
+Prerequisites: DNS records below must be added at your DNS provider (Cloudflare / Sav.com). This repo already generates `/sitemap.xml` and `/robots.txt`.
+
+### DNS verification records
+
+| Provider              | Type  | Name | Value                                 | Status        |
+| --------------------- | ----- | ---- | ------------------------------------- | ------------- |
+| Google Search Console | `TXT` | `@`  | `google-site-verification=REPLACE_ME` | pending token |
+| Bing Webmaster Tools  | `TXT` | `@`  | `REPLACE_ME`                          | pending token |
+
+Paste the tokens from each dashboard and update the table above, then add the records.
+
+### Google Search Console
+
+1. Open <https://search.google.com/search-console>.
+2. Choose **Domain** property and enter `nothing.digital`.
+3. Copy the provided `TXT` verification record.
+4. Add the `TXT` record on `@` in your DNS provider.
+5. Click **Verify** in Search Console.
+6. Go to **Sitemaps** → enter `https://nothing.digital/sitemap.xml` and submit.
+
+### Bing Webmaster Tools
+
+1. Open <https://www.bing.com/webmasters>.
+2. Add site — use **Import from Google Search Console** if available, otherwise verify by DNS `TXT` record.
+3. Submit sitemap `https://nothing.digital/sitemap.xml`.
+
+### Verification checklist
+
+- [ ] Google Search Console domain property verified
+- [ ] Bing Webmaster Tools site verified
+- [ ] `https://nothing.digital/sitemap.xml` submitted to both
 
 ## Runbooks
 
