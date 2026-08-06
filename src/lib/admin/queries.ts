@@ -33,6 +33,27 @@ export async function listContactSubmissions(
   return { rows: data ?? [], error: null };
 }
 
+export async function getContactSubmission(
+  id: string,
+): Promise<{ row: ContactSubmission | null; error: string | null }> {
+  const supabase = getServiceRoleClient();
+  if (!supabase) {
+    return { row: null, error: "Supabase is not configured." };
+  }
+
+  const { data, error } = await supabase
+    .from("contact_submissions")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) {
+    return { row: null, error: error.message };
+  }
+
+  return { row: data, error: null };
+}
+
 export async function updateContactStatus(
   id: string,
   status: InboxStatus,
