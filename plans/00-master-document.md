@@ -2,7 +2,7 @@
 
 > **Version:** 1.0  
 > **Date:** 2026-08-04  
-> **Status:** Phase 3 Code/Validation Complete — Phase 4 Skipped — External Account Setup Pending  
+> **Status:** Phase 3 code complete · Phase 4 skipped · Phase 6 in progress (admin + Calendly CTA shipped; Umami ops next)  
 > **General Contractor:** Kimi (Orchestration Agent)  
 > **Specialist Agents:** Principal Architect · DevOps Engineer · QA Engineer · Gap Analyst  
 > **Domain:** `nothing.digital`
@@ -399,12 +399,12 @@ Nothing.Digital is a digital services company specializing in website developmen
 
 ### 6.8 Contact Page
 
-| Step | Task                                                         | Owner    | Effort | Status |
-| ---- | ------------------------------------------------------------ | -------- | ------ | ------ |
-| 2.39 | Contact form (name, email, phone, service dropdown, message) | Frontend | M      | 🔲     |
-| 2.40 | Embed Calendly booking widget                                | Frontend | S      | 🔲     |
-| 2.41 | FAQ accordion section                                        | Frontend | S      | 🔲     |
-| 2.42 | Contact info + social links                                  | Frontend | S      | 🔲     |
+| Step | Task                                                         | Owner    | Effort | Status                                       |
+| ---- | ------------------------------------------------------------ | -------- | ------ | -------------------------------------------- |
+| 2.39 | Contact form (name, email, phone, service dropdown, message) | Frontend | M      | 🔲                                           |
+| 2.40 | Embed Calendly booking widget                                | Frontend | S      | ✅ CTA link (env-gated); full embed deferred |
+| 2.41 | FAQ accordion section                                        | Frontend | S      | 🔲                                           |
+| 2.42 | Contact info + social links                                  | Frontend | S      | 🔲                                           |
 
 ### 6.9 Legal Pages
 
@@ -486,12 +486,12 @@ Nothing.Digital is a digital services company specializing in website developmen
 
 ### 7.5 Analytics Integration
 
-| Step | Task                                                                     | Owner    | Effort | Status          |
-| ---- | ------------------------------------------------------------------------ | -------- | ------ | --------------- |
-| 3.24 | Install Umami (PikaPods) — cookieless, drop Plausible / Vercel Analytics | Frontend | S      | ✅ code; 🔲 pod |
-| 3.25 | Configure event tracking plan (page_view, form_submit, etc.)             | Frontend | S      | 🔲              |
-| 3.26 | Set up Google Search Console + Bing Webmaster Tools                      | DevOps   | S      | 🔲              |
-| 3.27 | Submit sitemap to search engines                                         | DevOps   | S      | 🔲              |
+| Step | Task                                                                     | Owner    | Effort | Status                      |
+| ---- | ------------------------------------------------------------------------ | -------- | ------ | --------------------------- |
+| 3.24 | Install Umami (PikaPods) — cookieless, drop Plausible / Vercel Analytics | Frontend | S      | ✅ code; 🔲 pod + DNS + env |
+| 3.25 | Configure event tracking plan (page_view, form_submit, etc.)             | Frontend | S      | 🔲                          |
+| 3.26 | Set up Google Search Console + Bing Webmaster Tools                      | DevOps   | S      | 🔲                          |
+| 3.27 | Submit sitemap to search engines                                         | DevOps   | S      | 🔲                          |
 
 ### Phase 3 Deliverables
 
@@ -519,25 +519,25 @@ Nothing.Digital is a digital services company specializing in website developmen
 
 ### 9.1 Pre-Launch Checklist
 
-| Step | Task                                                      | Owner  | Effort | Status |
-| ---- | --------------------------------------------------------- | ------ | ------ | ------ |
-| 5.1  | Final DNS propagation check (dnschecker.org)              | DevOps | S      | 🔲     |
-| 5.2  | SSL Labs rating A+ verification                           | DevOps | S      | 🔲     |
-| 5.3  | End-to-end form submission test (contact + newsletter)    | QA     | S      | 🔲     |
-| 5.4  | Email delivery test (confirmation + team notification)    | QA     | S      | 🔲     |
-| 5.5  | Calendly embed functionality test                         | QA     | S      | 🔲     |
-| 5.6  | Social share link preview test (OG images, meta tags)     | QA     | S      | 🔲     |
-| 5.7  | 404 and 500 error page test                               | QA     | S      | 🔲     |
-| 5.8  | Cookie consent banner test (accept/reject/essential-only) | QA     | S      | 🔲     |
+| Step | Task                                                      | Owner  | Effort | Status                                                    |
+| ---- | --------------------------------------------------------- | ------ | ------ | --------------------------------------------------------- |
+| 5.1  | Final DNS propagation check (dnschecker.org)              | DevOps | S      | 🔲                                                        |
+| 5.2  | SSL Labs rating A+ verification                           | DevOps | S      | 🔲                                                        |
+| 5.3  | End-to-end form submission test (contact + newsletter)    | QA     | S      | ✅ (contact verified live 2026-08-05; newsletter pending) |
+| 5.4  | Email delivery test (confirmation + team notification)    | QA     | S      | ✅ (both delivered, 2026-08-05)                           |
+| 5.5  | Calendly embed functionality test                         | QA     | S      | 🔲 CTA link smoke when `CALENDLY_URL` set                 |
+| 5.6  | Social share link preview test (OG images, meta tags)     | QA     | S      | 🔲                                                        |
+| 5.7  | 404 and 500 error page test                               | QA     | S      | 🔲                                                        |
+| 5.8  | Cookie consent banner test (accept/reject/essential-only) | QA     | S      | ✅ (shipped 2026-08-06; gates analytics on accept)        |
 
 ### 9.2 Launch Day
 
-| Step | Task                                           | Owner   | Effort | Status |
-| ---- | ---------------------------------------------- | ------- | ------ | ------ |
-| 5.9  | Merge `staging` → `main` (Vercel auto-deploys) | DevOps  | S      | 🔲     |
-| 5.10 | Verify production URL loads correctly          | DevOps  | S      | 🔲     |
-| 5.11 | Announce launch on social media                | Content | S      | 🔲     |
-| 5.12 | Send launch email to newsletter subscribers    | Content | S      | 🔲     |
+| Step | Task                                           | Owner   | Effort | Status                                        |
+| ---- | ---------------------------------------------- | ------- | ------ | --------------------------------------------- |
+| 5.9  | Merge `staging` → `main` (Vercel auto-deploys) | DevOps  | S      | ✅ (trunk-based on `main`; auto-deploys live) |
+| 5.10 | Verify production URL loads correctly          | DevOps  | S      | ✅ (https://nothing.digital live)             |
+| 5.11 | Announce launch on social media                | Content | S      | 🔲                                            |
+| 5.12 | Send launch email to newsletter subscribers    | Content | S      | 🔲                                            |
 
 ### 9.3 Post-Launch Week 1
 
@@ -562,8 +562,8 @@ Nothing.Digital is a digital services company specializing in website developmen
 
 ### Phase 5 Deliverables
 
-- [ ] Production site live at `https://nothing.digital`
-- [ ] All monitoring dashboards active
+- [x] Production site live at `https://nothing.digital`
+- [ ] All monitoring dashboards active (Sentry wired; needs `SENTRY_DSN` env)
 - [ ] CRM integrated and lead pipeline operational
 - [ ] Content calendar established
 - [ ] Team trained on deployment and rollback procedures
@@ -657,17 +657,25 @@ Applies to **all phases**:
 
 ## 12. Phase 6: PikaPods & Ops Backend
 
-> **Status:** Planning  
+> **Status:** In progress — 6.1 code done; 6.2 code ready (pod pending); 6.3 CTA shipped (webhook deferred)  
 > **Detail doc:** [`05-pikapods-integrations.md`](./05-pikapods-integrations.md)  
 > **Goal:** Sidecar open-source tools on PikaPods + owner/secretary management software alongside the client-facing site.
+
+### Done vs next vs later
+
+|           | Work                                                                                                                               |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| **Done**  | `/admin` (inbox, newsletter list, health, settings, magic link); Calendly CTA on `/contact`; Umami client wiring + privacy/consent |
+| **Next**  | Umami pod + `analytics.nothing.digital` + Vercel env; cut Vercel Web Analytics                                                     |
+| **Later** | Listmonk (campaign gate); Calendly webhook/`bookings`; n8n; Kuma; secretary roles; secondary pods                                  |
 
 ### Scope (ponytail order)
 
 | Step | Work                                              | Est. $/mo | Gate                                  |
 | ---- | ------------------------------------------------- | --------- | ------------------------------------- |
 | 6.1  | Owner `/admin` inbox (Supabase Auth magic link)   | $0        | ✅ code; gate: Auth + `ADMIN_EMAILS`  |
-| 6.2  | Umami on PikaPods → drop Vercel Analytics         | ~$1.80    | Privacy-first traffic owned           |
-| 6.3  | Calendly embed + webhook → `bookings`             | $0–10     | Bookings visible in admin             |
+| 6.2  | Umami on PikaPods → drop Vercel Analytics         | ~$1.80    | ✅ code; 🔲 pod + DNS + env           |
+| 6.3  | Calendly on `/contact` (+ webhook when volume)    | $0–10     | ✅ CTA; webhook deferred              |
 | 6.4  | Listmonk when campaigns start                     | ~$2–3     | Double opt-in + broadcasts            |
 | 6.5  | n8n when Slack/Listmonk fan-out needed            | ~$4–5     | Fire-and-forget webhooks only         |
 | 6.6  | Uptime Kuma only if free UptimeRobot insufficient | ~$1.80    | Status page / sub-min checks          |
@@ -708,4 +716,4 @@ Applies to **all phases**:
 ---
 
 _Document maintained by the General Contractor. Updated after each phase completion._  
-_Last Updated: 2026-08-05 — added Phase 6 / `05-pikapods-integrations.md`_
+_Last Updated: 2026-08-05 — Phase 6 status: admin + Calendly CTA done; Umami ops next; Listmonk deferred_

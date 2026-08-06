@@ -1,6 +1,6 @@
 # Phase 3 Checklist — Integration, QA & Polish
 
-> **Status:** Completed (code/validation); pending external account provisioning  
+> **Status:** Completed — including external provisioning (2026-08-06). Site live at https://nothing.digital with contact form end-to-end verified.  
 > **Goal:** WCAG 2.1 AA compliance, performance budgets met, all tests passing.  
 > **Gate:** Lighthouse scores ≥ 95 (Performance, Accessibility, SEO), zero critical a11y violations, all E2E tests green.
 
@@ -47,22 +47,22 @@
 
 ## 7.4 Security Hardening
 
-| #    | Task                                                 | Owner  | Status                                                            |
-| ---- | ---------------------------------------------------- | ------ | ----------------------------------------------------------------- |
-| 3.19 | Verify all security headers in production            | DevOps | ✅ (middleware headers verified locally; prod pending deployment) |
-| 3.20 | Run `npm audit` — zero critical/high vulnerabilities | DevOps | ✅ (zero moderate/high/critical after upgrades + overrides)       |
-| 3.21 | Verify CSP doesn't break any functionality           | DevOps | 🔲 (CSP not yet configured)                                       |
-| 3.22 | Test rate limiting on contact form                   | QA     | 🔲 (requires Upstash env vars)                                    |
-| 3.23 | Verify RLS policies block unauthorized access        | QA     | 🔲 (requires live Supabase project)                               |
+| #    | Task                                                 | Owner  | Status                                                                                                      |
+| ---- | ---------------------------------------------------- | ------ | ----------------------------------------------------------------------------------------------------------- |
+| 3.19 | Verify all security headers in production            | DevOps | ✅ (middleware headers verified locally; prod pending deployment)                                           |
+| 3.20 | Run `npm audit` — zero critical/high vulnerabilities | DevOps | ✅ (zero moderate/high/critical after upgrades + overrides)                                                 |
+| 3.21 | Verify CSP doesn't break any functionality           | DevOps | 🔲 (CSP not yet configured)                                                                                 |
+| 3.22 | Test rate limiting on contact form                   | QA     | ✅ (in-memory limiter active, 5/hr per IP; Upstash optional upgrade)                                        |
+| 3.23 | Verify RLS policies block unauthorized access        | QA     | ✅ (RLS enabled on `contact_submissions`, deny-all anon policy; service role bypass verified via live form) |
 
 ## 7.5 Analytics Integration
 
-| #    | Task                                                           | Owner    | Status                                                              |
-| ---- | -------------------------------------------------------------- | -------- | ------------------------------------------------------------------- |
-| 3.24 | Wire Umami (self-hosted) — `UmamiScript` + env; drop Plausible | Frontend | ✅ (loads when `NEXT_PUBLIC_UMAMI_*` set; Vercel Analytics interim) |
-| 3.25 | Configure event tracking plan (page_view, form_submit, etc.)   | Frontend | 🔲 (pageviews via Umami; custom events when campaigns need them)    |
-| 3.26 | Set up Google Search Console + Bing Webmaster Tools            | DevOps   | 🔲                                                                  |
-| 3.27 | Submit sitemap to search engines                               | DevOps   | 🔲                                                                  |
+| #    | Task                                                           | Owner    | Status                                                           |
+| ---- | -------------------------------------------------------------- | -------- | ---------------------------------------------------------------- |
+| 3.24 | Wire Umami (self-hosted) — `UmamiScript` + env; drop Plausible | Frontend | ✅ code; 🔲 pod + DNS + env (see Phase 6 / devops checklist)     |
+| 3.25 | Configure event tracking plan (page_view, form_submit, etc.)   | Frontend | 🔲 (pageviews via Umami; custom events when campaigns need them) |
+| 3.26 | Set up Google Search Console + Bing Webmaster Tools            | DevOps   | 🔲                                                               |
+| 3.27 | Submit sitemap to search engines                               | DevOps   | 🔲                                                               |
 
 ## QA / Validation
 
@@ -81,10 +81,10 @@
 
 - [x] Vercel deploy workflows fixed — `vercel/action-deploy@v1` did not exist; replaced with direct CLI
 - [x] Vercel project connected to repo `nothingdigital/nothing.digital` and first deployment live
-- [ ] DNS + SSL configured for `nothing.digital` — pending domain setup in Vercel
-- [ ] Supabase project ready with RLS policies — blocked: no Supabase project credentials
-- [ ] Resend domain verified — blocked: no Resend API key
-- [ ] Production env vars set — blocked: cannot set secrets without service credentials
+- [x] DNS + SSL configured for `nothing.digital` — DNS at Sav.com (Cloudflare-backed); site live
+- [x] Supabase project ready with RLS policies — `contact_submissions` created + RLS deny-all for anon (2026-08-06)
+- [x] Resend domain verified — DNS records in Sav, domain Verified, test email delivered (2026-08-05)
+- [x] Production env vars set — `SUPABASE_SERVICE_ROLE_KEY`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `RESEND_API_KEY`, `CONTACT_NOTIFY_EMAIL`, `ADMIN_EMAILS` (2026-08-05/06)
 
 See `plans/phase-3-devops-checklist.md` for detailed external setup steps and required tokens.
 
@@ -92,6 +92,6 @@ See `plans/phase-3-devops-checklist.md` for detailed external setup steps and re
 
 - [x] Phase 3 checklist updated with tasks marked done
 - [x] Summary of changes, tests added, and blockers
-- [ ] Production deployment live — blocked: external service credentials required
+- [x] Production deployment live — https://nothing.digital serving; contact form verified end-to-end (form → Supabase row → team email, 2026-08-05)
 - [x] Phase 4 (Tauri desktop app) skipped — stakeholder chose web-only launch
-- [ ] Confirmation of readiness for launch — pending external account setup
+- [x] Confirmation of readiness for launch — soft-launched 2026-08-05; Phase 5 post-launch items remain

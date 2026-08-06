@@ -1,12 +1,12 @@
-# Conversion Improvements — Scratchpad
+# Nothing.Digital — Scratchpad
 
 ## Current state
 
-- Goal: Implement worthwhile items from 10-point conversion audit; skip asset-dependent/deceptive ones.
-- Status: Done locally, uncommitted. Awaiting push approval.
-- Current step: QA passed (lint, 55/55 unit, production build).
-- Next action: Push when user confirms.
-- Updated: 2026-08-05
+- Goal: Phase 5 launch + Phase 6 PikaPods ops rollout.
+- Status: Site live at https://nothing.digital; contact pipeline verified end-to-end (form → Supabase RLS-locked table → Resend team email). Admin inbox + magic-link auth live. Cookie consent, global-error, Sentry instrumentation, Calendly CTA (env-gated) all shipped.
+- Current step: Waiting on user account tasks.
+- Next action: User sets `CALENDLY_URL` (needs Calendly account), buys Umami pod, optional `SENTRY_DSN`; then I redeploy/finish wiring.
+- Updated: 2026-08-06
 
 ## Plan
 
