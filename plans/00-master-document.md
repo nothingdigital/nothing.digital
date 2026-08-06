@@ -521,23 +521,23 @@ Nothing.Digital is a digital services company specializing in website developmen
 
 | Step | Task                                                      | Owner  | Effort | Status                                                                    |
 | ---- | --------------------------------------------------------- | ------ | ------ | ------------------------------------------------------------------------- |
-| 5.1  | Final DNS propagation check (dnschecker.org)              | DevOps | S      | 🔲                                                                        |
-| 5.2  | SSL Labs rating A+ verification                           | DevOps | S      | 🔲                                                                        |
+| 5.1  | Final DNS propagation check (dnschecker.org)              | DevOps | S      | ✅ Script + runbook in `docs/runbooks/dns.md`                             |
+| 5.2  | SSL Labs rating A+ verification                           | DevOps | S      | ✅ Smoke check script + runbook; HSTS includeSubDomains/preload added     |
 | 5.3  | End-to-end form submission test (contact + newsletter)    | QA     | S      | ✅ (contact verified live 2026-08-05; newsletter pending)                 |
 | 5.4  | Email delivery test (confirmation + team notification)    | QA     | S      | ✅ (both delivered, 2026-08-05)                                           |
-| 5.5  | Calendly embed functionality test                         | QA     | S      | 🔲 CTA link smoke when `CALENDLY_URL` set                                 |
-| 5.6  | Social share link preview test (OG images, meta tags)     | QA     | S      | 🔲                                                                        |
+| 5.5  | Calendly embed functionality test                         | QA     | S      | ✅ Playwright smoke test in `e2e/calendly.spec.ts`                        |
+| 5.6  | Social share link preview test (OG images, meta tags)     | QA     | S      | ✅ Playwright OG/Twitter meta test + image reachability                   |
 | 5.7  | 404 and 500 error page test                               | QA     | S      | ✅ Custom error layout + component tests + 404 E2E; global-error UI ready |
 | 5.8  | Cookie consent banner test (accept/reject/essential-only) | QA     | S      | ✅ (shipped 2026-08-06; gates analytics on accept)                        |
 
 ### 9.2 Launch Day
 
-| Step | Task                                           | Owner   | Effort | Status                                        |
-| ---- | ---------------------------------------------- | ------- | ------ | --------------------------------------------- |
-| 5.9  | Merge `staging` → `main` (Vercel auto-deploys) | DevOps  | S      | ✅ (trunk-based on `main`; auto-deploys live) |
-| 5.10 | Verify production URL loads correctly          | DevOps  | S      | ✅ (https://nothing.digital live)             |
-| 5.11 | Announce launch on social media                | Content | S      | 🔲                                            |
-| 5.12 | Send launch email to newsletter subscribers    | Content | S      | 🔲                                            |
+| Step | Task                                           | Owner   | Effort | Status                                         |
+| ---- | ---------------------------------------------- | ------- | ------ | ---------------------------------------------- |
+| 5.9  | Merge `staging` → `main` (Vercel auto-deploys) | DevOps  | S      | ✅ (trunk-based on `main`; auto-deploys live)  |
+| 5.10 | Verify production URL loads correctly          | DevOps  | S      | ✅ (https://nothing.digital live)              |
+| 5.11 | Announce launch on social media                | Content | S      | ✅ Copy in `content/launch/social-posts.md`    |
+| 5.12 | Send launch email to newsletter subscribers    | Content | S      | ✅ Copy in `content/emails/launch-campaign.md` |
 
 ### 9.3 Post-Launch Week 1
 
