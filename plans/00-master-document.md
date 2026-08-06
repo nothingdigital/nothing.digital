@@ -22,7 +22,8 @@
 9. [Phase 5: Launch & Post-Launch](#9-phase-5-launch--post-launch)
 10. [Cross-Cutting Concerns](#10-cross-cutting-concerns)
 11. [Risk Register](#11-risk-register)
-12. [Reference Documents](#12-reference-documents)
+12. [Phase 6: PikaPods & Ops Backend](#12-phase-6-pikapods--ops-backend)
+13. [Reference Documents](#13-reference-documents)
 
 ---
 
@@ -32,12 +33,13 @@ This master document consolidates the outputs of four specialist planning agents
 
 ### Specialist Agent Deliverables
 
-| Agent                   | Document                    | Lines | Key Contribution                                                                            |
-| ----------------------- | --------------------------- | ----- | ------------------------------------------------------------------------------------------- |
-| **Principal Architect** | `01-principal-architect.md` | 2,763 | System architecture, component design, `nothing://` feasibility analysis, data architecture |
-| **DevOps Engineer**     | `02-devops-engineer.md`     | 949   | CI/CD pipelines, DNS/SSL, security headers, monitoring, cost estimation (~$95/mo)           |
-| **QA Engineer**         | `03-qa-engineer.md`         | 1,563 | Testing pyramid, WCAG 2.1 AA compliance, performance budgets, E2E strategy                  |
-| **Gap Analyst**         | `04-gap-analysis.md`        | 555   | 67 gaps identified, 10 critical risks, stakeholder questions                                |
+| Agent                   | Document                      | Lines | Key Contribution                                                                                    |
+| ----------------------- | ----------------------------- | ----- | --------------------------------------------------------------------------------------------------- |
+| **Principal Architect** | `01-principal-architect.md`   | 2,763 | System architecture, component design, `nothing://` feasibility analysis, data architecture         |
+| **DevOps Engineer**     | `02-devops-engineer.md`       | 949   | CI/CD pipelines, DNS/SSL, security headers, monitoring, cost estimation (~$95/mo)                   |
+| **QA Engineer**         | `03-qa-engineer.md`           | 1,563 | Testing pyramid, WCAG 2.1 AA compliance, performance budgets, E2E strategy                          |
+| **Gap Analyst**         | `04-gap-analysis.md`          | 555   | 67 gaps identified, 10 critical risks, stakeholder questions                                        |
+| **PikaPods & Ops**      | `05-pikapods-integrations.md` | —     | Umami, Listmonk, n8n, Kuma, secondary pods, `/admin` dashboard, secretary CRM — costs + build specs |
 
 ### Estimated Timeline
 
@@ -653,16 +655,42 @@ Applies to **all phases**:
 
 ---
 
-## 12. Reference Documents
+## 12. Phase 6: PikaPods & Ops Backend
 
-| Document                     | Path                               | Description                                                            |
-| ---------------------------- | ---------------------------------- | ---------------------------------------------------------------------- |
-| **Project Brief**            | Original attachment                | Source requirements from stakeholder                                   |
-| **Principal Architect Plan** | `/plans/01-principal-architect.md` | Full architecture, component design, `nothing://` deep-dive            |
-| **DevOps Plan**              | `/plans/02-devops-engineer.md`     | CI/CD, infrastructure, security, monitoring, cost details              |
-| **QA Strategy**              | `/plans/03-qa-engineer.md`         | Testing pyramid, a11y compliance, performance budgets, E2E specs       |
-| **Gap Analysis**             | `/plans/04-gap-analysis.md`        | 67 gaps, risk register, stakeholder questions, compliance requirements |
-| **Master Document**          | `/plans/00-master-document.md`     | This document — single source of truth                                 |
+> **Status:** Planning  
+> **Detail doc:** [`05-pikapods-integrations.md`](./05-pikapods-integrations.md)  
+> **Goal:** Sidecar open-source tools on PikaPods + owner/secretary management software alongside the client-facing site.
+
+### Scope (ponytail order)
+
+| Step | Work                                              | Est. $/mo | Gate                                    |
+| ---- | ------------------------------------------------- | --------- | --------------------------------------- |
+| 6.1  | Owner `/admin` inbox (Supabase Auth magic link)   | $0        | Leads triage without Supabase dashboard |
+| 6.2  | Umami on PikaPods → drop Vercel Analytics         | ~$1.80    | Privacy-first traffic owned             |
+| 6.3  | Calendly embed + webhook → `bookings`             | $0–10     | Bookings visible in admin               |
+| 6.4  | Listmonk when campaigns start                     | ~$2–3     | Double opt-in + broadcasts              |
+| 6.5  | n8n when Slack/Listmonk fan-out needed            | ~$4–5     | Fire-and-forget webhooks only           |
+| 6.6  | Uptime Kuma only if free UptimeRobot insufficient | ~$1.80    | Status page / sub-min checks            |
+| 6.7  | Secretary role (Phase B) on hire                  | $0        | Least-privilege staff login             |
+| 6.8  | Secondary pods (FreeScout, etc.)                  | defer     | See §6 of detail doc — default **no**   |
+
+**Year-1 recommended pack:** Admin + Umami + Listmonk ≈ **$5–15/mo** incremental.
+
+**Standards:** SOLID module boundaries, never-nesting critical paths, YAGNI on secondary pods and first-party booking until volume hurts.
+
+---
+
+## 13. Reference Documents
+
+| Document                     | Path                                 | Description                                                                          |
+| ---------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------ |
+| **Project Brief**            | Original attachment                  | Source requirements from stakeholder                                                 |
+| **Principal Architect Plan** | `/plans/01-principal-architect.md`   | Full architecture, component design, `nothing://` deep-dive                          |
+| **DevOps Plan**              | `/plans/02-devops-engineer.md`       | CI/CD, infrastructure, security, monitoring, cost details                            |
+| **QA Strategy**              | `/plans/03-qa-engineer.md`           | Testing pyramid, a11y compliance, performance budgets, E2E specs                     |
+| **Gap Analysis**             | `/plans/04-gap-analysis.md`          | 67 gaps, risk register, stakeholder questions, compliance requirements               |
+| **PikaPods & Ops Backend**   | `/plans/05-pikapods-integrations.md` | Sidecar OSS pods (Umami/Listmonk/n8n/Kuma), cost rollup, `/admin` + secretary phases |
+| **Master Document**          | `/plans/00-master-document.md`       | This document — single source of truth                                               |
 
 ---
 
@@ -680,4 +708,4 @@ Applies to **all phases**:
 ---
 
 _Document maintained by the General Contractor. Updated after each phase completion._  
-_Last Updated: 2026-08-04_
+_Last Updated: 2026-08-05 — added Phase 6 / `05-pikapods-integrations.md`_
