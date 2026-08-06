@@ -63,7 +63,7 @@ export default function PrivacyPage() {
               4. Cookies and analytics
             </h2>
             <p>
-              This site uses cookieless analytics from Vercel Analytics and
+              This site uses cookieless analytics via Umami (self-hosted) and
               Vercel Speed Insights. These tools help us understand aggregate
               traffic and page performance. They do not set tracking cookies or
               store personal identifiers on your device, so we do not show a

@@ -70,21 +70,29 @@ export default function HomePage() {
     <>
       <SectionContainer className="pb-16 pt-20 md:pb-24 md:pt-32">
         <div className="mx-auto grid max-w-6xl items-center gap-16 md:grid-cols-2">
-          <div className="text-center md:text-left">
-            <p className="font-mono text-xs uppercase tracking-[0.35em] text-primary">
+          <div className="relative text-center md:text-left">
+            <div
+              aria-hidden
+              className="hero-glow pointer-events-none absolute -inset-16"
+            />
+            <p className="relative font-mono text-xs uppercase tracking-[0.35em] text-primary">
               Est. on time, every time
             </p>
-            <h1 className="mt-6 font-display text-5xl leading-[0.95] tracking-tight md:text-7xl lg:text-8xl">
+            <h1 className="relative mt-6 font-display text-5xl leading-[0.95] tracking-tight md:text-7xl lg:text-8xl">
               Built on time.{" "}
               <span className="italic text-primary">Built to last.</span>
             </h1>
-            <p className="mx-auto mt-8 max-w-xl text-lg text-muted-foreground md:mx-0 md:text-xl">
+            <p className="relative mx-auto mt-8 max-w-xl text-lg text-muted-foreground md:mx-0 md:text-xl">
               Nothing.Digital ships premium websites, custom software,
               applications, and email marketing — delivered precisely when you
               need it.
             </p>
-            <div className="mt-10 flex flex-wrap justify-center gap-4 md:justify-start">
-              <Button asChild size="lg" className="shadow-lg">
+            <div className="relative mt-10 flex flex-wrap justify-center gap-4 md:justify-start">
+              <Button
+                asChild
+                size="lg"
+                className="shadow-[0_10px_40px_-12px_hsl(var(--primary)/0.55)]"
+              >
                 <Link href={routes.services.index}>
                   Explore services <ArrowRight className="h-4 w-4" />
                 </Link>
@@ -172,7 +180,11 @@ export default function HomePage() {
             before you commit.
           </p>
           <div className="mt-10">
-            <Button size="lg" asChild className="shadow-lg">
+            <Button
+              size="lg"
+              asChild
+              className="shadow-[0_10px_40px_-12px_hsl(var(--primary)/0.55)]"
+            >
               <Link href={routes.contact}>Book a free scoping call</Link>
             </Button>
           </div>

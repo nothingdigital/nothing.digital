@@ -34,7 +34,11 @@ export default function PricingPage() {
           business day.
         </p>
         <div className="mt-8">
-          <Button asChild size="lg" className="shadow-lg">
+          <Button
+            asChild
+            size="lg"
+            className="shadow-[0_10px_40px_-12px_hsl(var(--primary)/0.55)]"
+          >
             <Link href={routes.contact}>Book a free scoping call</Link>
           </Button>
         </div>

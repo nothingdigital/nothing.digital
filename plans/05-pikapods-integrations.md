@@ -245,7 +245,7 @@ Pages compose; queries own SQL; no god context.
 ## 10. Recommended rollout checklist
 
 - [ ] Phase F: Ship `/admin` inbox + magic link (Pack F)
-- [ ] Phase A: Umami pod + script + drop Vercel Analytics (~$1.80)
+- [x] Phase A code: `UmamiScript` + env + privacy/CSP notes (pod still pending)
 - [ ] Wire Calendly on `/contact` + webhook → `bookings`
 - [ ] Phase B: Listmonk when first campaign scheduled (~+$2–3)
 - [ ] Phase C: n8n when Slack/Listmonk fan-out requested (~+$5)

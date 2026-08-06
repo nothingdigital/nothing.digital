@@ -81,4 +81,13 @@
     background: hsl(var(--accent) / 0.85);
     color: hsl(var(--accent-foreground));
   }
+
+  /* ponytail: teal hero glow, joins brass body wash */
+  .hero-glow {
+    background: radial-gradient(
+      closest-side,
+      hsl(var(--accent) / 0.22),
+      transparent
+    );
+  }
 }

@@ -7,11 +7,19 @@ import { CursorGlow } from "@/components/atoms/cursor-glow";
 import { JsonLd } from "@/components/atoms/json-ld";
 import { logoDotColorScript } from "@/components/atoms/logo-dot";
 import { ScrollToTop } from "@/components/atoms/scroll-to-top";
+import { UmamiScript } from "@/components/atoms/umami-script";
 import { Footer } from "@/components/organisms/footer";
 import { Navigation } from "@/components/organisms/navigation";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { env } from "@/lib/env";
 import { sameAs, siteConfig } from "@/lib/site";
 import "./globals.css";
+
+// ponytail: Umami when env set; Vercel Analytics only as interim fallback.
+const useUmami = Boolean(
+  env.public.NEXT_PUBLIC_UMAMI_WEBSITE_ID &&
+  env.public.NEXT_PUBLIC_UMAMI_SCRIPT_URL,
+);
 
 const inter = Inter({
   subsets: ["latin"],
@@ -91,7 +99,7 @@ export default function RootLayout({
             <Footer />
             <ScrollToTop />
           </div>
-          <Analytics />
+          {useUmami ? <UmamiScript /> : <Analytics />}
           <SpeedInsights />
         </ThemeProvider>
         <JsonLd data={organizationJsonLd} />

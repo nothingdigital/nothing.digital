@@ -7,7 +7,7 @@ Monitoring stack for Nothing.Digital:
 | Layer     | Tool                              | Purpose                             |
 | --------- | --------------------------------- | ----------------------------------- |
 | Uptime    | UptimeRobot                       | External HTTP checks + alerting     |
-| Analytics | Vercel Analytics + Speed Insights | Traffic + Core Web Vitals           |
+| Analytics | Umami (PikaPods) + Speed Insights | Owned traffic + Core Web Vitals     |
 | Errors    | Sentry                            | Error tracking + performance traces |
 
 ## UptimeRobot
@@ -17,10 +17,16 @@ Monitoring stack for Nothing.Digital:
 - Alert channels: Email + Slack (#alerts)
 - Expected response: `200 OK` from Vercel edge
 
-## Vercel Analytics
+## Umami
 
-- Enable in project dashboard: Analytics → Web Analytics → Enable
-- Enable Speed Insights for Core Web Vitals
+- Host: PikaPods → `https://analytics.nothing.digital`
+- Env: `NEXT_PUBLIC_UMAMI_WEBSITE_ID`, `NEXT_PUBLIC_UMAMI_SCRIPT_URL`
+- Until env is set, layout falls back to Vercel Analytics
+- Cut Vercel Web Analytics the same deploy Umami goes live
+
+## Vercel Speed Insights
+
+- Enable Speed Insights for Core Web Vitals (keep even after Umami)
 - Targets:
   - LCP ≤ 2.5s
   - INP ≤ 200ms

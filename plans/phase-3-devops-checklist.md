@@ -38,13 +38,19 @@
   - [ ] Verify source maps upload on production build.
 
 - [ ] **Vercel Analytics / Speed Insights**
-  - [ ] Enable in Vercel dashboard (already instrumented in code).
+  - [ ] Keep Speed Insights enabled in Vercel dashboard (already instrumented).
+  - [ ] Disable Vercel Web Analytics once Umami env vars are live (same deploy).
+
+- [ ] **Umami (PikaPods)**
+  - [ ] Create Umami pod (~0.25/0.25) on PikaPods.
+  - [ ] Point `analytics.nothing.digital` at the pod.
+  - [ ] Create website in Umami dashboard; set `NEXT_PUBLIC_UMAMI_WEBSITE_ID` + `NEXT_PUBLIC_UMAMI_SCRIPT_URL` in Vercel.
+  - [ ] Confirm pageview appears <30s after visit; remove dual tracking.
 
 - [ ] **UptimeRobot**
   - [ ] Add monitors for `https://nothing.digital`, `https://nothing.digital/api/health`.
 
-- [ ] **Plausible**
-  - [ ] Create site `nothing.digital` and add script domain to env vars if self-hosted.
+- [ ] ~~**Plausible**~~ — replaced by Umami (see Phase 6).
 
 ## Post-Deployment Verification
 
@@ -67,6 +73,7 @@ Set these as GitHub Actions secrets (and in Vercel project env vars) to unblock 
 - `RESEND_API_KEY`
 - `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`
 - `SENTRY_DSN`, `SENTRY_AUTH_TOKEN`
+- `NEXT_PUBLIC_UMAMI_WEBSITE_ID`, `NEXT_PUBLIC_UMAMI_SCRIPT_URL` (after PikaPods Umami pod)
 
 ## Notes
 

@@ -93,7 +93,11 @@ export default function ServicesPage() {
         <p className="mb-6 text-muted-foreground">
           Book a free scoping call and we will recommend the right approach.
         </p>
-        <Button asChild size="lg" className="shadow-lg">
+        <Button
+          asChild
+          size="lg"
+          className="shadow-[0_10px_40px_-12px_hsl(var(--primary)/0.55)]"
+        >
           <Link href={routes.contact}>Book a free scoping call</Link>
         </Button>
       </SectionContainer>

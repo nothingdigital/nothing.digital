@@ -486,12 +486,12 @@ Nothing.Digital is a digital services company specializing in website developmen
 
 ### 7.5 Analytics Integration
 
-| Step | Task                                                                 | Owner    | Effort | Status |
-| ---- | -------------------------------------------------------------------- | -------- | ------ | ------ |
-| 3.24 | Install Plausible Analytics (privacy-first, no cookie banner needed) | Frontend | S      | 🔲     |
-| 3.25 | Configure event tracking plan (page_view, form_submit, etc.)         | Frontend | S      | 🔲     |
-| 3.26 | Set up Google Search Console + Bing Webmaster Tools                  | DevOps   | S      | 🔲     |
-| 3.27 | Submit sitemap to search engines                                     | DevOps   | S      | 🔲     |
+| Step | Task                                                                     | Owner    | Effort | Status          |
+| ---- | ------------------------------------------------------------------------ | -------- | ------ | --------------- |
+| 3.24 | Install Umami (PikaPods) — cookieless, drop Plausible / Vercel Analytics | Frontend | S      | ✅ code; 🔲 pod |
+| 3.25 | Configure event tracking plan (page_view, form_submit, etc.)             | Frontend | S      | 🔲              |
+| 3.26 | Set up Google Search Console + Bing Webmaster Tools                      | DevOps   | S      | 🔲              |
+| 3.27 | Submit sitemap to search engines                                         | DevOps   | S      | 🔲              |
 
 ### Phase 3 Deliverables
 
@@ -544,7 +544,7 @@ Nothing.Digital is a digital services company specializing in website developmen
 | Step | Task                                            | Owner   | Effort | Status |
 | ---- | ----------------------------------------------- | ------- | ------ | ------ |
 | 5.13 | Monitor Sentry for errors (daily review)        | DevOps  | S      | 🔲     |
-| 5.14 | Review Plausible Analytics dashboard            | Content | S      | 🔲     |
+| 5.14 | Review Umami Analytics dashboard                | Content | S      | 🔲     |
 | 5.15 | Check Google Search Console for indexing        | DevOps  | S      | 🔲     |
 | 5.16 | Review Core Web Vitals in Vercel Speed Insights | QA      | S      | 🔲     |
 | 5.17 | Collect and triage user feedback                | Content | S      | 🔲     |
