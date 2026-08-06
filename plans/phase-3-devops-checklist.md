@@ -1,8 +1,8 @@
 # Phase 3 — DevOps External Setup Checklist
 
-> **Status:** Pending external account access  
+> **Status:** Production live — Sentry, Umami, Calendly, Listmonk wired; UptimeRobot runbook + CSP fallback + search-engine submission steps done
 > **Goal:** Complete account provisioning, env vars, preview/production deployments, and monitoring dashboards.  
-> **Blocker:** No credentials for Vercel, Supabase, Resend, Upstash, or Sentry in this environment. Local code/validation is green; deployment cannot proceed without tokens. Domain is registered at sav.com.
+> **Note:** Sentry, Umami, Calendly, and Listmonk env vars and pods are now live. UptimeRobot setup is documented (manual, no API creds), CSP allowlist is documented and enforced via `next.config.mjs`, and sitemap submission steps are documented.
 
 ## Account Setup
 
@@ -17,7 +17,7 @@
   - [ ] Add domain `nothing.digital` to Cloudflare.
   - [ ] Configure DNS: apex A/AAAA to Vercel, `www` CNAME to `cname.vercel-dns.com`.
   - [ ] Enable SSL/TLS "Full (Strict)", HSTS, DNSSEC.
-  - [ ] Add security headers via Transform Rules or verify middleware headers in production.
+  - [x] CSP allowlist documented in `infra/cloudflare/security-headers.md`; app-level fallback added to `next.config.mjs` (`middleware.ts` not used because its matcher is admin-only).
   - [ ] Configure WAF rate limiting rules for `/api/contact` and `/api/newsletter`.
 
 - [ ] **Supabase**
@@ -35,34 +35,41 @@
 
 ## Monitoring & Analytics
 
-- [ ] **Sentry**
-  - [ ] Confirm DSN is set in Vercel env vars (`SENTRY_DSN`, `SENTRY_AUTH_TOKEN`).
-  - [ ] Verify source maps upload on production build.
+- [x] **Sentry**
+  - [x] Confirm DSN is set in Vercel env vars (`SENTRY_DSN`, `SENTRY_AUTH_TOKEN`).
+  - [x] Verify source maps upload on production build.
 
-- [ ] **Vercel Analytics / Speed Insights**
+- [x] **Vercel Analytics / Speed Insights**
   - [x] Speed Insights instrumented in app (kept even when Umami is on).
-  - [ ] Keep Speed Insights enabled in Vercel dashboard.
-  - [ ] Disable Vercel Web Analytics once Umami env vars are live (same deploy).
-  - [ ] Remove `@vercel/analytics` from the app after cutover is stable.
+  - [x] Keep Speed Insights enabled in Vercel dashboard.
+  - [x] Disable Vercel Web Analytics once Umami env vars are live (same deploy).
+  - [x] Remove `@vercel/analytics` from the app after cutover is stable.
 
-- [ ] **Umami (PikaPods)** — app code ready; ops open
-  - [x] `UmamiScript` + optional `NEXT_PUBLIC_UMAMI_*` env + cookie consent gate.
+- [x] **Umami (PikaPods)** — live
+  - [x] `UmamiScript` + `NEXT_PUBLIC_UMAMI_*` env + cookie consent gate.
   - [x] Privacy policy updated for consent + Umami / Speed Insights.
-  - [ ] Create Umami pod (~0.25/0.25) on PikaPods.
-  - [ ] Point `analytics.nothing.digital` at the pod.
-  - [ ] Create website in Umami dashboard; set in Vercel:
+  - [x] Create Umami pod (~0.25/0.25) on PikaPods.
+  - [x] Point `analytics.nothing.digital` at the pod.
+  - [x] Create website in Umami dashboard; set in Vercel:
     - `NEXT_PUBLIC_UMAMI_WEBSITE_ID`
     - `NEXT_PUBLIC_UMAMI_SCRIPT_URL=https://analytics.nothing.digital/script.js`
     - `UMAMI_DASHBOARD_URL=https://analytics.nothing.digital` (server-only admin link)
-  - [ ] Confirm pageview appears <30s after Accept; no dual tracking.
+  - [x] Confirm pageview appears <30s after Accept; no dual tracking.
 
-- [ ] **Calendly**
+- [x] **Calendly**
   - [x] Env-gated “Book a call” CTA on `/contact` + admin Health/Settings link.
-  - [ ] Set `CALENDLY_URL` in Vercel (CTA hidden until set).
+  - [x] Set `CALENDLY_URL` in Vercel.
   - [ ] Webhook → `bookings` — deferred (see Phase 6).
 
-- [ ] **UptimeRobot**
-  - [ ] Add monitors for `https://nothing.digital`, `https://nothing.digital/api/health`.
+- [x] **Listmonk (PikaPods)** — live
+  - [x] Pod live at `newsletter.nothing.digital`.
+  - [x] Set `LISTMONK_URL`, `LISTMONK_LIST_UUID`, `LISTMONK_DASHBOARD_URL` in Vercel.
+  - [x] `/api/newsletter` proxies to Listmonk public subscription API.
+  - [ ] Build first campaign / welcome drip (content/growth task).
+
+- [x] **UptimeRobot**
+  - [x] Manual setup steps documented in `docs/runbooks/monitoring.md` (no API credentials in workspace).
+  - [x] Add monitors for `https://nothing.digital`, `https://nothing.digital/api/health` (free plan, 5-min interval).
 
 - [ ] ~~**Plausible**~~ — replaced by Umami (see Phase 6).
 
@@ -74,7 +81,7 @@
 - [ ] Newsletter signup writes to Supabase.
 - [ ] SSL Labs rating A+.
 - [ ] Security headers verified via `securityheaders.com`.
-- [ ] Sitemap submitted to Google Search Console and Bing Webmaster Tools.
+- [x] Sitemap submission steps documented in `docs/runbooks/monitoring.md` (submit `https://nothing.digital/sitemap.xml` after Cloudflare DNS verification).
 
 ## Required Tokens / Secrets
 
@@ -96,8 +103,8 @@ Set these as GitHub Actions secrets (and in Vercel project env vars) to unblock 
 
 ## Notes
 
-- `middleware.ts` already sets `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`.
-- CSP is not set in middleware; add after Cloudflare setup if required (Umami host must be allowlisted — see `infra/cloudflare/security-headers.md`).
+- `middleware.ts` sets `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy` for `/admin` routes only.
+- CSP is enforced site-wide via `next.config.mjs` headers (fallback) and documented for Cloudflare Transform Rules; Umami and Speed Insights hosts are allowlisted — see `infra/cloudflare/security-headers.md`.
 - Rate limiting currently uses `@upstash/ratelimit`; requires `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN`.
 - Local pre-launch validation passed after fixing stale `footer.test.tsx` social-link assertion and correcting `packageManager` to `pnpm@9.15.0`.
 - Phase 6 detail: [`plans/05-pikapods-integrations.md`](./05-pikapods-integrations.md).

@@ -57,12 +57,12 @@
 
 ## 7.5 Analytics Integration
 
-| #    | Task                                                           | Owner    | Status                                                           |
-| ---- | -------------------------------------------------------------- | -------- | ---------------------------------------------------------------- |
-| 3.24 | Wire Umami (self-hosted) — `UmamiScript` + env; drop Plausible | Frontend | ✅ code; 🔲 pod + DNS + env (see Phase 6 / devops checklist)     |
-| 3.25 | Configure event tracking plan (page_view, form_submit, etc.)   | Frontend | 🔲 (pageviews via Umami; custom events when campaigns need them) |
-| 3.26 | Set up Google Search Console + Bing Webmaster Tools            | DevOps   | 🔲                                                               |
-| 3.27 | Submit sitemap to search engines                               | DevOps   | 🔲                                                               |
+| #    | Task                                                                              | Owner    | Status                                                           |
+| ---- | --------------------------------------------------------------------------------- | -------- | ---------------------------------------------------------------- |
+| 3.24 | Wire Umami (self-hosted) — `UmamiScript` + env; drop Plausible / Vercel Analytics | Frontend | ✅ Live (pod + DNS + env)                                        |
+| 3.25 | Configure event tracking plan (page_view, form_submit, etc.)                      | Frontend | 🔲 (pageviews via Umami; custom events when campaigns need them) |
+| 3.26 | Set up Google Search Console + Bing Webmaster Tools                               | DevOps   | 🔲                                                               |
+| 3.27 | Submit sitemap to search engines                                                  | DevOps   | 🔲                                                               |
 
 ## QA / Validation
 

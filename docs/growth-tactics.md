@@ -136,11 +136,11 @@ All quotes fixed after scoping. Ranges are starting points only.
 
 ## Implementation map
 
-| Slice                       | Status               |
-| --------------------------- | -------------------- |
-| CTAs + SEO (sitemap/OG)     | Code                 |
-| Pricing ballparks           | Code                 |
-| Case studies + home feature | Code (anonymized)    |
-| Cross-sell                  | Code                 |
-| Mobile polish               | Code                 |
-| Listmonk cutover + drips    | Ops-gated (this doc) |
+| Slice                       | Status                        |
+| --------------------------- | ----------------------------- |
+| CTAs + SEO (sitemap/OG)     | Code                          |
+| Pricing ballparks           | Code                          |
+| Case studies + home feature | Code (anonymized)             |
+| Cross-sell                  | Code                          |
+| Mobile polish               | Code                          |
+| Listmonk cutover + drips    | ✅ Live; drip content pending |

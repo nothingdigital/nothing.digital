@@ -68,11 +68,11 @@
 
 ## Monitoring Setup
 
-| #    | Task                                            | Owner  | Status                                          |
-| ---- | ----------------------------------------------- | ------ | ----------------------------------------------- |
-| 1.33 | Set up Sentry error tracking (DSN, source maps) | DevOps | ✅ (conditional init; requires live DSN)        |
-| 1.34 | Enable Vercel Analytics + Speed Insights        | DevOps | ✅ (deps installed; enable in Vercel dashboard) |
-| 1.35 | Configure UptimeRobot monitoring                | DevOps | ✅ (requires UptimeRobot account)               |
+| #    | Task                                            | Owner  | Status                                                   |
+| ---- | ----------------------------------------------- | ------ | -------------------------------------------------------- |
+| 1.33 | Set up Sentry error tracking (DSN, source maps) | DevOps | ✅ Live DSN + source maps verified                       |
+| 1.34 | Enable Speed Insights; disable Vercel Analytics | DevOps | ✅ Speed Insights on; Vercel Analytics replaced by Umami |
+| 1.35 | Configure UptimeRobot monitoring                | DevOps | 🔲 (free account still needed)                           |
 
 ## Phase 1 Deliverables
 

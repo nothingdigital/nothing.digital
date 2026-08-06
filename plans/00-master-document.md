@@ -301,8 +301,8 @@ Nothing.Digital is a digital services company specializing in website developmen
 
 | Step | Task                                            | Owner  | Effort | Status |
 | ---- | ----------------------------------------------- | ------ | ------ | ------ |
-| 1.33 | Set up Sentry error tracking (DSN, source maps) | DevOps | S      | 🔲     |
-| 1.34 | Enable Vercel Analytics + Speed Insights        | DevOps | S      | 🔲     |
+| 1.33 | Set up Sentry error tracking (DSN, source maps) | DevOps | S      | ✅     |
+| 1.34 | Enable Speed Insights; disable Vercel Analytics | DevOps | S      | ✅     |
 | 1.35 | Configure UptimeRobot monitoring                | DevOps | S      | 🔲     |
 
 ### Phase 1 Deliverables
@@ -486,12 +486,12 @@ Nothing.Digital is a digital services company specializing in website developmen
 
 ### 7.5 Analytics Integration
 
-| Step | Task                                                                     | Owner    | Effort | Status                      |
-| ---- | ------------------------------------------------------------------------ | -------- | ------ | --------------------------- |
-| 3.24 | Install Umami (PikaPods) — cookieless, drop Plausible / Vercel Analytics | Frontend | S      | ✅ code; 🔲 pod + DNS + env |
-| 3.25 | Configure event tracking plan (page_view, form_submit, etc.)             | Frontend | S      | 🔲                          |
-| 3.26 | Set up Google Search Console + Bing Webmaster Tools                      | DevOps   | S      | 🔲                          |
-| 3.27 | Submit sitemap to search engines                                         | DevOps   | S      | 🔲                          |
+| Step | Task                                                                     | Owner    | Effort | Status  |
+| ---- | ------------------------------------------------------------------------ | -------- | ------ | ------- |
+| 3.24 | Install Umami (PikaPods) — cookieless, drop Plausible / Vercel Analytics | Frontend | S      | ✅ Live |
+| 3.25 | Configure event tracking plan (page_view, form_submit, etc.)             | Frontend | S      | 🔲      |
+| 3.26 | Set up Google Search Console + Bing Webmaster Tools                      | DevOps   | S      | 🔲      |
+| 3.27 | Submit sitemap to search engines                                         | DevOps   | S      | 🔲      |
 
 ### Phase 3 Deliverables
 
@@ -657,26 +657,26 @@ Applies to **all phases**:
 
 ## 12. Phase 6: PikaPods & Ops Backend
 
-> **Status:** In progress — 6.1 code done; 6.2 code ready (pod pending); 6.3 CTA shipped (webhook deferred)  
+> **Status:** In progress — 6.1 `/admin` live; 6.2 Umami live; 6.3 Calendly live; 6.4 Listmonk live; 6.5 n8n deferred
 > **Detail doc:** [`05-pikapods-integrations.md`](./05-pikapods-integrations.md)  
 > **Goal:** Sidecar open-source tools on PikaPods + owner/secretary management software alongside the client-facing site.
 
 ### Done vs next vs later
 
-|           | Work                                                                                                                |
-| --------- | ------------------------------------------------------------------------------------------------------------------- |
-| **Done**  | `/admin`; Calendly CTA; Umami client wiring; Listmonk/n8n/Kuma **code ready** (env-gated helpers + admin launchers) |
-| **Next**  | Umami pod + `analytics.nothing.digital` + Vercel env; cut Vercel Web Analytics                                      |
-| **Later** | Listmonk/n8n **ops** (set env when pods live); Calendly webhook/`bookings`; Kuma pod; secretary roles               |
+|           | Work                                                                                                      |
+| --------- | --------------------------------------------------------------------------------------------------------- |
+| **Done**  | `/admin`; Umami + Calendly + Listmonk live; n8n/Kuma **code ready** (env-gated helpers + admin launchers) |
+| **Next**  | n8n pod + webhook env (only if Slack/Listmonk fan-out needed); CSP allowlist for Umami                    |
+| **Later** | Calendly webhook/`bookings`; Kuma pod (only if UptimeRobot free fails); secretary roles                   |
 
 ### Scope (ponytail order)
 
 | Step | Work                                              | Est. $/mo | Gate                                    |
 | ---- | ------------------------------------------------- | --------- | --------------------------------------- |
 | 6.1  | Owner `/admin` inbox (Supabase Auth magic link)   | $0        | ✅ code; gate: Auth + `ADMIN_EMAILS`    |
-| 6.2  | Umami on PikaPods → drop Vercel Analytics         | ~$1.80    | ✅ code; 🔲 pod + DNS + env             |
-| 6.3  | Calendly on `/contact` (+ webhook when volume)    | $0–10     | ✅ CTA; webhook deferred                |
-| 6.4  | Listmonk when campaigns start                     | ~$2–3     | 🟡 code ready; 🔲 pod + env             |
+| 6.2  | Umami on PikaPods → drop Vercel Analytics         | ~$1.80    | ✅ Live                                 |
+| 6.3  | Calendly on `/contact` (+ webhook when volume)    | $0–10     | ✅ Live; webhook deferred               |
+| 6.4  | Listmonk when campaigns start                     | ~$2–3     | ✅ Live; campaign content pending       |
 | 6.5  | n8n when Slack/Listmonk fan-out needed            | ~$4–5     | 🟡 code ready; 🔲 pod + webhook env     |
 | 6.6  | Uptime Kuma only if free UptimeRobot insufficient | ~$1.80    | 🟡 admin link ready; prefer UptimeRobot |
 | 6.7  | Secretary role (Phase B) on hire                  | $0        | Least-privilege staff login             |

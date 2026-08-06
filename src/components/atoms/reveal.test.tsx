@@ -22,7 +22,7 @@ describe("Reveal", () => {
     vi.mocked(useReducedMotion).mockReturnValue(true);
     render(<Reveal className="plain-reveal">reduced</Reveal>);
 
-    const wrapper = screen.getByText("reduced").parentElement;
+    const wrapper = screen.getByText("reduced");
     expect(wrapper).toHaveClass("plain-reveal");
     expect(wrapper).not.toHaveAttribute("style");
   });

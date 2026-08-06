@@ -2,7 +2,7 @@
 
 > **Document:** `05-pikapods-integrations.md`  
 > **Date:** 2026-08-05  
-> **Status:** In progress — Pack F admin + Calendly CTA shipped; Umami code ready (pod pending); Listmonk/n8n deferred  
+> **Status:** In progress — Pack F admin + Calendly CTA + Umami + Listmonk live; n8n/Kuma deferred
 > **Parent:** [`00-master-document.md`](./00-master-document.md)  
 > **Standards:** ponytail (YAGNI), SOLID, never-nesting, caveman prose in summaries  
 > **Agents:** [Umami](d5b86a08-a858-4671-8bfc-46a836b2a6fa) · [Listmonk](ccabcb50-5c94-4409-b8a7-5edad7f7c2ee) · [n8n](e212eb16-7dba-4f32-84ea-31bc8afada76) · [Uptime Kuma](b8134db9-9505-453c-ba52-826f8e521d62) · [Secondary](cadea115-b2ad-44b4-a465-9791b6c3d93d) · [Admin](ec11bd9c-fba7-4764-b3e9-40c8a0ea5e74) · [Secretary](2dc1953e-9bed-4ac6-a85a-4f66312813c3)
@@ -15,16 +15,16 @@ Client site stays on Vercel. PikaPods hosts **sidecar OSS tools**. Admin/ops liv
 
 ### Status board (2026-08-05)
 
-| Track                            | Status                   | Notes                                                                                                                                            |
-| -------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Pack F — `/admin`**            | ✅ Code shipped          | Inbox, newsletter list, health, settings, magic-link auth. Live gate: Supabase Auth + `ADMIN_EMAILS`.                                            |
-| **Pack A — Umami**               | 🟡 Code ready / ops open | `UmamiScript`, consent gate, privacy copy, Speed Insights kept. **Next:** pod + `analytics.nothing.digital` + Vercel env + cut Vercel Analytics. |
-| **Calendly**                     | ✅ CTA shipped           | Env-gated link on `/contact` + admin Health/Settings. `/admin/bookings` removed (Calendly SoT). Webhook/`bookings` table deferred.               |
-| **Pack B — Listmonk**            | 🟡 Code ready / ops open | `/api/newsletter` proxies when `LISTMONK_*` set; else Supabase. Admin launcher.                                                                  |
-| **Pack C — n8n**                 | 🟡 Code ready / ops open | `notifyN8n()` after contact/newsletter; no-op without env. Admin launcher.                                                                       |
-| **Kuma / secondary / secretary** | ⬜ Deferred              | Kuma admin link ready via `KUMA_DASHBOARD_URL`. See §5–§8.                                                                                       |
+| Track                            | Status                   | Notes                                                                                                                                       |
+| -------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Pack F — `/admin`**            | ✅ Code shipped          | Inbox, newsletter list, health, settings, magic-link auth. Live gate: Supabase Auth + `ADMIN_EMAILS`.                                       |
+| **Pack A — Umami**               | ✅ Live                  | Pod live at `analytics.nothing.digital`; Vercel env set; Vercel Web Analytics disabled; `@vercel/analytics` removed.                        |
+| **Calendly**                     | ✅ Live                  | `CALENDLY_URL` set; CTA on `/contact` + admin Health/Settings. `/admin/bookings` removed (Calendly SoT). Webhook/`bookings` table deferred. |
+| **Pack B — Listmonk**            | ✅ Live                  | Pod live at `newsletter.nothing.digital`; `LISTMONK_*` env set; `/api/newsletter` proxies; admin launcher ready.                            |
+| **Pack C — n8n**                 | 🟡 Code ready / ops open | `notifyN8n()` after contact/newsletter; no-op without env. Admin launcher.                                                                  |
+| **Kuma / secondary / secretary** | ⬜ Deferred              | Kuma admin link ready via `KUMA_DASHBOARD_URL`. See §5–§8.                                                                                  |
 
-**Next to complete:** Umami ops (pod + DNS + env). **After that:** Listmonk when a campaign exists (set env only). Drip outline + cadence: [`docs/growth-tactics.md`](../docs/growth-tactics.md).
+**Next to complete:** n8n pod + webhook env (only if Slack/Listmonk fan-out needed). **After that:** UptimeRobot free or Uptime Kuma if sub-minute checks matter. Drip outline + cadence: [`docs/growth-tactics.md`](../docs/growth-tactics.md).
 
 **Growth drip acceptance (when Pack B live):**
 
@@ -36,11 +36,11 @@ Client site stays on Vercel. PikaPods hosts **sidecar OSS tools**. Admin/ops liv
 **Ship order (ponytail):**
 
 1. ~~Owner `/admin` inbox~~ ✅ code
-2. Umami (~$1.80/mo) — 🟡 code done; **ops next**
-3. ~~Calendly CTA on `/contact`~~ ✅ (webhook later)
-4. Listmonk (~$2–3/mo) — when campaigns exist
+2. ~~Umami (~$1.80/mo)~~ ✅ live
+3. ~~Calendly CTA on `/contact`~~ ✅ live (webhook later)
+4. ~~Listmonk (~$2–3/mo)~~ ✅ live
 5. n8n (~$4–5/mo) — when Slack/Listmonk fan-out needed
-6. Uptime Kuma (~$1.80/mo) — only if UptimeRobot free fails you
+6. UptimeRobot free → Kuma (~$1.80/mo) only if free fails you
 7. Secondary pods — defer (see §6)
 8. Secretary role — when hire exists
 
@@ -90,14 +90,14 @@ PikaPods pricing v4 baseline: **~$1.80/mo** = 0.25 CPU + 0.25 GB RAM + default s
 
 **Build:**
 
-| #   | Item                                                          | Status                                                                                         |
-| --- | ------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| 1   | PikaPods Umami pod (0.25/0.25)                                | ⬜ Ops                                                                                         |
-| 2   | Domain `analytics.nothing.digital`                            | ⬜ Ops (NXDOMAIN today)                                                                        |
-| 3   | Atom `UmamiScript` + env `NEXT_PUBLIC_UMAMI_*`                | ✅ Code                                                                                        |
-| 4   | Keep Speed Insights; drop `@vercel/analytics` when Umami live | 🟡 Code keeps Speed Insights; Analytics still interim fallback until env set + package removed |
-| 5   | CSP allow script/connect to analytics host                    | 🟡 Documented in `infra/cloudflare/security-headers.md`; not enforced in app yet               |
-| 6   | Privacy page accurate (consent + Umami)                       | ✅ Code                                                                                        |
+| #   | Item                                                          | Status                                                                           |
+| --- | ------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| 1   | PikaPods Umami pod (0.25/0.25)                                | ✅ Live                                                                          |
+| 2   | Domain `analytics.nothing.digital`                            | ✅ Live                                                                          |
+| 3   | Atom `UmamiScript` + env `NEXT_PUBLIC_UMAMI_*`                | ✅ Code + env                                                                    |
+| 4   | Keep Speed Insights; drop `@vercel/analytics` when Umami live | ✅ Speed Insights kept; Vercel Web Analytics disabled; `@vercel/analytics` gone  |
+| 5   | CSP allow script/connect to analytics host                    | 🟡 Documented in `infra/cloudflare/security-headers.md`; not enforced in app yet |
+| 6   | Privacy page accurate (consent + Umami)                       | ✅ Code                                                                          |
 
 **SOLID:** `env.ts` owns config; `umami-script.tsx` owns inject; layout/consent compose; pod owns store.
 
@@ -111,7 +111,7 @@ PikaPods pricing v4 baseline: **~$1.80/mo** = 0.25 CPU + 0.25 GB RAM + default s
 
 ## 3. Listmonk
 
-**Status:** 🟡 Code ready — gate: first newsletter campaign + pod. Set `LISTMONK_URL` + `LISTMONK_LIST_UUID` to cut over.
+**Status:** ✅ Live — pod at `newsletter.nothing.digital`; `LISTMONK_URL` + `LISTMONK_LIST_UUID` + `LISTMONK_DASHBOARD_URL` set; `/api/newsletter` proxies to Listmonk. Campaign content is the remaining gate.
 
 **Does:** Double opt-in lists, campaigns, unsub, open/click. Site `/api/newsletter` becomes thin forwarder.
 
@@ -278,27 +278,27 @@ Pages compose; queries own SQL; no god context.
 ### Done
 
 - [x] Phase F: Ship `/admin` inbox + magic link (Pack F) — live; Supabase Auth + `ADMIN_EMAILS` verified
-- [x] Phase A code: `UmamiScript` + env schema + consent gate + privacy + Speed Insights kept with Umami
-- [x] Calendly CTA on `/contact` (env-gated `CALENDLY_URL`) + admin Health/Settings link
+- [x] Phase A: Umami pod + `analytics.nothing.digital` + Vercel env; `UmamiScript` + consent gate + privacy; Vercel Web Analytics disabled; `@vercel/analytics` removed
+- [x] Calendly: `CALENDLY_URL` set; CTA on `/contact` + admin Health/Settings link
 - [x] Drop `/admin/bookings` page — Calendly external SoT until volume
-- [x] Phase B ops: Listmonk pod live at `newsletter.nothing.digital`; `LISTMONK_URL` + `LISTMONK_LIST_UUID` set; newsletter route proxies to Listmonk; privacy policy updated
+- [x] Phase B: Listmonk pod live at `newsletter.nothing.digital`; `LISTMONK_*` env set; newsletter route proxies to Listmonk; privacy policy updated
 - [x] Code ready for n8n / Kuma — env-gated helpers + admin launchers (pods optional)
 
-### Next (ops — Pack A)
+### Next (Phase 3 close-out)
 
-- [ ] Create Umami pod on PikaPods (~0.25/0.25)
-- [ ] DNS `analytics.nothing.digital` → pod
-- [ ] Set `NEXT_PUBLIC_UMAMI_WEBSITE_ID`, `NEXT_PUBLIC_UMAMI_SCRIPT_URL`, `UMAMI_DASHBOARD_URL` in Vercel
-- [ ] Confirm pageview <30s; disable Vercel Web Analytics; remove `@vercel/analytics` when stable
-- [ ] Apply Cloudflare CSP allowlist for analytics host (see `infra/cloudflare/security-headers.md`)
+- [ ] Apply CSP allowlist for analytics host — ship in app `middleware.ts`/`next.config` first, mirror in Cloudflare later (see `infra/cloudflare/security-headers.md`)
+- [ ] UptimeRobot free monitors for `nothing.digital` + `/api/health` (keyword `ok`)
+- [ ] Google Search Console + Bing Webmaster Tools verification + `/sitemap.xml` submission
+- [ ] Manual a11y pass: keyboard nav, screen reader, `prefers-reduced-motion`
+- [ ] API integration tests for `/api/contact` and `/api/newsletter` (mock Resend/Listmonk)
 
-### Later
+### Later / deferred
 
-- [ ] Set `CALENDLY_URL` in Vercel if not already (CTA hidden until set)
+- [ ] Phase C: n8n pod + `automation.nothing.digital` + set `N8N_WEBHOOK_*` / dashboard URL (~+$5) — only if Slack/Listmonk fan-out needed
 - [ ] Webhook → `bookings` table — defer until >50 bookings/mo or secretary needs list
 - [ ] Admin newsletter CSV export + unsubscribe action (or retire after Listmonk)
-- [ ] Phase C ops: n8n pod + set `N8N_WEBHOOK_*` / dashboard URL (~+$5)
-- [ ] Keep UptimeRobot free; set `KUMA_DASHBOARD_URL` only if Kuma is live
+- [ ] UptimeRobot free → Kuma only if sub-minute checks or branded status page needed
+- [ ] Lighthouse CI — unblock when CI runner arch matches build arch
 - [ ] Phase Secretary B only on hire day
 - [ ] Secondary pods: default **no**
 
@@ -306,14 +306,18 @@ Pages compose; queries own SQL; no god context.
 
 ## 11. Risk register (delta)
 
-| Risk                   | Mitigation                                |
-| ---------------------- | ----------------------------------------- |
-| Pod sprawl cost/ops    | Cap at Pack B until pain                  |
-| n8n down loses Slack   | Resend remains primary notify             |
-| Listmonk admin exposed | Cloudflare Access / no public admin DNS   |
-| Dual analytics         | Cut Vercel Analytics same deploy as Umami |
-| Over-CRM               | Status field until secretary; no HubSpot  |
-| Secret leak webhooks   | Header secret + rotate; form still 201    |
+| Risk                               | Mitigation                                              |
+| ---------------------------------- | ------------------------------------------------------- |
+| Pod sprawl cost/ops                | Cap at Pack B until pain                                |
+| n8n down loses Slack               | Resend remains primary notify                           |
+| Listmonk admin exposed             | Cloudflare Access / no public admin DNS                 |
+| Dual analytics                     | Cut Vercel Analytics same deploy as Umami               |
+| Over-CRM                           | Status field until secretary; no HubSpot                |
+| Secret leak webhooks               | Header secret + rotate; form still 201                  |
+| CSP drift app vs Cloudflare        | Ship app CSP first; DevOps copies exact policy later    |
+| Search engine verification delay   | Verify early; not a deploy blocker                      |
+| API tests hit real Resend/Listmonk | Mock external HTTP; use seeded test DB                  |
+| UptimeRobot free 5-min interval    | Accept until incident proves need for sub-minute checks |
 
 ---
 
@@ -325,4 +329,4 @@ Pages compose; queries own SQL; no god context.
 
 ---
 
-_Last updated: 2026-08-05 — status board + done/next/later checklist after Phase F + Calendly CTA + Umami code_
+_Last updated: 2026-08-06 — Sentry, Umami, Calendly, Listmonk marked live; n8n/Kuma remain deferred_

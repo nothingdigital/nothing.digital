@@ -4,25 +4,41 @@
 
 Monitoring stack for Nothing.Digital:
 
-| Layer     | Tool                              | Purpose                             | Status                       |
-| --------- | --------------------------------- | ----------------------------------- | ---------------------------- |
-| Uptime    | UptimeRobot                       | External HTTP checks + alerting     | ⬜ Ops                       |
-| Analytics | Umami (PikaPods) + Speed Insights | Owned traffic + Core Web Vitals     | ✅ Live                      |
-| Errors    | Sentry                            | Error tracking + performance traces | 🟡 Code present; confirm env |
+| Layer        | Tool                              | Purpose                             | Status                      |
+| ------------ | --------------------------------- | ----------------------------------- | --------------------------- |
+| Uptime       | UptimeRobot                       | External HTTP checks + alerting     | ✅ Runbook (manual setup)   |
+| Analytics    | Umami (PikaPods) + Speed Insights | Owned traffic + Core Web Vitals     | ✅ Live                     |
+| Errors       | Sentry                            | Error tracking + performance traces | ✅ Live (DSN + source maps) |
+| Search index | Google Search Console + Bing      | Sitemap submission + indexing       | ✅ Runbook (manual setup)   |
 
 ## UptimeRobot
 
-- URL: `https://nothing.digital`
-- Interval: 1 minute
-- Alert channels: Email + Slack (#alerts)
-- Expected response: `200 OK` from Vercel edge
+No API credentials available in this workspace, so setup is manual.
+
+Plan: **UptimeRobot free** — 5-minute interval, 50 monitors, email alerts.
+
+1. Sign up / log in at <https://uptimerobot.com>.
+2. Click **Add New Monitor**.
+3. Create monitor **"Nothing.Digital homepage"**:
+   - Monitor Type: **HTTP(s)**
+   - URL: `https://nothing.digital`
+   - Monitoring Interval: **5 minutes**
+   - Alert Contacts: owner email (add Slack webhook if you configure one)
+   - Save
+4. Create monitor **"Nothing.Digital API health"**:
+   - Monitor Type: **HTTP(s)** or **Keyword**
+   - URL: `https://nothing.digital/api/health`
+   - If Keyword: search for `ok`
+   - Monitoring Interval: **5 minutes**
+   - Save
+5. Wait one interval and confirm both monitors show **Up**.
 
 ## Umami
 
 - Host: PikaPods → `https://analytics.nothing.digital`
 - Env: `NEXT_PUBLIC_UMAMI_WEBSITE_ID`, `NEXT_PUBLIC_UMAMI_SCRIPT_URL`, `UMAMI_DASHBOARD_URL`
 - App: `UmamiScript` + cookie consent; Speed Insights loads after Accept
-- `@vercel/analytics` removed — keep Speed Insights only
+- Vercel Web Analytics disabled; `@vercel/analytics` removed from app
 - Verify: Accept cookies → pageview in Umami <30s; no Vercel Web Analytics requests
 
 ## Vercel Speed Insights
@@ -42,6 +58,20 @@ Monitoring stack for Nothing.Digital:
   - New issue in `production` → Slack #alerts
   - Error rate > 1% in 5 min → PagerDuty on-call
   - First appearance of error → Email team lead
+
+## Search engine submission
+
+1. **Google Search Console**
+   - Open <https://search.google.com/search-console>.
+   - Choose **Domain** property and enter `nothing.digital`.
+   - Copy the provided `TXT` verification record.
+   - In Cloudflare DNS, add a `TXT` record on `@` with that value.
+   - Click **Verify** in Search Console.
+   - Go to **Sitemaps** → enter `https://nothing.digital/sitemap.xml` and submit.
+2. **Bing Webmaster Tools**
+   - Open <https://www.bing.com/webmasters>.
+   - Add site — use **Import from Google Search Console** if available, otherwise verify by DNS `TXT` record.
+   - Submit sitemap `https://nothing.digital/sitemap.xml`.
 
 ## Runbooks
 
@@ -68,3 +98,4 @@ Monitoring stack for Nothing.Digital:
 
 - Phase 6 plan: [`plans/05-pikapods-integrations.md`](../../plans/05-pikapods-integrations.md)
 - DevOps checklist: [`plans/phase-3-devops-checklist.md`](../../plans/phase-3-devops-checklist.md)
+- CSP allowlist: [`infra/cloudflare/security-headers.md`](../../infra/cloudflare/security-headers.md)

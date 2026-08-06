@@ -23,6 +23,21 @@ const nextConfig = {
             key: 'Permissions-Policy',
             value: 'camera=(), microphone=(), geolocation=()',
           },
+          // ponytail: static CSP fallback; Cloudflare Transform Rules are the source of truth
+          {
+            key: 'Content-Security-Policy',
+            value:
+              "default-src 'self'; " +
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://analytics.nothing.digital https://*.vercel-scripts.com https://vercel.live; " +
+              "style-src 'self' 'unsafe-inline'; " +
+              "img-src 'self' data: https:; " +
+              "font-src 'self'; " +
+              "connect-src 'self' https://*.supabase.co https://*.sentry.io https://analytics.nothing.digital https://*.vercel-scripts.com https://vitals.vercel-insights.com; " +
+              "frame-ancestors 'none'; " +
+              "base-uri 'self'; " +
+              "form-action 'self'; " +
+              "object-src 'none';",
+          },
         ],
       },
     ];

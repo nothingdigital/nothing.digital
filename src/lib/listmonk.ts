@@ -5,7 +5,7 @@ export type ListmonkSubscribeResult =
 
 /**
  * Proxy subscribe to Listmonk public API.
- * ponytail: no-op when env missing — keep Supabase path until pod is live.
+ * ponytail: Listmonk is live; no-op only when env missing so local/test stays safe.
  */
 export async function subscribeToListmonk(
   email: string,

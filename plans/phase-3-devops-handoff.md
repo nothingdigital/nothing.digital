@@ -31,7 +31,7 @@ Get `https://nothing.digital` live and fully verified:
 3. Create Supabase project, run migrations, enable RLS, verify policies.
 4. Set up Resend, verify `nothing.digital` domain, configure DKIM/SPF.
 5. Configure rate limiting for `/api/contact` and `/api/newsletter`.
-6. Enable Vercel Analytics, Speed Insights, and Sentry source maps.
+6. Enable Speed Insights + Sentry source maps; disable Vercel Web Analytics (Umami replaces it).
 7. Deploy to production and verify end-to-end.
 
 ---
@@ -47,6 +47,9 @@ Add these as GitHub Actions secrets **and** Vercel project environment variables
 - `RESEND_API_KEY`
 - `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`
 - `SENTRY_DSN`, `SENTRY_AUTH_TOKEN`
+- `NEXT_PUBLIC_UMAMI_WEBSITE_ID`, `NEXT_PUBLIC_UMAMI_SCRIPT_URL`, `UMAMI_DASHBOARD_URL`
+- `CALENDLY_URL`
+- `LISTMONK_URL`, `LISTMONK_LIST_UUID`, `LISTMONK_DASHBOARD_URL`
 
 Cloudflare or DNS provider access is also needed if you configure DNS there.
 
@@ -90,8 +93,9 @@ Cloudflare or DNS provider access is also needed if you configure DNS there.
 
 ### Monitoring / analytics
 
-- [ ] Add `SENTRY_DSN` and `SENTRY_AUTH_TOKEN`; verify source maps upload on build.
-- [ ] Enable Vercel Analytics and Speed Insights in the project dashboard.
+- [x] Add `SENTRY_DSN` and `SENTRY_AUTH_TOKEN`; verify source maps upload on build.
+- [x] Enable Speed Insights in the project dashboard; disable Vercel Web Analytics.
+- [x] Set `NEXT_PUBLIC_UMAMI_*` and `UMAMI_DASHBOARD_URL`; confirm pageviews in Umami.
 
 ### Post-deployment verification
 

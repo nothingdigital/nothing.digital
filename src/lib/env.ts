@@ -12,9 +12,10 @@ const envSchema = z.object({
   RESEND_API_KEY: z.string().min(1).optional(),
   CONTACT_NOTIFY_EMAIL: z.string().email().optional(),
   ADMIN_EMAILS: z.string().optional(),
+  SENTRY_DSN: z.string().url().optional(),
   CALENDLY_URL: z.string().url().optional(),
   UMAMI_DASHBOARD_URL: z.string().url().optional(),
-  // PikaPods sidecars — omit until pods live; helpers no-op / fallback.
+  // PikaPods sidecars — optional; helpers no-op / fallback when unset.
   LISTMONK_URL: z.string().url().optional(),
   LISTMONK_LIST_UUID: z.string().uuid().optional(),
   LISTMONK_DASHBOARD_URL: z.string().url().optional(),
@@ -34,6 +35,7 @@ const result = envSchema.safeParse({
   RESEND_API_KEY: process.env.RESEND_API_KEY,
   CONTACT_NOTIFY_EMAIL: process.env.CONTACT_NOTIFY_EMAIL,
   ADMIN_EMAILS: process.env.ADMIN_EMAILS,
+  SENTRY_DSN: process.env.SENTRY_DSN,
   CALENDLY_URL: process.env.CALENDLY_URL,
   UMAMI_DASHBOARD_URL: process.env.UMAMI_DASHBOARD_URL,
   LISTMONK_URL: process.env.LISTMONK_URL,
@@ -64,6 +66,7 @@ export const env = {
     RESEND_API_KEY: parsed.RESEND_API_KEY,
     CONTACT_NOTIFY_EMAIL: parsed.CONTACT_NOTIFY_EMAIL,
     ADMIN_EMAILS: parsed.ADMIN_EMAILS,
+    SENTRY_DSN: parsed.SENTRY_DSN,
     CALENDLY_URL: parsed.CALENDLY_URL,
     UMAMI_DASHBOARD_URL: parsed.UMAMI_DASHBOARD_URL,
     LISTMONK_URL: parsed.LISTMONK_URL,
