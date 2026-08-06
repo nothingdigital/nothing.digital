@@ -216,6 +216,24 @@ export async function createInvoice(
   return { row: data, error: null };
 }
 
+export async function getInvoice(
+  id: string,
+): Promise<{ row: InvoiceRow | null; error: string | null }> {
+  const supabase = getServiceRoleClient();
+  if (!supabase) {
+    return { row: null, error: "Supabase is not configured." };
+  }
+
+  const { data, error } = await supabase
+    .from("invoices")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) return { row: null, error: error.message };
+  return { row: data, error: null };
+}
+
 export async function updateInvoiceStatus(
   id: string,
   status: InvoiceStatus,
@@ -235,6 +253,49 @@ export async function updateInvoiceStatus(
   }
 
   const { error } = await supabase.from("invoices").update(patch).eq("id", id);
+  if (error) return { ok: false, error: error.message };
+  return { ok: true };
+}
+
+export type UpdateInvoiceInput = {
+  number: string;
+  title: string;
+  amount_cents: number;
+  currency?: string;
+  status: InvoiceStatus;
+  issued_at?: string | null;
+  due_at?: string | null;
+  paid_at?: string | null;
+  external_url?: string | null;
+  notes?: string | null;
+};
+
+export async function updateInvoice(
+  id: string,
+  input: UpdateInvoiceInput,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const supabase = getServiceRoleClient();
+  if (!supabase) {
+    return { ok: false, error: "Supabase is not configured." };
+  }
+
+  const { error } = await supabase
+    .from("invoices")
+    .update({
+      number: input.number,
+      title: input.title,
+      amount_cents: input.amount_cents,
+      currency: input.currency ?? "USD",
+      status: input.status,
+      issued_at: input.issued_at ?? null,
+      due_at: input.due_at ?? null,
+      paid_at: input.paid_at ?? null,
+      external_url: input.external_url ?? null,
+      notes: input.notes ?? null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", id);
+
   if (error) return { ok: false, error: error.message };
   return { ok: true };
 }
@@ -385,6 +446,24 @@ export async function createWorkItem(
   return { row: data, error: null };
 }
 
+export async function getWorkItem(
+  id: string,
+): Promise<{ row: ClientWorkItemRow | null; error: string | null }> {
+  const supabase = getServiceRoleClient();
+  if (!supabase) {
+    return { row: null, error: "Supabase is not configured." };
+  }
+
+  const { data, error } = await supabase
+    .from("client_work_items")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) return { row: null, error: error.message };
+  return { row: data, error: null };
+}
+
 export async function updateWorkItemStatus(
   id: string,
   status: WorkStatus,
@@ -397,6 +476,58 @@ export async function updateWorkItemStatus(
   const { error } = await supabase
     .from("client_work_items")
     .update({ status, updated_at: new Date().toISOString() })
+    .eq("id", id);
+
+  if (error) return { ok: false, error: error.message };
+  return { ok: true };
+}
+
+export type UpdateWorkItemInput = {
+  title: string;
+  description?: string | null;
+  status: WorkStatus;
+  priority: WorkPriority;
+  due_at?: string | null;
+  asset_id?: string | null;
+};
+
+export async function updateWorkItem(
+  id: string,
+  input: UpdateWorkItemInput,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const supabase = getServiceRoleClient();
+  if (!supabase) {
+    return { ok: false, error: "Supabase is not configured." };
+  }
+
+  const { error } = await supabase
+    .from("client_work_items")
+    .update({
+      title: input.title,
+      description: input.description ?? null,
+      status: input.status,
+      priority: input.priority,
+      due_at: input.due_at ?? null,
+      asset_id: input.asset_id ?? null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", id);
+
+  if (error) return { ok: false, error: error.message };
+  return { ok: true };
+}
+
+export async function deleteWorkItem(
+  id: string,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const supabase = getServiceRoleClient();
+  if (!supabase) {
+    return { ok: false, error: "Supabase is not configured." };
+  }
+
+  const { error } = await supabase
+    .from("client_work_items")
+    .delete()
     .eq("id", id);
 
   if (error) return { ok: false, error: error.message };

@@ -12,6 +12,7 @@ import {
   isWorkPriority,
   isWorkStatus,
   openBalanceCents,
+  truncateText,
 } from "./client-ops";
 
 describe("client ops enums", () => {
@@ -102,5 +103,11 @@ describe("formatCents and openBalanceCents", () => {
         { amount_cents: 1000, status: "draft", due_at: null },
       ]),
     ).toBe(14000);
+  });
+
+  it("truncates long text", () => {
+    expect(truncateText("short")).toBe("short");
+    expect(truncateText("a".repeat(120)).length).toBe(100);
+    expect(truncateText("a".repeat(120)).endsWith("…")).toBe(true);
   });
 });

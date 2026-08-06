@@ -107,6 +107,12 @@ export function formatCents(
   }).format(amountCents / 100);
 }
 
+export function truncateText(value: string, max = 100): string {
+  const trimmed = value.trim();
+  if (trimmed.length <= max) return trimmed;
+  return `${trimmed.slice(0, max - 1)}…`;
+}
+
 export function openBalanceCents(
   invoices: Array<{
     amount_cents: number;

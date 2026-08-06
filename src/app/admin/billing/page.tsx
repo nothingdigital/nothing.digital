@@ -4,6 +4,7 @@ import Link from "next/link";
 import { AdminFilterChip } from "@/components/admin/admin-form";
 import { InvoiceStatusSelect } from "@/components/admin/client-ops-selects";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   INVOICE_STATUSES,
   effectiveInvoiceStatus,
@@ -35,11 +36,16 @@ export default async function AdminBillingPage({
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="font-display text-3xl tracking-tight">Billing</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Invoices across clients ({visible.length})
-        </p>
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h2 className="font-display text-3xl tracking-tight">Billing</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Invoices across clients ({visible.length})
+          </p>
+        </div>
+        <Button asChild>
+          <Link href="/admin/billing/new">New invoice</Link>
+        </Button>
       </div>
 
       <div className="flex flex-wrap gap-2">
@@ -70,7 +76,35 @@ export default async function AdminBillingPage({
       ) : null}
 
       {visible.length === 0 && !error ? (
-        <p className="text-sm text-muted-foreground">No invoices yet.</p>
+        <div className="space-y-2 rounded-lg border border-border bg-card px-4 py-5 text-sm">
+          <p className="font-medium text-foreground">No invoices yet.</p>
+          <p className="text-muted-foreground">
+            Create a client first, then add an invoice from here or from the
+            client&apos;s Billing tab. Cancel an invoice by setting status to{" "}
+            <span className="font-medium text-foreground">void</span> — invoices
+            are not deleted.
+          </p>
+          <div className="flex flex-wrap gap-3 pt-1">
+            <Link
+              href="/admin/clients"
+              className="text-primary underline-offset-4 hover:underline"
+            >
+              View clients
+            </Link>
+            <Link
+              href="/admin/clients/new"
+              className="text-primary underline-offset-4 hover:underline"
+            >
+              New client
+            </Link>
+            <Link
+              href="/admin/billing/new"
+              className="text-primary underline-offset-4 hover:underline"
+            >
+              New invoice
+            </Link>
+          </div>
+        </div>
       ) : null}
 
       <ul className="space-y-3">
@@ -97,9 +131,28 @@ export default async function AdminBillingPage({
                   {invoice.due_at
                     ? ` · due ${new Date(invoice.due_at).toLocaleDateString()}`
                     : ""}
+                  {invoice.external_url ? (
+                    <>
+                      {" · "}
+                      <a
+                        href={invoice.external_url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-primary underline-offset-4 hover:underline"
+                      >
+                        PDF / link
+                      </a>
+                    </>
+                  ) : null}
                 </p>
               </div>
               <div className="flex items-center gap-2">
+                <Link
+                  href={`/admin/clients/${invoice.client_id}/invoices/${invoice.id}/edit`}
+                  className="text-sm text-primary underline-offset-4 hover:underline"
+                >
+                  Edit
+                </Link>
                 <Badge
                   variant={display === "overdue" ? "destructive" : "secondary"}
                 >

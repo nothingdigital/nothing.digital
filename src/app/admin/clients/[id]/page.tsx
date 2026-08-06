@@ -31,6 +31,7 @@ import {
   effectiveInvoiceStatus,
   formatCents,
   openBalanceCents,
+  truncateText,
 } from "@/lib/admin/client-ops";
 import {
   getClient,
@@ -271,9 +272,28 @@ export default async function AdminClientDetailPage({
                       {invoice.due_at
                         ? ` · due ${new Date(invoice.due_at).toLocaleDateString()}`
                         : ""}
+                      {invoice.external_url ? (
+                        <>
+                          {" · "}
+                          <a
+                            href={invoice.external_url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-primary underline-offset-4 hover:underline"
+                          >
+                            PDF / link
+                          </a>
+                        </>
+                      ) : null}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
+                    <Link
+                      href={`/admin/clients/${id}/invoices/${invoice.id}/edit`}
+                      className="text-sm text-primary underline-offset-4 hover:underline"
+                    >
+                      Edit
+                    </Link>
                     <Badge
                       variant={
                         display === "overdue" ? "destructive" : "secondary"
@@ -501,6 +521,11 @@ export default async function AdminClientDetailPage({
               >
                 <div>
                   <p className="font-medium">{item.title}</p>
+                  {item.description ? (
+                    <p className="text-sm text-muted-foreground">
+                      {truncateText(item.description)}
+                    </p>
+                  ) : null}
                   <p className="text-sm text-muted-foreground">
                     {item.priority}
                     {item.due_at
@@ -508,11 +533,19 @@ export default async function AdminClientDetailPage({
                       : ""}
                   </p>
                 </div>
-                <WorkStatusSelect
-                  id={item.id}
-                  status={item.status}
-                  clientId={id}
-                />
+                <div className="flex items-center gap-2">
+                  <Link
+                    href={`/admin/clients/${id}/work/${item.id}/edit`}
+                    className="text-sm text-primary underline-offset-4 hover:underline"
+                  >
+                    Edit
+                  </Link>
+                  <WorkStatusSelect
+                    id={item.id}
+                    status={item.status}
+                    clientId={id}
+                  />
+                </div>
               </li>
             ))}
           </ul>

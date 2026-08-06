@@ -19,9 +19,12 @@ import {
   createClientAsset,
   createInvoice,
   createWorkItem,
+  deleteWorkItem,
   updateClient,
   updateClientAssetStatus,
+  updateInvoice,
   updateInvoiceStatus,
+  updateWorkItem,
   updateWorkItemStatus,
 } from "@/lib/admin/client-ops-queries";
 
@@ -180,6 +183,65 @@ export async function createInvoiceAction(formData: FormData): Promise<void> {
   redirect(`/admin/clients/${client_id}?tab=billing`);
 }
 
+export async function startNewInvoiceAction(formData: FormData): Promise<void> {
+  await requireAdmin();
+
+  const client_id = formString(formData, "client_id");
+  if (!client_id) {
+    throw new Error("Client is required.");
+  }
+
+  redirect(`/admin/clients/${client_id}/invoices/new`);
+}
+
+export async function updateInvoiceAction(formData: FormData): Promise<void> {
+  await requireAdmin();
+
+  const id = formString(formData, "id");
+  const client_id = formString(formData, "client_id");
+  const number = formString(formData, "number");
+  const title = formString(formData, "title");
+  const status = formString(formData, "status");
+  const amount_cents = dollarsToCents(formString(formData, "amount"));
+
+  if (!id || !client_id || !number || !title) {
+    throw new Error("Invoice, client, number, and title required.");
+  }
+  if (amount_cents === null) {
+    throw new Error("Invalid amount.");
+  }
+  if (!isInvoiceStatus(status)) {
+    throw new Error("Invalid invoice status.");
+  }
+
+  const paid_at =
+    status === "paid"
+      ? (dateOrNull(formOptional(formData, "paid_at")) ??
+        new Date().toISOString())
+      : null;
+
+  const result = await updateInvoice(id, {
+    number,
+    title,
+    amount_cents,
+    currency: formOptional(formData, "currency") ?? "USD",
+    status,
+    issued_at: dateOrNull(formOptional(formData, "issued_at")),
+    due_at: dateOrNull(formOptional(formData, "due_at")),
+    paid_at,
+    external_url: formOptional(formData, "external_url"),
+    notes: formOptional(formData, "notes"),
+  });
+
+  if (!result.ok) {
+    throw new Error(result.error);
+  }
+
+  revalidatePath("/admin/billing");
+  revalidatePath(`/admin/clients/${client_id}`);
+  redirect(`/admin/clients/${client_id}?tab=billing`);
+}
+
 export async function updateInvoiceStatusAction(
   id: string,
   status: string,
@@ -277,6 +339,61 @@ export async function createWorkItemAction(formData: FormData): Promise<void> {
 
   if (result.error || !result.row) {
     throw new Error(result.error ?? "Create failed.");
+  }
+
+  revalidatePath("/admin/work");
+  revalidatePath(`/admin/clients/${client_id}`);
+  redirect(`/admin/clients/${client_id}?tab=work`);
+}
+
+export async function updateWorkItemAction(formData: FormData): Promise<void> {
+  await requireAdmin();
+
+  const id = formString(formData, "id");
+  const client_id = formString(formData, "client_id");
+  const title = formString(formData, "title");
+  const status = formString(formData, "status");
+  const priority = formString(formData, "priority");
+  const asset_id = formOptional(formData, "asset_id");
+
+  if (!id || !client_id || !title) {
+    throw new Error("Work item, client, and title are required.");
+  }
+  if (!isWorkStatus(status) || !isWorkPriority(priority)) {
+    throw new Error("Invalid work fields.");
+  }
+
+  const result = await updateWorkItem(id, {
+    title,
+    description: formOptional(formData, "description"),
+    status,
+    priority,
+    due_at: dateOrNull(formOptional(formData, "due_at")),
+    asset_id,
+  });
+
+  if (!result.ok) {
+    throw new Error(result.error);
+  }
+
+  revalidatePath("/admin/work");
+  revalidatePath(`/admin/clients/${client_id}`);
+  redirect(`/admin/clients/${client_id}?tab=work`);
+}
+
+export async function deleteWorkItemAction(formData: FormData): Promise<void> {
+  await requireAdmin();
+
+  const id = formString(formData, "id");
+  const client_id = formString(formData, "client_id");
+
+  if (!id || !client_id) {
+    throw new Error("Work item and client are required.");
+  }
+
+  const result = await deleteWorkItem(id);
+  if (!result.ok) {
+    throw new Error(result.error);
   }
 
   revalidatePath("/admin/work");
