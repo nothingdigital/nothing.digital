@@ -6,9 +6,7 @@ import { SectionContainer } from "@/components/atoms/section-container";
 import { Reveal } from "@/components/atoms/reveal";
 import { Button } from "@/components/ui/button";
 import { ServiceCard } from "@/components/molecules/service-card";
-import { PortfolioCard } from "@/components/molecules/portfolio-card";
 import { HeroClock } from "@/components/atoms/hero-clock";
-import { getAllFrontmatter, type PortfolioFrontmatter } from "@/lib/mdx";
 import { routes } from "@/lib/routes";
 import { serviceSummaries } from "@/lib/services";
 
@@ -67,19 +65,7 @@ function SectionHeading({
   );
 }
 
-function selectFeaturedWork(
-  items: PortfolioFrontmatter[],
-  limit = 3,
-): PortfolioFrontmatter[] {
-  const featured = items.filter((item) => item.featured);
-  const pool = featured.length > 0 ? featured : items;
-  return pool.slice(0, limit);
-}
-
-export default async function HomePage() {
-  const portfolio = await getAllFrontmatter<PortfolioFrontmatter>("portfolio");
-  const featuredWork = selectFeaturedWork(portfolio);
-
+export default function HomePage() {
   return (
     <>
       <SectionContainer className="pb-16 pt-20 md:pb-24 md:pt-32">
@@ -152,36 +138,6 @@ export default async function HomePage() {
           ))}
         </div>
       </SectionContainer>
-
-      {featuredWork.length > 0 ? (
-        <SectionContainer id="work">
-          <Reveal>
-            <SectionHeading
-              kicker="Selected work"
-              title="Outcomes, not decks"
-              description="Anonymized composites until named clients approve public quotes."
-            />
-          </Reveal>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {featuredWork.map((item) => (
-              <PortfolioCard
-                key={item.slug}
-                slug={item.slug}
-                title={item.title}
-                client={item.client}
-                industry={item.industry}
-                services={item.services}
-                coverImage={item.coverImage}
-              />
-            ))}
-          </div>
-          <div className="mt-10 text-center">
-            <Button variant="outline" asChild>
-              <Link href={routes.portfolio.index}>See all work</Link>
-            </Button>
-          </div>
-        </SectionContainer>
-      ) : null}
 
       <SectionContainer id="why-us">
         <Reveal>

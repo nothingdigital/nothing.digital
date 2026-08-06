@@ -60,7 +60,7 @@ it("submits the form and shows a success message", async () => {
   });
 
   expect(
-    screen.getByRole("link", { name: /review ballpark pricing ranges/i }),
+    screen.getByRole("link", { name: /see how pricing works/i }),
   ).toHaveAttribute("href", "/pricing");
   expect(
     screen.getByRole("link", { name: /browse our services/i }),

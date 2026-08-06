@@ -60,21 +60,19 @@ const faqs: {
     question: "What does a project typically cost?",
     answer: (
       <>
-        Ballpark ranges live on our{" "}
+        Every engagement gets a fixed quote after a free scoping call — no
+        published rates, no surprise invoices. See how pricing works on our{" "}
         <Link
           href={routes.pricing}
           className="text-primary underline underline-offset-4"
         >
           pricing page
         </Link>
-        : websites $5K–$15K, software $15K–$60K, apps $20K–$80K, email marketing
-        $1.5K–$5K/mo, AI $8K–$35K, tech literacy $75–$150/hr, coding & SQL
-        $40–$80/session. Every engagement still gets a fixed quote after
-        scoping.
+        .
       </>
     ),
     answerText:
-      "Ballpark ranges: websites $5K–$15K, software $15K–$60K, apps $20K–$80K, email marketing $1.5K–$5K/mo, AI $8K–$35K, tech literacy $75–$150/hr, coding & SQL $40–$80/session. Every engagement gets a fixed quote after scoping. See https://nothing.digital/pricing.",
+      "Every engagement gets a fixed quote after a free scoping call — no published rates, no surprise invoices. See https://nothing.digital/pricing.",
   },
 ];
 

@@ -139,7 +139,7 @@ export function ContactForm() {
               href={routes.pricing}
               className="text-primary underline underline-offset-4 hover:text-primary/80"
             >
-              Review ballpark pricing ranges
+              See how pricing works
             </a>
           </li>
           {relatedService ? (

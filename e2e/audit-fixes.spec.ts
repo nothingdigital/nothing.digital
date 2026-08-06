@@ -29,7 +29,10 @@ test("pricing page is reachable and linked from nav", async ({
   await expect(
     page.getByRole("heading", { name: "Pricing", level: 1 }),
   ).toBeVisible();
-  await expect(page.getByText(/\$5K–\$15K/)).toBeVisible();
+  await expect(page.getByText(/Schedule a quote/i)).toBeVisible();
+  await expect(
+    page.getByText(/Marketing sites & brand launches/i),
+  ).toBeVisible();
 });
 
 test("cookie consent banner is not present", async ({ page }) => {

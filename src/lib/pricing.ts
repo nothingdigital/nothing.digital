@@ -1,61 +1,62 @@
 import { routes, type ServiceSlug } from "@/lib/routes";
 
-export interface PricingBallpark {
+export interface PricingService {
   slug: ServiceSlug;
   title: string;
-  range: string;
+  /** Short fit cue — who/what the service is for. No dollar amounts. */
+  fit: string;
   summary: string;
   href: string;
 }
 
-/** Approved ballpark ranges — fixed quote after scoping. */
-export const pricingBallparks: PricingBallpark[] = [
+/** Service cards for the pricing page — fixed quote after scoping. */
+export const pricingServices: PricingService[] = [
   {
     slug: "website-development",
     title: "Websites",
-    range: "$5K–$15K",
+    fit: "Marketing sites & brand launches",
     summary: "Marketing sites, landing pages, and content-driven builds.",
     href: routes.services.websiteDevelopment,
   },
   {
     slug: "software-solutions",
     title: "Software",
-    range: "$15K–$60K",
+    fit: "Custom tools & workflow systems",
     summary: "Custom tools, dashboards, and workflow automation.",
     href: routes.services.softwareSolutions,
   },
   {
     slug: "applications",
     title: "Apps",
-    range: "$20K–$80K",
+    fit: "Products built to scale",
     summary: "Web and mobile products designed for scale.",
     href: routes.services.applications,
   },
   {
     slug: "email-marketing",
     title: "Email marketing",
-    range: "$1.5K–$5K/mo",
+    fit: "Campaigns & ongoing nurture",
     summary: "Campaign strategy, automation, and ongoing nurture.",
     href: routes.services.emailMarketing,
   },
   {
     slug: "ai-solutions",
     title: "AI Solutions",
-    range: "$8K–$35K",
+    fit: "Scoped AI for products & ops",
     summary: "Scoped AI implementation for products, sites, and ops.",
     href: routes.services.aiSolutions,
   },
   {
     slug: "tech-literacy",
     title: "Tech Literacy",
-    range: "$75–$150/hr",
+    fit: "1:1 or small-group coaching",
     summary: "Private or small-group sessions for everyday tech confidence.",
     href: routes.services.techLiteracy,
   },
   {
     slug: "coding-sql",
     title: "Coding & SQL",
-    range: "$40–$80/session",
+    fit: "Kids, youth & beginners",
     summary: "Project-based coding and SQL for kids, youth, and beginners.",
     href: routes.services.codingSql,
   },

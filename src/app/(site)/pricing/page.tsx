@@ -4,18 +4,18 @@ import Link from "next/link";
 import { SectionContainer } from "@/components/atoms/section-container";
 import { PageHero } from "@/components/molecules/page-hero";
 import { Button } from "@/components/ui/button";
-import { pricingBallparks } from "@/lib/pricing";
+import { pricingServices } from "@/lib/pricing";
 import { routes } from "@/lib/routes";
 
 export const metadata: Metadata = {
   title: "Pricing",
   description:
-    "Ballpark ranges for websites ($5K–$15K), software ($15K–$60K), apps ($20K–$80K), email marketing ($1.5K–$5K/mo), AI ($8K–$35K), tech literacy ($75–$150/hr), and coding & SQL ($40–$80/session). Fixed quote after a free scoping call.",
+    "Custom digital work priced by scope — fixed quote after a free scoping call. No published rates, no surprise invoices.",
   alternates: { canonical: routes.pricing },
   openGraph: {
     title: "Pricing",
     description:
-      "Ballpark ranges for websites, software, apps, email, AI, tech literacy, and coding & SQL. Fixed quote after scoping.",
+      "Custom digital work priced by scope. Fixed quote after a free scoping call.",
     url: routes.pricing,
     type: "website",
   },
@@ -27,23 +27,25 @@ export default function PricingPage() {
       <PageHero
         kicker="Investment"
         title="Pricing"
-        description="Starting ranges so you can self-qualify. Every project still gets a fixed quote after scoping — no hourly billing, no surprise invoices."
+        description="Serious custom work, scoped to your goals. Every engagement gets a fixed quote after a free scoping call — no published rates, no surprise invoices."
       />
 
       <SectionContainer>
         <p className="mb-8 text-center font-mono text-xs uppercase tracking-[0.35em] text-primary">
-          Ballpark ranges
+          What we build
         </p>
         <div className="grid gap-6 sm:grid-cols-2">
-          {pricingBallparks.map((item) => (
+          {pricingServices.map((item) => (
             <Link
               key={item.slug}
               href={item.href}
               className="rounded-xl border-2 border-border bg-card p-6 shadow-md transition hover:-translate-y-0.5 hover:border-primary hover:shadow-xl"
             >
-              <div className="flex items-baseline justify-between gap-4">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
                 <h2 className="font-display text-2xl">{item.title}</h2>
-                <p className="font-mono text-lg text-primary">{item.range}</p>
+                <p className="shrink-0 font-mono text-sm text-primary sm:text-right">
+                  {item.fit}
+                </p>
               </div>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
                 {item.summary}
@@ -52,8 +54,8 @@ export default function PricingPage() {
           ))}
         </div>
         <p className="mx-auto mt-8 max-w-2xl text-center text-sm leading-relaxed text-muted-foreground">
-          Ranges are starting points. Scope, timeline, and budget are confirmed
-          on a free scoping call before you commit.
+          Pricing is available by quote. Scope, timeline, and budget are
+          confirmed on a free scoping call before you commit.
         </p>
       </SectionContainer>
 
@@ -62,7 +64,7 @@ export default function PricingPage() {
           Free scoping call
         </p>
         <h2 className="mt-3 font-display text-3xl tracking-tight md:text-4xl">
-          Get your fixed quote
+          Schedule a quote
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
           We map scope, timeline, and budget before you commit. Reply within one
