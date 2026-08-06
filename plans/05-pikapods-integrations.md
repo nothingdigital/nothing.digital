@@ -301,7 +301,7 @@ Admin-only: no client portal, no Stripe. Routes: `/admin/clients`, `/admin/billi
 ### Next (Phase 3 close-out)
 
 - [ ] Apply CSP allowlist for analytics host — ship in app `middleware.ts`/`next.config` first, mirror in Cloudflare later (see `infra/cloudflare/security-headers.md`)
-- [ ] UptimeRobot free monitors for `nothing.digital` + `/api/health` (keyword `ok`)
+- [x] UptimeRobot free monitors for `nothing.digital` + `/api/health` (keyword `ok`)
 - [ ] Google Search Console + Bing Webmaster Tools verification + `/sitemap.xml` submission
 - [ ] Manual a11y pass: keyboard nav, screen reader, `prefers-reduced-motion`
 - [ ] API integration tests for `/api/contact` and `/api/newsletter` (mock Resend/Listmonk)

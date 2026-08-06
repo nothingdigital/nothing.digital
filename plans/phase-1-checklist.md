@@ -72,7 +72,7 @@
 | ---- | ----------------------------------------------- | ------ | -------------------------------------------------------- |
 | 1.33 | Set up Sentry error tracking (DSN, source maps) | DevOps | ✅ Live DSN + source maps verified                       |
 | 1.34 | Enable Speed Insights; disable Vercel Analytics | DevOps | ✅ Speed Insights on; Vercel Analytics replaced by Umami |
-| 1.35 | Configure UptimeRobot monitoring                | DevOps | 🔲 (free account still needed)                           |
+| 1.35 | Configure UptimeRobot monitoring                | DevOps | ✅ Live — homepage + /api/health keyword monitors        |
 
 ## Phase 1 Deliverables
 

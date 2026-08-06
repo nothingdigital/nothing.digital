@@ -6,32 +6,30 @@ Monitoring stack for Nothing.Digital:
 
 | Layer        | Tool                              | Purpose                             | Status                      |
 | ------------ | --------------------------------- | ----------------------------------- | --------------------------- |
-| Uptime       | UptimeRobot                       | External HTTP checks + alerting     | ✅ Runbook (manual setup)   |
+| Uptime       | UptimeRobot                       | External HTTP checks + alerting     | ✅ Live                     |
 | Analytics    | Umami (PikaPods) + Speed Insights | Owned traffic + Core Web Vitals     | ✅ Live                     |
 | Errors       | Sentry                            | Error tracking + performance traces | ✅ Live (DSN + source maps) |
 | Search index | Google Search Console + Bing      | Sitemap submission + indexing       | ✅ Runbook (manual setup)   |
 
 ## UptimeRobot
 
-No API credentials available in this workspace, so setup is manual.
-
 Plan: **UptimeRobot free** — 5-minute interval, 50 monitors, email alerts.
+
+Monitors live:
+
+| Monitor                    | Type    | URL                                  | Keyword | Interval | Status  |
+| -------------------------- | ------- | ------------------------------------ | ------- | -------- | ------- |
+| Nothing.Digital homepage   | HTTP(s) | `https://nothing.digital`            | —       | 5 min    | ✅ Live |
+| Nothing.Digital API health | Keyword | `https://nothing.digital/api/health` | `ok`    | 5 min    | ✅ Live |
+
+Alert contact: `alexander@nothing.digital`.
+
+To add more monitors later:
 
 1. Sign up / log in at <https://uptimerobot.com>.
 2. Click **Add New Monitor**.
-3. Create monitor **"Nothing.Digital homepage"**:
-   - Monitor Type: **HTTP(s)**
-   - URL: `https://nothing.digital`
-   - Monitoring Interval: **5 minutes**
-   - Alert Contacts: owner email (add Slack webhook if you configure one)
-   - Save
-4. Create monitor **"Nothing.Digital API health"**:
-   - Monitor Type: **HTTP(s)** or **Keyword**
-   - URL: `https://nothing.digital/api/health`
-   - If Keyword: search for `ok`
-   - Monitoring Interval: **5 minutes**
-   - Save
-5. Wait one interval and confirm both monitors show **Up**.
+3. Set type, URL, interval, and alert contact.
+4. Save and wait one interval.
 
 ## Umami
 
