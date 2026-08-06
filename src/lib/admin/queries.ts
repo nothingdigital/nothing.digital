@@ -95,3 +95,25 @@ export async function listNewsletterSubscribers(): Promise<{
 
   return { rows: data ?? [], error: null };
 }
+
+/** Sets unsubscribed_at in Supabase only — does not sync to Listmonk. */
+export async function unsubscribeNewsletterSubscriber(
+  id: string,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const supabase = getServiceRoleClient();
+  if (!supabase) {
+    return { ok: false, error: "Supabase is not configured." };
+  }
+
+  const { error } = await supabase
+    .from("newsletter_subscribers")
+    .update({ unsubscribed_at: new Date().toISOString() })
+    .eq("id", id)
+    .is("unsubscribed_at", null);
+
+  if (error) {
+    return { ok: false, error: error.message };
+  }
+
+  return { ok: true };
+}
