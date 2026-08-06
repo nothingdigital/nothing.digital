@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Mail } from "lucide-react";
+import { Calendar, Mail } from "lucide-react";
 
 import { SectionContainer } from "@/components/atoms/section-container";
 import { JsonLd } from "@/components/atoms/json-ld";
@@ -11,6 +11,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ContactForm } from "./components/contact-form";
+import { env } from "@/lib/env";
 import { routes } from "@/lib/routes";
 
 export const metadata: Metadata = {
@@ -75,6 +76,8 @@ const faqJsonLd = {
 };
 
 export default function ContactPage() {
+  const calendlyUrl = env.private.CALENDLY_URL;
+
   return (
     <>
       <JsonLd data={faqJsonLd} />
@@ -104,6 +107,27 @@ export default function ContactPage() {
                 </a>
               </div>
             </div>
+
+            {calendlyUrl ? (
+              <div className="flex items-start gap-4">
+                <div className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent ring-1 ring-accent/20">
+                  <Calendar className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="font-mono text-xs uppercase tracking-widest">
+                    Book a call
+                  </p>
+                  <a
+                    href={calendlyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground hover:text-foreground"
+                  >
+                    Pick a time that works for you
+                  </a>
+                </div>
+              </div>
+            ) : null}
           </div>
 
           <div className="rounded-xl border-2 border-border bg-background p-6 shadow-md md:p-8">
