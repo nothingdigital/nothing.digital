@@ -54,6 +54,10 @@ export const WORK_PRIORITIES = ["low", "med", "high"] as const;
 
 export type WorkPriority = (typeof WORK_PRIORITIES)[number];
 
+export const WORK_SORTS = ["due", "priority", "created"] as const;
+
+export type WorkSort = (typeof WORK_SORTS)[number];
+
 export function isClientStatus(value: string): value is ClientStatus {
   return (CLIENT_STATUSES as readonly string[]).includes(value);
 }
@@ -84,6 +88,55 @@ export function isWorkStatus(value: string): value is WorkStatus {
 
 export function isWorkPriority(value: string): value is WorkPriority {
   return (WORK_PRIORITIES as readonly string[]).includes(value);
+}
+
+export function isWorkSort(value: string): value is WorkSort {
+  return (WORK_SORTS as readonly string[]).includes(value);
+}
+
+const PRIORITY_RANK: Record<WorkPriority, number> = {
+  high: 0,
+  med: 1,
+  low: 2,
+};
+
+export function isWorkDueSoon(
+  item: { due_at: string | null },
+  now: Date = new Date(),
+  withinDays = 7,
+): boolean {
+  if (!item.due_at) return false;
+  const due = new Date(item.due_at);
+  if (Number.isNaN(due.getTime())) return false;
+  const horizon = new Date(now);
+  horizon.setUTCDate(horizon.getUTCDate() + withinDays);
+  return due <= horizon;
+}
+
+export function compareWorkItems(
+  a: { due_at: string | null; priority: string; created_at: string },
+  b: { due_at: string | null; priority: string; created_at: string },
+  sort: WorkSort,
+  _now: Date = new Date(),
+): number {
+  if (sort === "due") {
+    if (a.due_at === null && b.due_at === null) return 0;
+    if (a.due_at === null) return 1;
+    if (b.due_at === null) return -1;
+    return new Date(a.due_at).getTime() - new Date(b.due_at).getTime();
+  }
+
+  if (sort === "priority") {
+    const aRank = isWorkPriority(a.priority)
+      ? PRIORITY_RANK[a.priority]
+      : Number.POSITIVE_INFINITY;
+    const bRank = isWorkPriority(b.priority)
+      ? PRIORITY_RANK[b.priority]
+      : Number.POSITIVE_INFINITY;
+    return aRank - bRank;
+  }
+
+  return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
 }
 
 export function effectiveInvoiceStatus(

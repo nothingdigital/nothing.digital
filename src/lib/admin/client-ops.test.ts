@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  WORK_SORTS,
+  compareWorkItems,
   effectiveInvoiceStatus,
   formatCents,
   isAssetEnv,
@@ -9,11 +11,19 @@ import {
   isBillingModel,
   isClientStatus,
   isInvoiceStatus,
+  isWorkDueSoon,
   isWorkPriority,
+  isWorkSort,
   isWorkStatus,
   openBalanceCents,
   truncateText,
 } from "./client-ops";
+
+type SortableWork = {
+  due_at: string | null;
+  priority: string;
+  created_at: string;
+};
 
 describe("client ops enums", () => {
   it("validates client status", () => {
@@ -109,5 +119,116 @@ describe("formatCents and openBalanceCents", () => {
     expect(truncateText("short")).toBe("short");
     expect(truncateText("a".repeat(120)).length).toBe(100);
     expect(truncateText("a".repeat(120)).endsWith("…")).toBe(true);
+  });
+});
+
+describe("work queue sort and due-soon", () => {
+  const now = new Date("2026-08-06T12:00:00.000Z");
+
+  it("exposes WORK_SORTS and validates isWorkSort", () => {
+    expect(WORK_SORTS).toEqual(["due", "priority", "created"]);
+    expect(isWorkSort("due")).toBe(true);
+    expect(isWorkSort("priority")).toBe(true);
+    expect(isWorkSort("created")).toBe(true);
+    expect(isWorkSort("status")).toBe(false);
+  });
+
+  it("marks overdue and within 7 days as due soon", () => {
+    expect(
+      isWorkDueSoon({ due_at: "2026-07-01T00:00:00.000Z" }, now),
+    ).toBe(true);
+    expect(
+      isWorkDueSoon({ due_at: "2026-08-13T12:00:00.000Z" }, now),
+    ).toBe(true);
+    expect(
+      isWorkDueSoon({ due_at: "2026-08-06T12:00:00.000Z" }, now),
+    ).toBe(true);
+  });
+
+  it("excludes null and far-future due dates", () => {
+    expect(isWorkDueSoon({ due_at: null }, now)).toBe(false);
+    expect(
+      isWorkDueSoon({ due_at: "2026-08-14T12:00:00.000Z" }, now),
+    ).toBe(false);
+  });
+
+  it("sorts by due ascending with nulls last", () => {
+    const items: SortableWork[] = [
+      {
+        due_at: null,
+        priority: "low",
+        created_at: "2026-01-01T00:00:00.000Z",
+      },
+      {
+        due_at: "2026-08-20T00:00:00.000Z",
+        priority: "low",
+        created_at: "2026-01-01T00:00:00.000Z",
+      },
+      {
+        due_at: "2026-08-10T00:00:00.000Z",
+        priority: "low",
+        created_at: "2026-01-01T00:00:00.000Z",
+      },
+    ];
+    const sorted = [...items].sort((a, b) =>
+      compareWorkItems(a, b, "due", now),
+    );
+    expect(sorted.map((i) => i.due_at)).toEqual([
+      "2026-08-10T00:00:00.000Z",
+      "2026-08-20T00:00:00.000Z",
+      null,
+    ]);
+  });
+
+  it("sorts by priority high > med > low", () => {
+    const items: SortableWork[] = [
+      {
+        due_at: null,
+        priority: "low",
+        created_at: "2026-01-01T00:00:00.000Z",
+      },
+      {
+        due_at: null,
+        priority: "high",
+        created_at: "2026-01-01T00:00:00.000Z",
+      },
+      {
+        due_at: null,
+        priority: "med",
+        created_at: "2026-01-01T00:00:00.000Z",
+      },
+    ];
+    const sorted = [...items].sort((a, b) =>
+      compareWorkItems(a, b, "priority", now),
+    );
+    expect(sorted.map((i) => i.priority)).toEqual(["high", "med", "low"]);
+  });
+
+  it("sorts by created descending", () => {
+    const items: SortableWork[] = [
+      {
+        due_at: null,
+        priority: "med",
+        created_at: "2026-01-01T00:00:00.000Z",
+      },
+      {
+        due_at: null,
+        priority: "med",
+        created_at: "2026-03-01T00:00:00.000Z",
+      },
+      {
+        due_at: null,
+        priority: "med",
+        created_at: "2026-02-01T00:00:00.000Z",
+      },
+    ];
+    const sorted = [...items].sort((a, b) =>
+      compareWorkItems(a, b, "created", now),
+    );
+    expect(sorted.map((i) => i.created_at)).toEqual([
+      "2026-03-01T00:00:00.000Z",
+      "2026-02-01T00:00:00.000Z",
+      "2026-01-01T00:00:00.000Z",
+    ]);
   });
 });
