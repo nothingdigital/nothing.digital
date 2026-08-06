@@ -6,6 +6,9 @@ export const routes = {
     softwareSolutions: "/services/software-solutions",
     applications: "/services/applications",
     emailMarketing: "/services/email-marketing",
+    aiSolutions: "/services/ai-solutions",
+    techLiteracy: "/services/tech-literacy",
+    codingSql: "/services/coding-sql",
   },
   portfolio: {
     index: "/portfolio",
@@ -28,6 +31,9 @@ export const serviceSlugs = [
   "software-solutions",
   "applications",
   "email-marketing",
+  "ai-solutions",
+  "tech-literacy",
+  "coding-sql",
 ] as const;
 
 export type ServiceSlug = (typeof serviceSlugs)[number];

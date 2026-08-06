@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { routes } from "@/lib/routes";
 import { siteConfig, socialLinks } from "@/lib/site";
+import { Seal } from "@/components/atoms/seal";
 import { NewsletterForm } from "./newsletter-form";
 
 const serviceLinks = [
@@ -11,6 +12,9 @@ const serviceLinks = [
   { label: "Software Solutions", href: routes.services.softwareSolutions },
   { label: "Applications", href: routes.services.applications },
   { label: "Email Marketing", href: routes.services.emailMarketing },
+  { label: "AI Solutions", href: routes.services.aiSolutions },
+  { label: "Tech Literacy", href: routes.services.techLiteracy },
+  { label: "Coding & SQL", href: routes.services.codingSql },
 ];
 
 const companyLinks = [
@@ -110,7 +114,11 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t pt-8 md:flex-row">
+        <div className="mt-12 flex justify-center border-t pt-8">
+          <Seal className="text-foreground" />
+        </div>
+
+        <div className="mt-6 flex flex-col items-center justify-between gap-4 md:flex-row">
           <p className="text-sm text-muted-foreground">
             © {currentYear} {siteConfig.name}. All rights reserved.
           </p>

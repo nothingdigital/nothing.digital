@@ -7,6 +7,7 @@ import { PageHero } from "@/components/molecules/page-hero";
 import { Button } from "@/components/ui/button";
 import { routes } from "@/lib/routes";
 import { sameAs, siteConfig } from "@/lib/site";
+import { Seal } from "@/components/atoms/seal";
 
 export const metadata: Metadata = {
   title: "About",
@@ -53,7 +54,8 @@ const organizationJsonLd = {
   sameAs,
   contactPoint: {
     "@type": "ContactPoint",
-    email: siteConfig.email,
+    email: siteConfig.contactEmail ?? siteConfig.email,
+    telephone: siteConfig.phone,
     contactType: "sales",
   },
 };
@@ -109,6 +111,13 @@ export default function AboutPage() {
             ))}
           </div>
         </div>
+      </SectionContainer>
+
+      <SectionContainer variant="muted" className="text-center">
+        <Seal className="mx-auto text-foreground" />
+        <p className="mt-4 text-sm text-muted-foreground">
+          The Business of Nothing LLC · Established 2026 · Northport, Alabama
+        </p>
       </SectionContainer>
 
       <SectionContainer variant="muted">

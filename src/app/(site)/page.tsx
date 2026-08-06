@@ -98,8 +98,8 @@ export default async function HomePage() {
             </h1>
             <p className="relative mx-auto mt-8 max-w-xl text-lg leading-relaxed text-muted-foreground md:mx-0 md:text-xl">
               Nothing.Digital ships premium websites, custom software,
-              applications, and email marketing — delivered precisely when you
-              need it.
+              applications, email marketing, and AI — plus hands-on teaching for
+              tech literacy and coding — delivered precisely when you need it.
             </p>
             <div className="relative mt-10 flex w-full flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center md:justify-start">
               <Button
@@ -210,13 +210,13 @@ export default async function HomePage() {
       <SectionContainer variant="primary" id="newsletter">
         <Reveal>
           <div className="mx-auto max-w-2xl text-center">
-            <p className="font-mono text-xs uppercase tracking-[0.35em] text-primary-foreground/70">
+            <p className="font-mono text-xs uppercase tracking-[0.35em] text-primary-foreground">
               The monthly dispatch
             </p>
             <h2 className="mt-3 font-display text-4xl tracking-tight md:text-5xl">
               Stay in the loop
             </h2>
-            <p className="mt-4 text-primary-foreground/80">
+            <p className="mt-4 text-primary-foreground">
               One email a month. No spam, just insights.
             </p>
             <div className="mt-8 inline-block w-full max-w-md text-left">

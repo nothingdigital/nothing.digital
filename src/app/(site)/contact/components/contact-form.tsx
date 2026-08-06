@@ -31,6 +31,9 @@ const budgetOptions = [
 ];
 
 function slugToLabel(slug: string): string {
+  const summary = serviceSummaries.find((service) => service.slug === slug);
+  if (summary) return summary.title;
+
   return slug
     .split("-")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))

@@ -123,12 +123,15 @@ Newsletter → Listmonk drips → Soft CTA → Contact / Calendly
 
 ## Ballpark ranges (published on `/pricing`)
 
-| Service         | Range        |
-| --------------- | ------------ |
-| Websites        | $5K–$15K     |
-| Software        | $15K–$60K    |
-| Apps            | $20K–$80K    |
-| Email marketing | $1.5K–$5K/mo |
+| Service         | Range           |
+| --------------- | --------------- |
+| Websites        | $5K–$15K        |
+| Software        | $15K–$60K       |
+| Apps            | $20K–$80K       |
+| Email marketing | $1.5K–$5K/mo    |
+| AI Solutions    | $8K–$35K        |
+| Tech Literacy   | $75–$150/hr     |
+| Coding & SQL    | $40–$80/session |
 
 All quotes fixed after scoping. Ranges are starting points only.
 

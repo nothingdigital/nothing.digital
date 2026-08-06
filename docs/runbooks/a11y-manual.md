@@ -44,10 +44,25 @@
 
 ## Checklist
 
-- [ ] Keyboard navigation passes on all unique page layouts.
-- [ ] Screen reader headings and landmarks are logical.
-- [ ] All images have meaningful `alt` text or are hidden from assistive tech.
-- [ ] Focus is managed for dialogs, menus, and form success states.
-- [ ] `prefers-reduced-motion` removes non-essential motion.
-- [ ] Color contrast is ≥ 4.5:1 for normal text and ≥ 3:1 for UI components.
-- [ ] Automated axe-core scan has zero violations.
+- [x] Automated axe-core scan has zero violations — 11 public pages, chromium-desktop, 2026-08-06.
+- [x] Color contrast fixes applied (primary text on muted backgrounds, opacity on primary-foreground).
+- [x] ARIA prohibited attribute fixed on hero clock (`role="img"`).
+- [ ] Keyboard navigation passes on all unique page layouts — smoke test only; full pass needs human verification.
+- [ ] Screen reader headings and landmarks are logical — requires VoiceOver/NVDA check.
+- [ ] All images have meaningful `alt` text or are hidden from assistive tech — verified in code, needs spot-check on new assets.
+- [ ] Focus is managed for dialogs, menus, and form success states — form success state is a full-page reload; verify in browser.
+- [ ] `prefers-reduced-motion` removes non-essential motion — unit test covers `Reveal`; verify manually in OS settings.
+
+## Automated run details
+
+Command run locally:
+
+```bash
+NEXT_PUBLIC_SITE_URL=https://nothing.digital pnpm exec playwright test e2e/a11y.spec.ts --project=chromium-desktop
+```
+
+Pages scanned: `/`, `/services`, `/services/website-development`, `/pricing`, `/about`, `/blog`, `/blog/why-performance-matters`, `/contact`, `/privacy`, `/terms`, `/accessibility`.
+
+Result: 11 passed, 0 axe-core violations (wcag2a, wcag2aa, wcag21aa tags).
+
+Note: `/admin` routes were not scanned because they require authentication.

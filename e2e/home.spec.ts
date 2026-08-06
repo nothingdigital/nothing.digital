@@ -5,6 +5,9 @@ const serviceTitles = [
   "Software Solutions",
   "Applications",
   "Email Marketing",
+  "AI Solutions",
+  "Tech Literacy",
+  "Coding & SQL",
 ];
 
 async function openHome(page: Page) {

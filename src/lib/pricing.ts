@@ -38,4 +38,25 @@ export const pricingBallparks: PricingBallpark[] = [
     summary: "Campaign strategy, automation, and ongoing nurture.",
     href: routes.services.emailMarketing,
   },
+  {
+    slug: "ai-solutions",
+    title: "AI Solutions",
+    range: "$8K–$35K",
+    summary: "Scoped AI implementation for products, sites, and ops.",
+    href: routes.services.aiSolutions,
+  },
+  {
+    slug: "tech-literacy",
+    title: "Tech Literacy",
+    range: "$75–$150/hr",
+    summary: "Private or small-group sessions for everyday tech confidence.",
+    href: routes.services.techLiteracy,
+  },
+  {
+    slug: "coding-sql",
+    title: "Coding & SQL",
+    range: "$40–$80/session",
+    summary: "Project-based coding and SQL for kids, youth, and beginners.",
+    href: routes.services.codingSql,
+  },
 ];

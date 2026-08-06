@@ -186,7 +186,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <h2 className="text-2xl font-semibold md:text-3xl">
             Get insights in your inbox
           </h2>
-          <p className="mt-3 text-primary-foreground/80">
+          <p className="mt-3 text-primary-foreground">
             Join our newsletter for articles on performance, design, and growth.
           </p>
           <div className="mt-8 inline-block w-full max-w-md text-left">

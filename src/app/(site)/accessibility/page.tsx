@@ -77,7 +77,7 @@ export default function AccessibilityPage() {
               please contact us at{" "}
               <a
                 href="mailto:hello@nothing.digital"
-                className="text-primary underline underline-offset-4 hover:text-primary/80"
+                className="text-foreground underline underline-offset-4 hover:text-primary/80"
               >
                 hello@nothing.digital
               </a>

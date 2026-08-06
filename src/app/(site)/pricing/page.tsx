@@ -10,12 +10,12 @@ import { routes } from "@/lib/routes";
 export const metadata: Metadata = {
   title: "Pricing",
   description:
-    "Ballpark ranges for websites ($5K–$15K), software ($15K–$60K), apps ($20K–$80K), and email marketing ($1.5K–$5K/mo). Fixed quote after a free scoping call.",
+    "Ballpark ranges for websites ($5K–$15K), software ($15K–$60K), apps ($20K–$80K), email marketing ($1.5K–$5K/mo), AI ($8K–$35K), tech literacy ($75–$150/hr), and coding & SQL ($40–$80/session). Fixed quote after a free scoping call.",
   alternates: { canonical: routes.pricing },
   openGraph: {
     title: "Pricing",
     description:
-      "Ballpark ranges for websites, software, apps, and email marketing. Fixed quote after scoping.",
+      "Ballpark ranges for websites, software, apps, email, AI, tech literacy, and coding & SQL. Fixed quote after scoping.",
     url: routes.pricing,
     type: "website",
   },
@@ -58,7 +58,7 @@ export default function PricingPage() {
       </SectionContainer>
 
       <SectionContainer variant="muted" className="text-center">
-        <p className="font-mono text-xs uppercase tracking-[0.35em] text-primary">
+        <p className="font-mono text-xs uppercase tracking-[0.35em] text-foreground">
           Free scoping call
         </p>
         <h2 className="mt-3 font-display text-3xl tracking-tight md:text-4xl">

@@ -50,6 +50,7 @@ export function HeroClock() {
       onMouseMove={handleTilt}
       onMouseLeave={resetTilt}
       className="relative mx-auto aspect-square w-64 transition-transform duration-200 ease-out md:w-80 lg:w-96"
+      role="img"
       aria-label={`Current time ${time.toLocaleTimeString()}`}
     >
       {/* rotating seal text */}

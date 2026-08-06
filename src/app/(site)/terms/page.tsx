@@ -41,11 +41,11 @@ export default function TermsPage() {
               2. Services
             </h2>
             <p>
-              Nothing.Digital provides digital design and engineering services,
-              including but not limited to website development, software
-              solutions, applications, and email marketing. Project scope,
-              deliverables, and fees are defined in a separate proposal or
-              agreement.
+              Nothing.Digital provides digital design, engineering, and teaching
+              services, including but not limited to website development,
+              software solutions, applications, email marketing, AI solutions,
+              tech literacy, and coding &amp; SQL. Project scope, deliverables,
+              and fees are defined in a separate proposal or agreement.
             </p>
           </section>
 
@@ -101,7 +101,7 @@ export default function TermsPage() {
               Questions about these terms can be directed to{" "}
               <a
                 href="mailto:hello@nothing.digital"
-                className="text-primary underline underline-offset-4 hover:text-primary/80"
+                className="text-foreground underline underline-offset-4 hover:text-primary/80"
               >
                 hello@nothing.digital
               </a>

@@ -2,9 +2,11 @@ export const siteConfig = {
   name: "Nothing.Digital",
   tagline: "Built on time. Built to last.",
   description:
-    "Senior web and software development studio. Custom websites, software, apps, and email marketing — delivered on fixed timelines.",
+    "Senior web, software, and AI development studio. Custom websites, software, apps, email marketing, AI solutions, tech literacy, and coding & SQL — delivered on fixed timelines.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://nothing.digital",
   email: "hello@nothing.digital",
+  contactEmail: "alexander@nothing.digital",
+  phone: "205-561-7049",
 } as const;
 
 export interface SocialLink {

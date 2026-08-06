@@ -11,12 +11,12 @@ import { serviceSummaries } from "@/lib/services";
 export const metadata: Metadata = {
   title: "Services",
   description:
-    "Senior web and software development: websites, custom software, applications, and email marketing.",
+    "Senior web and software development: websites, custom software, applications, email marketing, AI solutions, tech literacy, and coding & SQL.",
   alternates: { canonical: routes.services.index },
   openGraph: {
     title: "Services",
     description:
-      "Senior web and software development: websites, custom software, applications, and email marketing.",
+      "Senior web and software development: websites, custom software, applications, email marketing, AI solutions, tech literacy, and coding & SQL.",
     url: routes.services.index,
     type: "website",
   },

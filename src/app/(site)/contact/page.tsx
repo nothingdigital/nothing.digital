@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Calendar, Mail } from "lucide-react";
+import { Calendar, Mail, Phone } from "lucide-react";
 
 import { SectionContainer } from "@/components/atoms/section-container";
 import { JsonLd } from "@/components/atoms/json-ld";
@@ -14,6 +14,7 @@ import {
 import { ContactForm } from "./components/contact-form";
 import { env } from "@/lib/env";
 import { routes } from "@/lib/routes";
+import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -30,9 +31,9 @@ const faqs: {
   {
     question: "What services do you offer?",
     answer:
-      "We build custom websites, software solutions, web and mobile applications, and data-driven email marketing campaigns.",
+      "We build custom websites, software solutions, web and mobile applications, email marketing, and practical AI — and we teach tech literacy plus coding & SQL for beginners, kids, and youth.",
     answerText:
-      "We build custom websites, software solutions, web and mobile applications, and data-driven email marketing campaigns.",
+      "We build custom websites, software solutions, web and mobile applications, email marketing, and practical AI — and we teach tech literacy plus coding & SQL for beginners, kids, and youth.",
   },
   {
     question: "How long does a typical project take?",
@@ -67,11 +68,13 @@ const faqs: {
           pricing page
         </Link>
         : websites $5K–$15K, software $15K–$60K, apps $20K–$80K, email marketing
-        $1.5K–$5K/mo. Every project still gets a fixed quote after scoping.
+        $1.5K–$5K/mo, AI $8K–$35K, tech literacy $75–$150/hr, coding & SQL
+        $40–$80/session. Every engagement still gets a fixed quote after
+        scoping.
       </>
     ),
     answerText:
-      "Ballpark ranges: websites $5K–$15K, software $15K–$60K, apps $20K–$80K, email marketing $1.5K–$5K/mo. Every project gets a fixed quote after scoping. See https://nothing.digital/pricing.",
+      "Ballpark ranges: websites $5K–$15K, software $15K–$60K, apps $20K–$80K, email marketing $1.5K–$5K/mo, AI $8K–$35K, tech literacy $75–$150/hr, coding & SQL $40–$80/session. Every engagement gets a fixed quote after scoping. See https://nothing.digital/pricing.",
   },
 ];
 
@@ -112,10 +115,27 @@ export default function ContactPage() {
                   Email
                 </p>
                 <a
-                  href="mailto:hello@nothing.digital"
+                  href={`mailto:${siteConfig.contactEmail}`}
                   className="text-muted-foreground hover:text-foreground"
                 >
-                  hello@nothing.digital
+                  {siteConfig.contactEmail}
+                </a>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4">
+              <div className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent ring-1 ring-accent/20">
+                <Phone className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="font-mono text-xs uppercase tracking-widest">
+                  Phone
+                </p>
+                <a
+                  href={`tel:${siteConfig.phone.replace(/-/g, "")}`}
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  {siteConfig.phone}
                 </a>
               </div>
             </div>
