@@ -118,6 +118,7 @@ Newsletter → Listmonk drips → Soft CTA → Contact / Calendly
 - Related services on each service page (siblings).
 - After contact submit: thank-you + links to pricing, related service, blog.
 - Proposal add-ons offline: email retainer, maintenance care plan.
+- **Founding Client** (invite-only, max 2): $2,500 build + 12 mo care included → $99+/mo after. Pitch: `docs/sales/founding-client-pitch.md`. Spec: `docs/superpowers/specs/2026-08-06-founding-client-package-design.md`. Not a public `/pricing` SKU.
 
 ---
 

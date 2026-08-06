@@ -3,8 +3,9 @@
 import * as React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
+import * as LabelPrimitive from "@radix-ui/react-label";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -326,10 +327,31 @@ export function ContactForm() {
         )}
       />
 
-      <FormField
-        name="privacyAccepted"
-        label={
-          <>
+      <div className="space-y-2">
+        <div className="flex items-center gap-3">
+          <Controller
+            name="privacyAccepted"
+            control={control}
+            render={({ field }) => (
+              <input
+                type="checkbox"
+                {...field}
+                id={field.name}
+                checked={(field.value as boolean) ?? false}
+                onChange={(event) => field.onChange(event.target.checked)}
+                value="true"
+                aria-invalid={errors.privacyAccepted ? true : undefined}
+                aria-describedby={
+                  errors.privacyAccepted ? "privacyAccepted-error" : undefined
+                }
+                className="h-4 w-4 shrink-0 rounded border-input text-primary focus:ring-ring"
+              />
+            )}
+          />
+          <LabelPrimitive.Root
+            htmlFor="privacyAccepted"
+            className="text-sm font-medium leading-snug peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
             I agree to the{" "}
             <a
               href="/privacy"
@@ -338,22 +360,17 @@ export function ContactForm() {
             >
               Privacy Policy
             </a>
-          </>
-        }
-        control={control}
-        error={errors.privacyAccepted}
-        render={(field) => (
-          <input
-            type="checkbox"
-            {...field}
-            id={field.name}
-            checked={(field.value as boolean) ?? false}
-            onChange={(event) => field.onChange(event.target.checked)}
-            value="true"
-            className="h-4 w-4 rounded border-input text-primary focus:ring-ring"
-          />
+          </LabelPrimitive.Root>
+        </div>
+        {errors.privacyAccepted?.message && (
+          <p
+            id="privacyAccepted-error"
+            className="text-sm font-medium text-destructive"
+          >
+            {errors.privacyAccepted.message}
+          </p>
         )}
-      />
+      </div>
 
       {status === "error" && (
         <p

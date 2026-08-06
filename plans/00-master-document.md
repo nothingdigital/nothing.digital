@@ -330,7 +330,7 @@ Nothing.Digital is a digital services company specializing in website developmen
 
 ## 6. Phase 2: Core Development — Complete
 
-> **To-Do:** ~~Add client-logo trust indicators, full Calendly embed (when volume justifies)~~ Done locally; reach Lighthouse ≥ 90 remains blocked on matching-arch CI runner.
+> **To-Do:** ~~Add client-logo trust indicators, full Calendly embed (when volume justifies)~~ Done locally: anonymized client-logo strip on home page and env-gated lazy-loaded Calendly iframe on `/contact`. Reach Lighthouse ≥ 90 remains blocked on matching-arch CI runner.
 
 > **Duration:** 2–3 weeks  
 > **Goal:** All core pages built, forms functional, content populated.  

@@ -6,8 +6,8 @@ import { SectionContainer } from "@/components/atoms/section-container";
 import { Reveal } from "@/components/atoms/reveal";
 import { Button } from "@/components/ui/button";
 import { ServiceCard } from "@/components/molecules/service-card";
-import { HeroClock } from "@/components/atoms/hero-clock";
 import { ClientLogoStrip } from "@/components/molecules/client-logo-strip";
+import { HeroClock } from "@/components/atoms/hero-clock";
 import { routes } from "@/lib/routes";
 import { serviceSummaries } from "@/lib/services";
 

@@ -172,7 +172,7 @@ export default function ContactPage() {
         </div>
 
         {calendlyUrl ? (
-          <div className="mt-12">
+          <div className="mt-12 w-full">
             <p className="mb-4 font-mono text-xs uppercase tracking-[0.35em] text-muted-foreground">
               Or book directly
             </p>

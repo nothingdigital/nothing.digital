@@ -1,26 +1,50 @@
 "use client";
 
-import { useMemo } from "react";
+import Script from "next/script";
+import { useEffect, useMemo } from "react";
 
 interface CalendlyEmbedProps {
   url: string;
 }
 
-// ponytail: simple iframe embed; no react-calendly dependency needed.
+declare global {
+  interface Window {
+    Calendly?: {
+      initInlineWidgets: () => void;
+    };
+  }
+}
+
+function buildEmbedUrl(url: string): string {
+  const parsed = new URL(url);
+  // Shorter chrome → less nested scroll before the calendar.
+  parsed.searchParams.set("hide_event_type_details", "1");
+  parsed.searchParams.set("hide_gdpr_banner", "1");
+  return parsed.toString();
+}
+
+// ponytail: official widget + data-resize grows with content; plain iframes stay fixed-height and double-scroll.
 export function CalendlyEmbed({ url }: CalendlyEmbedProps) {
-  const src = useMemo(() => {
-    const separator = url.includes("?") ? "&" : "?";
-    return `${url}${separator}embed=true`;
-  }, [url]);
+  const embedUrl = useMemo(() => buildEmbedUrl(url), [url]);
+
+  useEffect(() => {
+    window.Calendly?.initInlineWidgets();
+  }, [embedUrl]);
 
   return (
-    <div className="overflow-hidden rounded-xl border-2 border-border bg-card shadow-md">
-      <iframe
-        src={src}
-        title="Calendly scheduling"
-        className="min-h-[650px] w-full"
-        frameBorder="0"
-        loading="lazy"
+    <div className="w-full min-w-[320px] overflow-hidden rounded-xl border-2 border-border bg-card shadow-md">
+      <div
+        className="calendly-inline-widget w-full"
+        data-url={embedUrl}
+        data-resize="true"
+        style={{ minWidth: 320, height: 700 }}
+      />
+      <Script
+        src="https://assets.calendly.com/assets/external/widget.js"
+        strategy="lazyOnload"
+        onLoad={() => {
+          window.Calendly?.initInlineWidgets();
+        }}
       />
     </div>
   );
