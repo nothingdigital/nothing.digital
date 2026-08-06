@@ -93,6 +93,8 @@ Paste the tokens from each dashboard and update the table above, then add the re
 - [ ] Bing Webmaster Tools site verified
 - [ ] `https://nothing.digital/sitemap.xml` submitted to both
 
+**Ready now:** sitemap serves `200` at `https://nothing.digital/sitemap.xml`. DNS currently has SPF only — no `google-site-verification` TXT yet.
+
 ## Runbooks
 
 ### Site down

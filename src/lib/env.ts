@@ -1,28 +1,50 @@
 import { z } from "zod";
 
+// ponytail: empty Vercel env values arrive as ""; treat as unset so one bad
+// optional field cannot wipe the whole parse.
+function emptyToUndefined(value: unknown): unknown {
+  if (value === "") return undefined;
+  return value;
+}
+
+const optionalUrl = z.preprocess(emptyToUndefined, z.string().url().optional());
+const optionalEmail = z.preprocess(
+  emptyToUndefined,
+  z.string().email().optional(),
+);
+const optionalUuid = z.preprocess(
+  emptyToUndefined,
+  z.string().uuid().optional(),
+);
+const optionalNonEmpty = z.preprocess(
+  emptyToUndefined,
+  z.string().min(1).optional(),
+);
+const optionalString = z.preprocess(emptyToUndefined, z.string().optional());
+
 // ponytail: public env is optional at build time so `next build` succeeds without live secrets.
 // Modules that need these values must check for presence or provide sensible fallbacks.
 const envSchema = z.object({
-  NEXT_PUBLIC_SITE_URL: z.string().url().optional(),
-  NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional(),
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1).optional(),
-  NEXT_PUBLIC_UMAMI_WEBSITE_ID: z.string().min(1).optional(),
-  NEXT_PUBLIC_UMAMI_SCRIPT_URL: z.string().url().optional(),
-  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
-  RESEND_API_KEY: z.string().min(1).optional(),
-  CONTACT_NOTIFY_EMAIL: z.string().email().optional(),
-  ADMIN_EMAILS: z.string().optional(),
-  SENTRY_DSN: z.string().url().optional(),
-  CALENDLY_URL: z.string().url().optional(),
-  UMAMI_DASHBOARD_URL: z.string().url().optional(),
+  NEXT_PUBLIC_SITE_URL: optionalUrl,
+  NEXT_PUBLIC_SUPABASE_URL: optionalUrl,
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: optionalNonEmpty,
+  NEXT_PUBLIC_UMAMI_WEBSITE_ID: optionalNonEmpty,
+  NEXT_PUBLIC_UMAMI_SCRIPT_URL: optionalUrl,
+  SUPABASE_SERVICE_ROLE_KEY: optionalNonEmpty,
+  RESEND_API_KEY: optionalNonEmpty,
+  CONTACT_NOTIFY_EMAIL: optionalEmail,
+  ADMIN_EMAILS: optionalString,
+  SENTRY_DSN: optionalUrl,
+  CALENDLY_URL: optionalUrl,
+  UMAMI_DASHBOARD_URL: optionalUrl,
   // PikaPods sidecars — optional; helpers no-op / fallback when unset.
-  LISTMONK_URL: z.string().url().optional(),
-  LISTMONK_LIST_UUID: z.string().uuid().optional(),
-  LISTMONK_DASHBOARD_URL: z.string().url().optional(),
-  N8N_WEBHOOK_URL: z.string().url().optional(),
-  N8N_WEBHOOK_SECRET: z.string().min(1).optional(),
-  N8N_DASHBOARD_URL: z.string().url().optional(),
-  KUMA_DASHBOARD_URL: z.string().url().optional(),
+  LISTMONK_URL: optionalUrl,
+  LISTMONK_LIST_UUID: optionalUuid,
+  LISTMONK_DASHBOARD_URL: optionalUrl,
+  N8N_WEBHOOK_URL: optionalUrl,
+  N8N_WEBHOOK_SECRET: optionalNonEmpty,
+  N8N_DASHBOARD_URL: optionalUrl,
+  KUMA_DASHBOARD_URL: optionalUrl,
 });
 
 const result = envSchema.safeParse({
