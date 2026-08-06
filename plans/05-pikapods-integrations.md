@@ -28,10 +28,10 @@ Client site stays on Vercel. PikaPods hosts **sidecar OSS tools**. Admin/ops liv
 
 **Growth drip acceptance (when Pack B live):**
 
-- [ ] Double opt-in list + welcome transactional
-- [ ] Day 0 / 3 / 7 welcome series (blog → case study → scoping CTA)
-- [ ] Privacy copy names Listmonk / DOI
-- [ ] Site forms still succeed if n8n down
+- [x] Double opt-in list + welcome transactional — copy in `content/emails/welcome-drip.md`
+- [x] Day 0 / 3 / 7 welcome series (blog → case study → scoping CTA) — copy in `content/emails/welcome-drip.md`
+- [x] Privacy copy names Listmonk / DOI — see `src/app/(site)/privacy/page.tsx`
+- [x] Site forms still succeed if n8n down — `notifyN8n()` is fire-and-forget, no env = no-op
 
 **Ship order (ponytail):**
 

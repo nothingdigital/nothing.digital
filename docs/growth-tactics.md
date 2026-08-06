@@ -98,7 +98,7 @@ Newsletter → Listmonk drips → Soft CTA → Contact / Calendly
 
 ## Email drip outline (Listmonk)
 
-**Prerequisite:** Listmonk pod + `LISTMONK_*` env + double opt-in list.
+**Prerequisite:** Listmonk pod + `LISTMONK_*` env + double opt-in list + copy in `content/emails/welcome-drip.md`. Import the templates and activate the drip in Listmonk.
 
 | Day | Email              | Goal                                            |
 | --- | ------------------ | ----------------------------------------------- |
@@ -136,11 +136,11 @@ All quotes fixed after scoping. Ranges are starting points only.
 
 ## Implementation map
 
-| Slice                       | Status                        |
-| --------------------------- | ----------------------------- |
-| CTAs + SEO (sitemap/OG)     | Code                          |
-| Pricing ballparks           | Code                          |
-| Case studies + home feature | Code (anonymized)             |
-| Cross-sell                  | Code                          |
-| Mobile polish               | Code                          |
-| Listmonk cutover + drips    | ✅ Live; drip content pending |
+| Slice                       | Status                                                 |
+| --------------------------- | ------------------------------------------------------ |
+| CTAs + SEO (sitemap/OG)     | Code                                                   |
+| Pricing ballparks           | Code                                                   |
+| Case studies + home feature | Code (anonymized)                                      |
+| Cross-sell                  | Code                                                   |
+| Mobile polish               | Code                                                   |
+| Listmonk cutover + drips    | ✅ Live; drip copy in `content/emails/welcome-drip.md` |

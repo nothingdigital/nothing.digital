@@ -65,7 +65,7 @@
   - [x] Pod live at `newsletter.nothing.digital`.
   - [x] Set `LISTMONK_URL`, `LISTMONK_LIST_UUID`, `LISTMONK_DASHBOARD_URL` in Vercel.
   - [x] `/api/newsletter` proxies to Listmonk public subscription API.
-  - [ ] Build first campaign / welcome drip (content/growth task).
+  - [x] Build first campaign / welcome drip (copy in `content/emails/welcome-drip.md` and `content/newsletters/first-campaign.md`).
 
 - [x] **UptimeRobot**
   - [x] Manual setup steps documented in `docs/runbooks/monitoring.md` (no API credentials in workspace).

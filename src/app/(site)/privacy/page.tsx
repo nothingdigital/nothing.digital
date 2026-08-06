@@ -61,7 +61,19 @@ export default function PrivacyPage() {
 
           <section>
             <h2 className="mb-3 text-xl font-semibold text-foreground">
-              4. Cookies and analytics
+              4. Newsletter
+            </h2>
+            <p>
+              Our newsletter is sent with Listmonk, a self-hosted email tool.
+              New subscribers must confirm their email address via double opt-in
+              before receiving campaigns. Every marketing email includes an
+              unsubscribe link.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="mb-3 text-xl font-semibold text-foreground">
+              5. Cookies and analytics
             </h2>
             <p>
               This site uses privacy-friendly Umami analytics plus Vercel Speed
@@ -78,7 +90,7 @@ export default function PrivacyPage() {
 
           <section>
             <h2 className="mb-3 text-xl font-semibold text-foreground">
-              5. Your rights
+              6. Your rights
             </h2>
             <p>
               You may request access to, correction of, or deletion of your
@@ -88,7 +100,7 @@ export default function PrivacyPage() {
 
           <section>
             <h2 className="mb-3 text-xl font-semibold text-foreground">
-              6. Contact us
+              7. Contact us
             </h2>
             <p>
               If you have questions about this Privacy Policy, email us at{" "}
