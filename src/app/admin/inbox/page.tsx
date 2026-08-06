@@ -20,9 +20,7 @@ export default async function AdminInboxPage({
   const statusFilter =
     params.status && isInboxStatus(params.status) ? params.status : undefined;
 
-  const { rows, error } = await listContactSubmissions({
-    status: statusFilter,
-  });
+  const { rows, error } = await listContactSubmissions(statusFilter);
 
   return (
     <div className="space-y-6">

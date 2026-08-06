@@ -1,15 +1,15 @@
 import { getServiceRoleClient } from "@/lib/supabase/server";
 import type { Database } from "@/lib/supabase/database";
-import { isInboxStatus, type InboxStatus } from "./config";
+import type { InboxStatus } from "./config";
 
-export type ContactSubmission =
+type ContactSubmission =
   Database["public"]["Tables"]["contact_submissions"]["Row"];
 
 // ponytail: service role after requireAdmin() — skip admin RLS until Supabase live.
 
-export async function listContactSubmissions(options?: {
-  status?: InboxStatus;
-}): Promise<{ rows: ContactSubmission[]; error: string | null }> {
+export async function listContactSubmissions(
+  status?: InboxStatus,
+): Promise<{ rows: ContactSubmission[]; error: string | null }> {
   const supabase = getServiceRoleClient();
   if (!supabase) {
     return { rows: [], error: "Supabase is not configured." };
@@ -20,8 +20,8 @@ export async function listContactSubmissions(options?: {
     .select("*")
     .order("created_at", { ascending: false });
 
-  if (options?.status) {
-    query = query.eq("status", options.status);
+  if (status) {
+    query = query.eq("status", status);
   }
 
   const { data, error } = await query;
@@ -37,10 +37,6 @@ export async function updateContactStatus(
   id: string,
   status: InboxStatus,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
-  if (!isInboxStatus(status)) {
-    return { ok: false, error: "Invalid status." };
-  }
-
   const supabase = getServiceRoleClient();
   if (!supabase) {
     return { ok: false, error: "Supabase is not configured." };

@@ -27,8 +27,6 @@ export default async function AdminLayout({
     redirect("/admin/login");
   }
 
-  const showChrome = isAdmin;
-
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border">

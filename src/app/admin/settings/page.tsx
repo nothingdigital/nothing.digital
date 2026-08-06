@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-import { requireAdmin } from "@/lib/admin/auth";
 import { getAdminEmails, getAdminToolLinks } from "@/lib/admin/config";
 import { env } from "@/lib/env";
 
@@ -10,7 +9,6 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminSettingsPage() {
-  await requireAdmin();
   const tools = getAdminToolLinks();
   const adminEmails = getAdminEmails();
 
@@ -24,11 +22,11 @@ export default async function AdminSettingsPage() {
       value: tools.site,
     },
     {
-      key: "NEXT_PUBLIC_CALENDLY_URL",
+      key: "CALENDLY_URL",
       value: tools.calendly ?? "not set",
     },
     {
-      key: "NEXT_PUBLIC_UMAMI_DASHBOARD_URL",
+      key: "UMAMI_DASHBOARD_URL",
       value: tools.umami ?? "not set",
     },
     {
