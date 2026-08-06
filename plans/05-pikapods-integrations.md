@@ -300,7 +300,7 @@ Admin-only: no client portal, no Stripe. Routes: `/admin/clients`, `/admin/billi
 
 ### Next (Phase 3 close-out)
 
-- [ ] Apply CSP allowlist for analytics host — ship in app `middleware.ts`/`next.config` first, mirror in Cloudflare later (see `infra/cloudflare/security-headers.md`)
+- [x] Apply CSP allowlist for analytics host — enforced in `next.config.mjs`; Cloudflare Transform Rule N/A because DNS is Sav → Vercel (no Cloudflare proxy)
 - [x] UptimeRobot free monitors for `nothing.digital` + `/api/health` (keyword `ok`)
 - [ ] Google Search Console + Bing Webmaster Tools verification + `/sitemap.xml` submission
 - [ ] Manual a11y pass: keyboard nav, screen reader, `prefers-reduced-motion`

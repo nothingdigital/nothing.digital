@@ -11,9 +11,11 @@ Application-level security headers are set in `next.config.mjs` and served by Ne
 | `Referrer-Policy`        | `strict-origin-when-cross-origin`          | Limits referrer leakage      |
 | `Permissions-Policy`     | `camera=(), microphone=(), geolocation=()` | Disables unused browser APIs |
 
-## Cloudflare-level headers (manual setup)
+## Cloudflare-level headers
 
-Apply via Cloudflare Transform Rules once domain is live:
+Domain `nothing.digital` resolves directly to Vercel (`76.76.21.21`) with Sav DNS; there is no Cloudflare proxy. Cloudflare Transform Rules cannot apply. Production headers are served by Next.js from `next.config.mjs` (above).
+
+If you ever proxy through Cloudflare, mirror this policy in a Transform Rule:
 
 | Header                      | Value                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
