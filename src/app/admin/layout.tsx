@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 import { AdminNav } from "@/components/admin/admin-nav";
 import { AdminSignOutButton } from "@/components/admin/admin-sign-out";
@@ -18,7 +20,14 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   const user = await getSessionUser();
-  const showChrome = Boolean(user && isAdminEmail(user.email));
+  const isAdmin = Boolean(user && isAdminEmail(user.email));
+  const pathname = (await headers()).get("x-pathname");
+
+  if (!isAdmin && pathname !== "/admin/login") {
+    redirect("/admin/login");
+  }
+
+  const showChrome = isAdmin;
 
   return (
     <div className="min-h-screen bg-background">
@@ -30,7 +39,7 @@ export default async function AdminLayout({
             </p>
             <h1 className="font-display text-2xl tracking-tight">Admin</h1>
           </div>
-          {showChrome ? (
+          {isAdmin ? (
             <div className="flex items-center gap-3">
               <p className="hidden text-sm text-muted-foreground sm:block">
                 {user?.email}
@@ -41,7 +50,7 @@ export default async function AdminLayout({
         </div>
       </header>
       <div className="mx-auto max-w-5xl space-y-6 px-4 py-8">
-        {showChrome ? <AdminNav /> : null}
+        {isAdmin ? <AdminNav /> : null}
         {children}
       </div>
     </div>

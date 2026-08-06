@@ -22,16 +22,14 @@ export function getAdminEmails(): string[] {
 
 export function isAdminEmail(email: string | undefined | null): boolean {
   if (!email) return false;
-  const allowlist = getAdminEmails();
-  if (allowlist.length === 0) return false;
-  return allowlist.includes(email.trim().toLowerCase());
+  return getAdminEmails().includes(email.trim().toLowerCase());
 }
 
 export function getAdminToolLinks() {
   return {
     site: env.public.NEXT_PUBLIC_SITE_URL ?? "https://nothing.digital",
-    calendly: env.public.NEXT_PUBLIC_CALENDLY_URL,
-    umami: env.public.NEXT_PUBLIC_UMAMI_DASHBOARD_URL,
+    calendly: env.private.CALENDLY_URL,
+    umami: env.private.UMAMI_DASHBOARD_URL,
     vercel: "https://vercel.com/dashboard",
     sentry: "https://sentry.io",
   };

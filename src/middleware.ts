@@ -1,28 +1,18 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-function parseAdminEmails(raw: string | undefined): string[] {
-  return (raw ?? "")
-    .split(",")
-    .map((email) => email.trim().toLowerCase())
-    .filter(Boolean);
-}
-
-function isAdminEmail(email: string | undefined | null): boolean {
-  if (!email) return false;
-  const allowlist = parseAdminEmails(process.env.ADMIN_EMAILS);
-  if (allowlist.length === 0) return false;
-  return allowlist.includes(email.trim().toLowerCase());
-}
+import { isAdminEmail } from "@/lib/admin/config";
 
 export async function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+  request.headers.set("x-pathname", pathname);
+
   let response = NextResponse.next({
     request: { headers: request.headers },
   });
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  const pathname = request.nextUrl.pathname;
   const isLogin = pathname === "/admin/login";
 
   if (!url || !key) {

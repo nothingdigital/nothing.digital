@@ -3,12 +3,7 @@ import Link from "next/link";
 
 import { StatusSelect } from "@/components/admin/status-select";
 import { Badge } from "@/components/ui/badge";
-import { requireAdmin } from "@/lib/admin/auth";
-import {
-  INBOX_STATUSES,
-  isInboxStatus,
-  type InboxStatus,
-} from "@/lib/admin/config";
+import { INBOX_STATUSES, isInboxStatus } from "@/lib/admin/config";
 import { listContactSubmissions } from "@/lib/admin/queries";
 
 export const metadata: Metadata = {
@@ -21,7 +16,6 @@ export default async function AdminInboxPage({
 }: {
   searchParams: Promise<{ status?: string }>;
 }) {
-  await requireAdmin();
   const params = await searchParams;
   const statusFilter =
     params.status && isInboxStatus(params.status) ? params.status : undefined;
@@ -79,7 +73,7 @@ export default async function AdminInboxPage({
                 </a>
               </div>
               <div className="flex items-center gap-2">
-                <Badge variant="secondary">{row.status as InboxStatus}</Badge>
+                <Badge variant="secondary">{row.status}</Badge>
                 <StatusSelect id={row.id} status={row.status} />
               </div>
             </div>

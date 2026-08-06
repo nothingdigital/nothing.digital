@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-import { requireAdmin } from "@/lib/admin/auth";
 import { getAdminToolLinks } from "@/lib/admin/config";
 import { siteConfig } from "@/lib/site";
 
@@ -10,7 +9,6 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminHealthPage() {
-  await requireAdmin();
   const tools = getAdminToolLinks();
   const healthUrl = `${siteConfig.url}/api/health`;
 
@@ -30,6 +28,11 @@ export default async function AdminHealthPage() {
       label: "Umami",
       href: tools.umami,
       note: tools.umami ? "configured" : "env missing",
+    },
+    {
+      label: "Calendly",
+      href: tools.calendly,
+      note: tools.calendly ? "configured" : "env missing",
     },
     { label: "Vercel", href: tools.vercel, note: "dashboard" },
     { label: "Sentry", href: tools.sentry, note: "dashboard" },

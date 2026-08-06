@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-import { requireAdmin } from "@/lib/admin/auth";
 import { listNewsletterSubscribers } from "@/lib/admin/queries";
 
 export const metadata: Metadata = {
@@ -9,7 +8,6 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminNewsletterPage() {
-  await requireAdmin();
   const { rows, error } = await listNewsletterSubscribers();
   const active = rows.filter((row) => !row.unsubscribed_at);
 

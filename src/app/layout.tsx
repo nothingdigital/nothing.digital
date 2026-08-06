@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { DM_Serif_Display, Inter, JetBrains_Mono } from "next/font/google";
 
 import { JsonLd } from "@/components/atoms/json-ld";
 import { logoDotColorScript } from "@/components/atoms/logo-dot";
-import { UmamiScript } from "@/components/atoms/umami-script";
+import { CookieConsent } from "@/components/molecules/cookie-consent";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { env } from "@/lib/env";
 import { sameAs, siteConfig } from "@/lib/site";
@@ -89,8 +87,7 @@ export default function RootLayout({
       <body className="min-h-screen font-sans antialiased">
         <ThemeProvider>
           {children}
-          {useUmami ? <UmamiScript /> : <Analytics />}
-          <SpeedInsights />
+          <CookieConsent useUmami={useUmami} />
         </ThemeProvider>
         <JsonLd data={organizationJsonLd} />
       </body>
