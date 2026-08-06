@@ -17,7 +17,6 @@ const companyLinks = [
   { label: "Services", href: routes.services.index },
   { label: "Pricing", href: routes.pricing },
   { label: "About", href: routes.about },
-  { label: "Blog", href: routes.blog.index },
   { label: "Contact", href: routes.contact },
 ];
 

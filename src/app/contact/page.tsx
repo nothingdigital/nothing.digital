@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Mail } from "lucide-react";
 
 import { SectionContainer } from "@/components/atoms/section-container";
@@ -56,21 +55,10 @@ const faqs: {
   },
   {
     question: "What does a project typically cost?",
-    answer: (
-      <>
-        See our{" "}
-        <Link
-          href={routes.pricing}
-          className="text-primary underline underline-offset-4"
-        >
-          pricing page
-        </Link>{" "}
-        for current ranges. Every project gets a fixed quote after a free
-        scoping call — no hourly billing, no surprise invoices.
-      </>
-    ),
+    answer:
+      "Every project is scoped and quoted individually. Book a free scoping call and we'll come back with a fixed quote — no hourly billing, no surprise invoices.",
     answerText:
-      "See our pricing page for current ranges. Every project gets a fixed quote after a free scoping call — no hourly billing, no surprise invoices.",
+      "Every project is scoped and quoted individually. Book a free scoping call and we'll come back with a fixed quote — no hourly billing, no surprise invoices.",
   },
 ];
 
@@ -116,16 +104,6 @@ export default function ContactPage() {
                 </a>
               </div>
             </div>
-            <p className="text-sm text-muted-foreground">
-              Looking for ballpark ranges?{" "}
-              <Link
-                href={routes.pricing}
-                className="text-primary underline underline-offset-4 hover:text-primary/80"
-              >
-                See pricing
-              </Link>
-              .
-            </p>
           </div>
 
           <div className="rounded-xl border-2 border-border bg-background p-6 shadow-md md:p-8">

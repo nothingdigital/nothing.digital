@@ -10,10 +10,7 @@ function url(path: string): string {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [portfolioSlugs, blogSlugs] = await Promise.all([
-    listMdxFiles("portfolio"),
-    listMdxFiles("blog"),
-  ]);
+  const portfolioSlugs = await listMdxFiles("portfolio");
 
   const staticPages = [
     routes.home,
@@ -25,7 +22,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...(portfolioSlugs.length > 0 ? [routes.portfolio.index] : []),
     routes.about,
     routes.pricing,
-    routes.blog.index,
     routes.contact,
     "/privacy",
     "/terms",
@@ -41,12 +37,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
     ...portfolioSlugs.map((slug) => ({
       url: url(routes.portfolio.detail(slug)),
-      lastModified: new Date(),
-      changeFrequency: "monthly" as const,
-      priority: 0.6,
-    })),
-    ...blogSlugs.map((slug) => ({
-      url: url(routes.blog.post(slug)),
       lastModified: new Date(),
       changeFrequency: "monthly" as const,
       priority: 0.6,
