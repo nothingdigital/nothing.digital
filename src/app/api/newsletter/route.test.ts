@@ -196,4 +196,38 @@ describe("POST /api/newsletter", () => {
       ),
     );
   });
+
+  it("returns 201 and skips welcome email when Resend is unavailable", async () => {
+    vi.mocked(getResendClient).mockReturnValue(null);
+
+    const response = await POST(makeRequest({ email: "jane@example.com" }));
+
+    expect(response.status).toBe(201);
+    await expect(response.json()).resolves.toEqual({
+      success: true,
+      message: "Subscribed successfully",
+    });
+    expect(getServiceRoleClient).toHaveBeenCalled();
+  });
+
+  it("returns 201 even when Supabase upsert fails", async () => {
+    vi.mocked(getServiceRoleClient).mockReturnValue(
+      makeSupabaseClient({ message: "upsert failed" }),
+    );
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    const response = await POST(makeRequest({ email: "jane@example.com" }));
+
+    expect(response.status).toBe(201);
+    await expect(response.json()).resolves.toEqual({
+      success: true,
+      message: "Subscribed successfully",
+    });
+    expect(errorSpy).toHaveBeenCalledWith(
+      "[newsletter] Supabase upsert failed:",
+      "upsert failed",
+    );
+
+    errorSpy.mockRestore();
+  });
 });

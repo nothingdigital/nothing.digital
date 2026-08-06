@@ -2,16 +2,10 @@
 
 ## Current state
 
-- Goal: Close remaining Phase 3/6 integration gaps.
-- Status: Integration swarm complete; all agent outputs reconciled.
-  - Sentry, Umami, Calendly, Listmonk: live.
-  - CSP fallback shipped in `next.config.mjs`; Cloudflare Transform Rule doc updated.
-  - UptimeRobot + search-console steps documented.
-  - API integration tests added for `/api/contact` and `/api/newsletter`.
-  - Manual a11y runbook added.
-  - Pre-existing `reveal.test.tsx` failures fixed via `IntersectionObserver` mock.
-- Current step: Verify on production deploy; run manual a11y pass; execute UptimeRobot/search-console steps.
-- Next action: Deploy or validate in Vercel preview; check CSP reports; submit sitemap.
+- Goal: Implement surfaced to-dos across all phases.
+- Status: Master document phase headings updated; specialist agents have delivered; DevOps verification complete.
+- Current step: Review final DevOps summary and remaining credential-only actions.
+- Next action: Close out DevOps implementation scratchpad and return summary.
 - Updated: 2026-08-06
 
 ## Integration swarm dispatch
@@ -33,8 +27,9 @@
 6. ✅ UptimeRobot + search-console runbook steps.
 7. ✅ API integration tests + manual a11y runbook.
 8. ✅ Fixed `reveal.test.tsx` + global `IntersectionObserver` mock.
-9. 🔲 Production validation + manual a11y pass + sitemap submission.
-10. 🔲 n8n pod, Kuma, Lighthouse CI — deferred.
+9. ✅ DevOps production verification + sitemap/Search Console/Bing runbook steps.
+10. 🔲 Manual a11y pass + keyboard/screen-reader checks.
+11. 🔲 n8n pod, Kuma — deferred.
 
 ## Decisions
 
@@ -56,5 +51,7 @@
 - 2026-08-06: Added CSP fallback to `next.config.mjs`; updated `infra/cloudflare/security-headers.md`.
 - 2026-08-06: Added integration flags to `/api/health`; verified `src/lib/n8n.ts` is already correct.
 - 2026-08-06: Fixed `reveal.test.tsx` and global `IntersectionObserver` mock; full suite 76/76 green.
+- 2026-08-06: Updated `plans/00-master-document.md` phase headings with Complete / In Progress status and to-do callouts.
+- 2026-08-06: DevOps verification pass: DNS/SSL/sitemap confirmed live, `002_client_ops.sql` applied, credential-only runbook steps documented, `SCRATCHPAD.devops-impl.md` created.
 - 2026-08-06: Growth tactics implementation (docs + code MRs A–E; F ops-gated).
 - 2026-08-05: Prior design refresh deployed (`d762e76`), clock seal fix pushed (`00e304a`).

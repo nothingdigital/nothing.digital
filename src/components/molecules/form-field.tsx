@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactElement, ReactNode } from "react";
 import {
   Controller,
   Control,
@@ -12,10 +13,10 @@ import * as LabelPrimitive from "@radix-ui/react-label";
 
 export interface FormFieldProps<T extends FieldValues> {
   name: Path<T>;
-  label: React.ReactNode;
+  label: ReactNode;
   control: Control<T>;
   error?: FieldError;
-  render: (field: ControllerRenderProps<T, Path<T>>) => React.ReactElement;
+  render: (field: ControllerRenderProps<T, Path<T>>) => ReactElement;
 }
 
 export function FormField<T extends FieldValues>({
@@ -25,6 +26,8 @@ export function FormField<T extends FieldValues>({
   error,
   render,
 }: FormFieldProps<T>) {
+  const errorId = `${name}-error`;
+
   return (
     <div className="space-y-2">
       <LabelPrimitive.Root
@@ -36,10 +39,19 @@ export function FormField<T extends FieldValues>({
       <Controller
         name={name}
         control={control}
-        render={({ field }) => render(field)}
+        render={({ field }) =>
+          render({
+            ...field,
+            ...(error
+              ? { "aria-invalid": true, "aria-describedby": errorId }
+              : {}),
+          } as ControllerRenderProps<T, Path<T>>)
+        }
       />
       {error?.message && (
-        <p className="text-sm font-medium text-destructive">{error.message}</p>
+        <p id={errorId} className="text-sm font-medium text-destructive">
+          {error.message}
+        </p>
       )}
     </div>
   );

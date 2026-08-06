@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // ponytail: lock Next.js workspace root to this project; parent dir has stray package-lock.json.
+  outputFileTracingRoot: process.cwd(),
   images: {
     formats: ['image/avif', 'image/webp'],
     dangerouslyAllowSVG: true,
@@ -37,6 +39,7 @@ const nextConfig = {
               "img-src 'self' data: https:; " +
               "font-src 'self'; " +
               "connect-src 'self' https://*.supabase.co https://*.sentry.io https://analytics.nothing.digital https://*.vercel-scripts.com https://vitals.vercel-insights.com; " +
+              "frame-src 'self' https://calendly.com https://*.calendly.com; " +
               "frame-ancestors 'none'; " +
               "base-uri 'self'; " +
               "form-action 'self'; " +

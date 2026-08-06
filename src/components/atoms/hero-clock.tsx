@@ -1,14 +1,17 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useReducedMotion } from "framer-motion";
 
 // ponytail: tiny self-contained analog clock; no external chart/animation deps.
 export function HeroClock() {
   const [time, setTime] = useState<Date | null>(null);
   const tiltRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
 
   // ponytail: direct style mutation, no state churn per mousemove
   const handleTilt = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (reduceMotion) return;
     const el = tiltRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();

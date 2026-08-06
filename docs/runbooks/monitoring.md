@@ -63,10 +63,10 @@ Prerequisites: DNS records below must be added at your DNS provider (Cloudflare 
 
 ### DNS verification records
 
-| Provider              | Type  | Name | Value                                 | Status        |
-| --------------------- | ----- | ---- | ------------------------------------- | ------------- |
-| Google Search Console | `TXT` | `@`  | `google-site-verification=REPLACE_ME` | pending token |
-| Bing Webmaster Tools  | `TXT` | `@`  | `REPLACE_ME`                          | pending token |
+| Provider              | Type  | Name | Value                                                                  | Status        |
+| --------------------- | ----- | ---- | ---------------------------------------------------------------------- | ------------- |
+| Google Search Console | `TXT` | `@`  | `google-site-verification=HCvoYYwD9dDCDD8G1170_RhhsRb5SuGhFY6BTapwq5o` | present       |
+| Bing Webmaster Tools  | `TXT` | `@`  | `REPLACE_ME`                                                           | pending token |
 
 Paste the tokens from each dashboard and update the table above, then add the records.
 
@@ -87,11 +87,11 @@ Paste the tokens from each dashboard and update the table above, then add the re
 
 ### Verification checklist
 
-- [ ] Google Search Console domain property verified
-- [ ] Bing Webmaster Tools site verified
+- [ ] Google Search Console domain property verified (DNS token already in place)
+- [ ] Bing Webmaster Tools site verified (add Bing-provided TXT record first)
 - [ ] `https://nothing.digital/sitemap.xml` submitted to both
 
-**Ready now:** sitemap serves `200` at `https://nothing.digital/sitemap.xml`. DNS currently has SPF only — no `google-site-verification` TXT yet.
+**Ready now:** sitemap serves `200` at `https://nothing.digital/sitemap.xml`. Google verification TXT is in DNS; Bing verification TXT is not yet added.
 
 ## Runbooks
 

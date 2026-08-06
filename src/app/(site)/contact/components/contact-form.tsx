@@ -128,7 +128,13 @@ export function ContactForm() {
 
   if (status === "success") {
     return (
-      <div className="space-y-4 rounded-xl border-2 border-border bg-card p-6">
+      <div
+        className="space-y-4 rounded-xl border-2 border-border bg-card p-6"
+        role="status"
+        aria-live="polite"
+        tabIndex={-1}
+        ref={(node) => node?.focus()}
+      >
         <p className="text-sm font-medium text-green-800 dark:text-green-100">
           Thanks — we will be in touch soon. We reply within one business day.
         </p>
@@ -350,7 +356,11 @@ export function ContactForm() {
       />
 
       {status === "error" && (
-        <p className="rounded-md bg-destructive/10 px-4 py-3 text-sm font-medium text-destructive">
+        <p
+          className="rounded-md bg-destructive/10 px-4 py-3 text-sm font-medium text-destructive"
+          role="alert"
+          aria-live="polite"
+        >
           {errorMessage || "Something went wrong. Please try again."}
         </p>
       )}

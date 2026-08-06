@@ -7,6 +7,7 @@ import { Reveal } from "@/components/atoms/reveal";
 import { Button } from "@/components/ui/button";
 import { ServiceCard } from "@/components/molecules/service-card";
 import { HeroClock } from "@/components/atoms/hero-clock";
+import { ClientLogoStrip } from "@/components/molecules/client-logo-strip";
 import { routes } from "@/lib/routes";
 import { serviceSummaries } from "@/lib/services";
 
@@ -137,6 +138,15 @@ export default function HomePage() {
             </Reveal>
           ))}
         </div>
+      </SectionContainer>
+
+      <SectionContainer className="py-10">
+        <Reveal>
+          <p className="mb-6 text-center font-mono text-xs uppercase tracking-[0.35em] text-muted-foreground">
+            Trusted by teams like
+          </p>
+          <ClientLogoStrip />
+        </Reveal>
       </SectionContainer>
 
       <SectionContainer id="why-us">

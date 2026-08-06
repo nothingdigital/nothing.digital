@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Calendar, Mail, Phone } from "lucide-react";
 
@@ -15,6 +16,11 @@ import { ContactForm } from "./components/contact-form";
 import { env } from "@/lib/env";
 import { routes } from "@/lib/routes";
 import { siteConfig } from "@/lib/site";
+
+// ponytail: lazy-load Calendly iframe below the fold; ssr:false is not allowed in Server Components.
+const CalendlyEmbed = dynamic(() =>
+  import("./components/calendly-embed").then((module) => module.CalendlyEmbed),
+);
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -164,6 +170,15 @@ export default function ContactPage() {
             <ContactForm />
           </div>
         </div>
+
+        {calendlyUrl ? (
+          <div className="mt-12">
+            <p className="mb-4 font-mono text-xs uppercase tracking-[0.35em] text-muted-foreground">
+              Or book directly
+            </p>
+            <CalendlyEmbed url={calendlyUrl} />
+          </div>
+        ) : null}
       </SectionContainer>
 
       <SectionContainer>

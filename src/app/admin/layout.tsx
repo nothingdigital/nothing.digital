@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
+import { SkipLink } from "@/components/atoms/skip-link";
 import { AdminNav } from "@/components/admin/admin-nav";
 import { AdminSignOutButton } from "@/components/admin/admin-sign-out";
 import { getSessionUser } from "@/lib/admin/auth";
@@ -29,6 +30,7 @@ export default async function AdminLayout({
 
   return (
     <div className="min-h-screen bg-background">
+      <SkipLink />
       <header className="border-b border-border">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-4">
           <div>
@@ -47,10 +49,10 @@ export default async function AdminLayout({
           ) : null}
         </div>
       </header>
-      <div className="mx-auto max-w-5xl space-y-6 px-4 py-8">
+      <main id="main" className="mx-auto max-w-5xl space-y-6 px-4 py-8">
         {isAdmin ? <AdminNav /> : null}
         {children}
-      </div>
+      </main>
     </div>
   );
 }

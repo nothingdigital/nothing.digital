@@ -1,12 +1,16 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useReducedMotion } from "framer-motion";
 
 // ponytail: one listener + transform mutation; no state, no deps
 export function CursorGlow() {
   const ref = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
+    if (reduceMotion) return;
+
     const move = (e: MouseEvent) => {
       ref.current?.style.setProperty(
         "transform",
@@ -15,7 +19,7 @@ export function CursorGlow() {
     };
     window.addEventListener("mousemove", move);
     return () => window.removeEventListener("mousemove", move);
-  }, []);
+  }, [reduceMotion]);
 
   return (
     <div

@@ -2,7 +2,7 @@
 
 > **Version:** 1.0  
 > **Date:** 2026-08-04  
-> **Status:** Phase 3 code complete · Phase 4 skipped · Phase 6 in progress · Phase 7 Pack H client ops shipped · Growth tactics triage shipped — see `docs/growth-tactics.md`  
+> **Status:** Phase 1–3 complete (close-outs pending) · Phase 4 skipped · Phase 5 launched (post-launch in progress) · Phase 6 in progress · Pack H client ops shipped · Growth tactics triage shipped — see `docs/growth-tactics.md`  
 > **General Contractor:** Kimi (Orchestration Agent)  
 > **Specialist Agents:** Principal Architect · DevOps Engineer · QA Engineer · Gap Analyst  
 > **Domain:** `nothing.digital`
@@ -15,14 +15,14 @@
 2. [Critical Decision: The `nothing://` Protocol](#2-critical-decision-the-nothing-protocol)
 3. [Project Overview](#3-project-overview)
 4. [Team & Ownership](#4-team--ownership)
-5. [Phase 1: Foundation & Infrastructure](#5-phase-1-foundation--infrastructure)
-6. [Phase 2: Core Development](#6-phase-2-core-development)
-7. [Phase 3: Integration, QA & Polish](#7-phase-3-integration-qa--polish)
-8. [Phase 4: The `nothing://` Experience](#8-phase-4-the-nothing-experience)
-9. [Phase 5: Launch & Post-Launch](#9-phase-5-launch--post-launch)
+5. [Phase 1: Foundation & Infrastructure — Complete](#phase-1)
+6. [Phase 2: Core Development — Complete](#phase-2)
+7. [Phase 3: Integration, QA & Polish — Complete](#phase-3)
+8. [Phase 4: The `nothing://` Experience — Skipped](#phase-4)
+9. [Phase 5: Launch & Post-Launch — In Progress](#phase-5)
 10. [Cross-Cutting Concerns](#10-cross-cutting-concerns)
 11. [Risk Register](#11-risk-register)
-12. [Phase 6: PikaPods & Ops Backend](#12-phase-6-pikapods--ops-backend)
+12. [Phase 6: PikaPods & Ops Backend — In Progress](#phase-6)
 13. [Reference Documents](#13-reference-documents)
 
 ---
@@ -234,7 +234,15 @@ Nothing.Digital is a digital services company specializing in website developmen
 
 ---
 
-## 5. Phase 1: Foundation & Infrastructure
+<a id="phase-1"></a>
+
+## 5. Phase 1: Foundation & Infrastructure — Complete
+
+> **To-Do:** Verify remaining external-account gaps and document credential-only steps.
+>
+> **Verified live:** Vercel project + custom domain + `www` redirect; Cloudflare authoritative DNS + Vercel edge SSL; Supabase project with migrations `001`/`002` applied; Resend DKIM present and domain verified in prior run; core production env vars set (site + contact form work).
+>
+> **Pending (requires dashboard/credentials):** GitHub branch-protection/secret-scanning review, Resend SPF `include:_spf.resend.com`, Listmonk env vars in Vercel (`/api/health` currently reports `listmonk: false`), Cloudflare DNSSEC/WAF only if proxy is enabled.
 
 > **Duration:** 1 week  
 > **Goal:** Repository, CI/CD, infrastructure, and design system are ready for development.  
@@ -318,7 +326,11 @@ Nothing.Digital is a digital services company specializing in website developmen
 
 ---
 
-## 6. Phase 2: Core Development
+<a id="phase-2"></a>
+
+## 6. Phase 2: Core Development — Complete
+
+> **To-Do:** Add client-logo trust indicators, full Calendly embed (when volume justifies), and reach Lighthouse ≥ 90.
 
 > **Duration:** 2–3 weeks  
 > **Goal:** All core pages built, forms functional, content populated.  
@@ -435,7 +447,15 @@ Nothing.Digital is a digital services company specializing in website developmen
 
 ---
 
-## 7. Phase 3: Integration, QA & Polish
+<a id="phase-3"></a>
+
+## 7. Phase 3: Integration, QA & Polish — Complete
+
+> **To-Do:** Complete search-engine verification + sitemap submission; document Lighthouse CI arch fix.
+>
+> **Verified live:** `/sitemap.xml` and `/robots.txt` serve `200`; Google Search Console `TXT` verification record is in DNS.
+>
+> **Pending:** Verify Google Search Console property and submit sitemap; add Bing `TXT` verification record and submit sitemap; run Lighthouse CI in GitHub Actions only (skip local arm64/x64 Chrome mismatch).
 
 > **Duration:** 1 week  
 > **Goal:** WCAG 2.1 AA compliance, performance budgets met, all tests passing.  
@@ -504,14 +524,20 @@ Nothing.Digital is a digital services company specializing in website developmen
 
 ---
 
-## 8. Phase 4: The `nothing://` Experience
+<a id="phase-4"></a>
+
+## 8. Phase 4: The `nothing://` Experience — Skipped
 
 > **Status:** Skipped  
 > **Reason:** Stakeholder decided to eliminate the `nothing://` display requirement and focus entirely on the web experience (Option B from Section 2). No Tauri desktop app, PWA protocol handlers, or browser extension will be built.
 
 ---
 
-## 9. Phase 5: Launch & Post-Launch
+<a id="phase-5"></a>
+
+## 9. Phase 5: Launch & Post-Launch — In Progress
+
+> **To-Do:** Post-launch Week 1 monitoring, HubSpot CRM integration, content calendar, and team training.
 
 > **Duration:** 1 week  
 > **Goal:** Live production site, monitoring active, team trained.  
@@ -655,7 +681,15 @@ Applies to **all phases**:
 
 ---
 
-## 12. Phase 6: PikaPods & Ops Backend
+<a id="phase-6"></a>
+
+## 12. Phase 6: PikaPods & Ops Backend — In Progress
+
+> **To-Do:** Confirm `002_client_ops.sql` is applied; decide on n8n pod.
+>
+> **Verified:** `clients`, `invoices`, `client_assets`, `client_work_items` tables exist — migration `002_client_ops.sql` is applied.
+>
+> **Decision:** n8n pod deferred (no active Slack/Listmonk fan-out use case); `notifyN8n()` remains env-gated no-op.
 
 > **Status:** In progress — 6.1–6.4 live; 6.5 n8n deferred; **Pack H client ops shipped**
 > **Detail doc:** [`05-pikapods-integrations.md`](./05-pikapods-integrations.md)  

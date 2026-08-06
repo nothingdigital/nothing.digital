@@ -76,10 +76,12 @@ export function NewsletterForm() {
         </Button>
       </div>
       {status === "success" && (
-        <p className="text-sm text-green-600">{successMessage}</p>
+        <p className="text-sm text-green-600" role="status" aria-live="polite">
+          {successMessage}
+        </p>
       )}
       {status === "error" && (
-        <p className="text-sm text-destructive">
+        <p className="text-sm text-destructive" role="alert" aria-live="polite">
           Something went wrong. Please try again.
         </p>
       )}
