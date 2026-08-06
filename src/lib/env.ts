@@ -11,6 +11,9 @@ const envSchema = z.object({
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
   RESEND_API_KEY: z.string().min(1).optional(),
   CONTACT_NOTIFY_EMAIL: z.string().email().optional(),
+  ADMIN_EMAILS: z.string().optional(),
+  NEXT_PUBLIC_CALENDLY_URL: z.string().url().optional(),
+  NEXT_PUBLIC_UMAMI_DASHBOARD_URL: z.string().url().optional(),
 });
 
 const result = envSchema.safeParse({
@@ -22,6 +25,9 @@ const result = envSchema.safeParse({
   SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
   RESEND_API_KEY: process.env.RESEND_API_KEY,
   CONTACT_NOTIFY_EMAIL: process.env.CONTACT_NOTIFY_EMAIL,
+  ADMIN_EMAILS: process.env.ADMIN_EMAILS,
+  NEXT_PUBLIC_CALENDLY_URL: process.env.NEXT_PUBLIC_CALENDLY_URL,
+  NEXT_PUBLIC_UMAMI_DASHBOARD_URL: process.env.NEXT_PUBLIC_UMAMI_DASHBOARD_URL,
 });
 
 if (!result.success) {
@@ -37,10 +43,13 @@ export const env = {
     NEXT_PUBLIC_SUPABASE_ANON_KEY: parsed.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     NEXT_PUBLIC_UMAMI_WEBSITE_ID: parsed.NEXT_PUBLIC_UMAMI_WEBSITE_ID,
     NEXT_PUBLIC_UMAMI_SCRIPT_URL: parsed.NEXT_PUBLIC_UMAMI_SCRIPT_URL,
+    NEXT_PUBLIC_CALENDLY_URL: parsed.NEXT_PUBLIC_CALENDLY_URL,
+    NEXT_PUBLIC_UMAMI_DASHBOARD_URL: parsed.NEXT_PUBLIC_UMAMI_DASHBOARD_URL,
   },
   private: {
     SUPABASE_SERVICE_ROLE_KEY: parsed.SUPABASE_SERVICE_ROLE_KEY,
     RESEND_API_KEY: parsed.RESEND_API_KEY,
     CONTACT_NOTIFY_EMAIL: parsed.CONTACT_NOTIFY_EMAIL,
+    ADMIN_EMAILS: parsed.ADMIN_EMAILS,
   },
 };

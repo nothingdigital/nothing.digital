@@ -244,7 +244,7 @@ Pages compose; queries own SQL; no god context.
 
 ## 10. Recommended rollout checklist
 
-- [ ] Phase F: Ship `/admin` inbox + magic link (Pack F)
+- [x] Phase F: Ship `/admin` inbox + magic link (Pack F) — code; needs Supabase Auth + `ADMIN_EMAILS`
 - [x] Phase A code: `UmamiScript` + env + privacy/CSP notes (pod still pending)
 - [ ] Wire Calendly on `/contact` + webhook → `bookings`
 - [ ] Phase B: Listmonk when first campaign scheduled (~+$2–3)

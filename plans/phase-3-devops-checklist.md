@@ -24,7 +24,9 @@
   - [ ] Create project and run migrations from `/supabase/migrations/`.
   - [ ] Enable RLS on all tables (`contact_submissions`, `newsletter_subscribers`).
   - [ ] Create policies: anon INSERT on contact/newsletter tables; authenticated service role SELECT.
-  - [ ] Copy project URL and service role key to Vercel env vars.
+  - [ ] Enable Email Auth (magic link); add redirect URL `https://nothing.digital/auth/callback` (and localhost for dev).
+  - [ ] Copy project URL, anon key, and service role key to Vercel env vars.
+  - [ ] Set `ADMIN_EMAILS` (comma-separated owner emails) in Vercel + GitHub secrets.
 
 - [ ] **Resend**
   - [ ] Sign up and verify domain `nothing.digital`.
@@ -70,10 +72,12 @@ Set these as GitHub Actions secrets (and in Vercel project env vars) to unblock 
 - `NEXT_PUBLIC_SITE_URL=https://nothing.digital`
 - `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY`
+- `ADMIN_EMAILS` (comma-separated)
 - `RESEND_API_KEY`
 - `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`
 - `SENTRY_DSN`, `SENTRY_AUTH_TOKEN`
 - `NEXT_PUBLIC_UMAMI_WEBSITE_ID`, `NEXT_PUBLIC_UMAMI_SCRIPT_URL` (after PikaPods Umami pod)
+- `NEXT_PUBLIC_CALENDLY_URL`, `NEXT_PUBLIC_UMAMI_DASHBOARD_URL` (optional admin links)
 
 ## Notes
 

@@ -663,16 +663,16 @@ Applies to **all phases**:
 
 ### Scope (ponytail order)
 
-| Step | Work                                              | Est. $/mo | Gate                                    |
-| ---- | ------------------------------------------------- | --------- | --------------------------------------- |
-| 6.1  | Owner `/admin` inbox (Supabase Auth magic link)   | $0        | Leads triage without Supabase dashboard |
-| 6.2  | Umami on PikaPods → drop Vercel Analytics         | ~$1.80    | Privacy-first traffic owned             |
-| 6.3  | Calendly embed + webhook → `bookings`             | $0–10     | Bookings visible in admin               |
-| 6.4  | Listmonk when campaigns start                     | ~$2–3     | Double opt-in + broadcasts              |
-| 6.5  | n8n when Slack/Listmonk fan-out needed            | ~$4–5     | Fire-and-forget webhooks only           |
-| 6.6  | Uptime Kuma only if free UptimeRobot insufficient | ~$1.80    | Status page / sub-min checks            |
-| 6.7  | Secretary role (Phase B) on hire                  | $0        | Least-privilege staff login             |
-| 6.8  | Secondary pods (FreeScout, etc.)                  | defer     | See §6 of detail doc — default **no**   |
+| Step | Work                                              | Est. $/mo | Gate                                  |
+| ---- | ------------------------------------------------- | --------- | ------------------------------------- |
+| 6.1  | Owner `/admin` inbox (Supabase Auth magic link)   | $0        | ✅ code; gate: Auth + `ADMIN_EMAILS`  |
+| 6.2  | Umami on PikaPods → drop Vercel Analytics         | ~$1.80    | Privacy-first traffic owned           |
+| 6.3  | Calendly embed + webhook → `bookings`             | $0–10     | Bookings visible in admin             |
+| 6.4  | Listmonk when campaigns start                     | ~$2–3     | Double opt-in + broadcasts            |
+| 6.5  | n8n when Slack/Listmonk fan-out needed            | ~$4–5     | Fire-and-forget webhooks only         |
+| 6.6  | Uptime Kuma only if free UptimeRobot insufficient | ~$1.80    | Status page / sub-min checks          |
+| 6.7  | Secretary role (Phase B) on hire                  | $0        | Least-privilege staff login           |
+| 6.8  | Secondary pods (FreeScout, etc.)                  | defer     | See §6 of detail doc — default **no** |
 
 **Year-1 recommended pack:** Admin + Umami + Listmonk ≈ **$5–15/mo** incremental.
 
