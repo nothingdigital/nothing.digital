@@ -4,14 +4,14 @@ Index of implementation plans for the next Pack F/H admin polish wave. Each plan
 
 **Recommended order** (dependency / value):
 
-| #   | Plan                                   | Path                                                                                         | Effort                |
-| --- | -------------------------------------- | -------------------------------------------------------------------------------------------- | --------------------- |
-| 1   | Ops glance home (`/admin` counts)      | [2026-08-06-admin-ops-glance-home.md](./2026-08-06-admin-ops-glance-home.md)                 | S                     |
-| 2   | Inbox → create client from lead        | [2026-08-06-inbox-create-client-from-lead.md](./2026-08-06-inbox-create-client-from-lead.md) | S                     |
-| 3   | Newsletter CSV + unsubscribe           | [2026-08-06-newsletter-polish.md](./2026-08-06-newsletter-polish.md)                         | S                     |
-| 4   | Work queue due-soon / sort             | [2026-08-06-work-queue-polish.md](./2026-08-06-work-queue-polish.md)                         | S                     |
-| 5   | Health status chips + UptimeRobot link | [2026-08-06-health-status-chips.md](./2026-08-06-health-status-chips.md)                     | S                     |
-| 6   | Asset edit + `monitor_url`             | [2026-08-06-asset-edit-monitor-link.md](./2026-08-06-asset-edit-monitor-link.md)             | S–M (needs migration) |
+| #   | Plan                                   | Path                                                                                         | Effort              |
+| --- | -------------------------------------- | -------------------------------------------------------------------------------------------- | ------------------- |
+| 1   | Ops glance home (`/admin` counts)      | [2026-08-06-admin-ops-glance-home.md](./2026-08-06-admin-ops-glance-home.md)                 | S                   |
+| 2   | Inbox → create client from lead        | [2026-08-06-inbox-create-client-from-lead.md](./2026-08-06-inbox-create-client-from-lead.md) | S                   |
+| 3   | Newsletter CSV + unsubscribe           | [2026-08-06-newsletter-polish.md](./2026-08-06-newsletter-polish.md)                         | S                   |
+| 4   | Work queue due-soon / sort             | [2026-08-06-work-queue-polish.md](./2026-08-06-work-queue-polish.md)                         | S                   |
+| 5   | Health status chips + UptimeRobot link | [2026-08-06-health-status-chips.md](./2026-08-06-health-status-chips.md)                     | S                   |
+| 6   | Asset edit + `monitor_url`             | [2026-08-06-asset-edit-monitor-link.md](./2026-08-06-asset-edit-monitor-link.md)             | S–M (migration run) |
 
 **Handoff for the next agent:** [../HANDOFF-admin-followups.md](../HANDOFF-admin-followups.md)
 

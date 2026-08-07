@@ -1,5 +1,7 @@
 # Asset Edit + Monitor Link Implementation Plan
 
+> **Status:** Migration 003 run (2026-08-06). Code next. ponytail: YAGNI full IT inventory.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Let admins edit client asset fields and optionally store/show an external monitor (uptime) URL on the Assets tab — without building IT inventory.
