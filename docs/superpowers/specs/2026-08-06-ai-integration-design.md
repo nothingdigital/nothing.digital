@@ -34,7 +34,7 @@ This extends — and does not contradict — [admin-automation-until-hire](./202
 │  gateway · flags · draft helpers · Zod schemas           │
 └────────────┬─────────────────────────────┬───────────────┘
              │                             │
-    Admin (generateObject)         Public (generateObject)
+    Admin (generateText + Output.object)         Public (generateText + Output.object)
              │                             │
    /admin/inbox server actions    /api/ai/brief (+ contact form UX)
              │                             │
@@ -108,7 +108,7 @@ On each contact submission card:
 
 ```
 contact_submission
-  → generateObject({ triage, subject, body })
+  → generateText + Output.object({ triage, subject, body })
   → founder edits in UI
   → Approve & Send
   → Resend to submission.email (from existing transactional from-address)
@@ -171,7 +171,7 @@ No new table in v1: draft stays ephemeral in client state until send. Audit ware
 
 ### API
 
-- `POST /api/ai/brief` — `generateObject` only (same structured pattern as inbox; no streaming chat in v1)
+- `POST /api/ai/brief` — `generateText` + `Output.object` only (same structured pattern as inbox; no streaming chat in v1)
 - Auth: none (public); rate limit by IP; max tokens capped
 - Input: answers to five fixed questions + honeypot field
 - Output: `{ message, suggestedService?, suggestedBudget? }` — suggestions must be existing `serviceSlugs` / budget enum values or omitted (never free strings)

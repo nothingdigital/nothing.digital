@@ -5,12 +5,8 @@ import * as React from "react";
 import { draftOpsBriefAction } from "@/app/admin/ops-brief-actions";
 import { adminControlClass } from "@/components/admin/admin-form";
 import { Button } from "@/components/ui/button";
-import type { LoopCollection } from "@/lib/admin/loops/types";
-type Props = {
-  collection: LoopCollection;
-};
 
-export function OpsBriefPanel({ collection }: Props) {
+export function OpsBriefPanel() {
   const [open, setOpen] = React.useState(false);
   const [headline, setHeadline] = React.useState("");
   const [bulletsText, setBulletsText] = React.useState("");
@@ -26,7 +22,7 @@ export function OpsBriefPanel({ collection }: Props) {
     setStatus("drafting");
     setError(null);
     setCopied(false);
-    const result = await draftOpsBriefAction(collection);
+    const result = await draftOpsBriefAction();
     if (!result.ok) {
       setStatus("error");
       setError(result.error);

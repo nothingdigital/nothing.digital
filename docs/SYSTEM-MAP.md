@@ -216,7 +216,7 @@ Credentials & remaining dashboard steps: [`runbooks/ops-credentials.md`](./runbo
 
 1. Visitor submits `/contact` → row in admin Inbox + Resend notify/confirm.
 2. `/admin/inbox` → triage status.
-3. Optional: **Draft reply** (AI) → edit → send yourself via your mail (or future safe Resend template).
+3. Optional: **Draft reply** (AI) → edit → **Approve & Send** via Resend (HITL; no auto-send).
 4. Book via Calendly if they want a call.
 5. Optional: **Create client from lead** when they become a client.
 

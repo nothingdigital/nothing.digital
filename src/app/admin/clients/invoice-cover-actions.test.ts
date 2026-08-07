@@ -9,6 +9,8 @@ const isInvoiceCoverEnabled = vi.fn();
 const buildInvoiceEmailContext = vi.fn();
 const sendInvoiceSentEmail = vi.fn();
 const revalidatePath = vi.fn();
+const guardAdminAiDraft = vi.fn();
+const aiDraftError = vi.fn();
 
 vi.mock("@/lib/admin/auth", () => ({
   requireAdmin: (...args: unknown[]) => requireAdmin(...args),
@@ -35,6 +37,11 @@ vi.mock("@/lib/admin/client-ops-queries", () => ({
 vi.mock("@/lib/ai", () => ({
   draftInvoiceCoverNote: (...args: unknown[]) => draftInvoiceCoverNote(...args),
   isInvoiceCoverEnabled: (...args: unknown[]) => isInvoiceCoverEnabled(...args),
+}));
+
+vi.mock("@/lib/ai/admin-guard", () => ({
+  guardAdminAiDraft: (...args: unknown[]) => guardAdminAiDraft(...args),
+  aiDraftError: (...args: unknown[]) => aiDraftError(...args),
 }));
 
 vi.mock("@/lib/invoices/invoice-email-context", () => ({
@@ -143,8 +150,10 @@ describe("updateInvoiceStatusAction invoice email gating", () => {
 describe("draftInvoiceCoverAction", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    requireAdmin.mockResolvedValue(undefined);
+    requireAdmin.mockResolvedValue({ email: "owner@nothing.digital" });
     isInvoiceCoverEnabled.mockReturnValue(true);
+    guardAdminAiDraft.mockResolvedValue({ ok: true });
+    aiDraftError.mockReturnValue("Draft failed. Try again.");
   });
 
   it("refuses when disabled", async () => {

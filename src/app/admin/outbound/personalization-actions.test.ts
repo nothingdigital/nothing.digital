@@ -6,6 +6,8 @@ const updateLeadCandidate = vi.fn();
 const draftOutboundPersonalization = vi.fn();
 const isOutboundPersonalizationEnabled = vi.fn();
 const revalidatePath = vi.fn();
+const guardAdminAiDraft = vi.fn();
+const aiDraftError = vi.fn();
 
 vi.mock("@/lib/admin/auth", () => ({
   requireAdmin: (...args: unknown[]) => requireAdmin(...args),
@@ -29,6 +31,11 @@ vi.mock("@/lib/ai", () => ({
     isOutboundPersonalizationEnabled(...args),
 }));
 
+vi.mock("@/lib/ai/admin-guard", () => ({
+  guardAdminAiDraft: (...args: unknown[]) => guardAdminAiDraft(...args),
+  aiDraftError: (...args: unknown[]) => aiDraftError(...args),
+}));
+
 vi.mock("next/cache", () => ({
   revalidatePath: (...args: unknown[]) => revalidatePath(...args),
 }));
@@ -48,8 +55,10 @@ const lead = {
 describe("draftOutboundPersonalizationAction", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    requireAdmin.mockResolvedValue(undefined);
+    requireAdmin.mockResolvedValue({ email: "owner@nothing.digital" });
     isOutboundPersonalizationEnabled.mockReturnValue(true);
+    guardAdminAiDraft.mockResolvedValue({ ok: true });
+    aiDraftError.mockReturnValue("Draft failed. Try again.");
   });
 
   it("refuses when disabled", async () => {

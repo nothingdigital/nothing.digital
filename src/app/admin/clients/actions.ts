@@ -35,6 +35,7 @@ import {
   isDocumentKind,
 } from "@/lib/documents/queries";
 import { draftInvoiceCoverNote, isInvoiceCoverEnabled } from "@/lib/ai";
+import { aiDraftError, guardAdminAiDraft } from "@/lib/ai/admin-guard";
 import { invoiceCoverSchema } from "@/lib/ai/types";
 import { buildInvoiceEmailContext } from "@/lib/invoices/invoice-email-context";
 import { sendInvoiceSentEmail } from "@/lib/invoices/send-invoice-email";
@@ -301,11 +302,14 @@ export async function updateInvoiceStatusAction(
 }
 
 export async function draftInvoiceCoverAction(invoiceId: string) {
-  await requireAdmin();
+  const user = await requireAdmin();
 
   if (!isInvoiceCoverEnabled()) {
     return { ok: false as const, error: "Invoice cover AI is disabled." };
   }
+
+  const gated = await guardAdminAiDraft("invoice-cover", user);
+  if (!gated.ok) return gated;
 
   const built = await buildInvoiceEmailContext(invoiceId);
   if (!built.ok) {
@@ -319,10 +323,7 @@ export async function draftInvoiceCoverAction(invoiceId: string) {
     const draft = await draftInvoiceCoverNote(built.context.coverFacts);
     return { ok: true as const, draft };
   } catch (err) {
-    return {
-      ok: false as const,
-      error: err instanceof Error ? err.message : "Draft failed.",
-    };
+    return { ok: false as const, error: aiDraftError(err) };
   }
 }
 

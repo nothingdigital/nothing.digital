@@ -15,6 +15,7 @@ import {
   draftOutboundPersonalization,
   isOutboundPersonalizationEnabled,
 } from "@/lib/ai";
+import { aiDraftError, guardAdminAiDraft } from "@/lib/ai/admin-guard";
 import { outboundPersonalizationSchema } from "@/lib/ai/types";
 
 const STATUSES: LeadCandidateStatus[] = [
@@ -106,7 +107,7 @@ export async function updateLeadEmailAction(formData: FormData): Promise<void> {
 }
 
 export async function draftOutboundPersonalizationAction(leadId: string) {
-  await requireAdmin();
+  const user = await requireAdmin();
 
   if (!isOutboundPersonalizationEnabled()) {
     return {
@@ -114,6 +115,9 @@ export async function draftOutboundPersonalizationAction(leadId: string) {
       error: "Outbound personalization AI is disabled.",
     };
   }
+
+  const gated = await guardAdminAiDraft("outbound", user);
+  if (!gated.ok) return gated;
 
   const { row, error } = await getLeadCandidate(leadId);
   if (error) return { ok: false as const, error };
@@ -129,10 +133,7 @@ export async function draftOutboundPersonalizationAction(leadId: string) {
     });
     return { ok: true as const, draft };
   } catch (err) {
-    return {
-      ok: false as const,
-      error: err instanceof Error ? err.message : "Draft failed.",
-    };
+    return { ok: false as const, error: aiDraftError(err) };
   }
 }
 
