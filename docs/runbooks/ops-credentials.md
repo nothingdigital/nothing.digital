@@ -5,19 +5,21 @@
 
 ## Live verification (2026-08-06)
 
-| Check                                                   | Result                                                                     |
-| ------------------------------------------------------- | -------------------------------------------------------------------------- |
-| `/api/health`                                           | `status: ok`                                                               |
-| `supabase` / `resend` / `sentry` / `umami` / `calendly` | `true`                                                                     |
-| `listmonk`                                              | **`false`** — missing production env                                       |
-| Sitemap                                                 | `https://nothing.digital/sitemap.xml` → 200                                |
-| Google Search Console TXT                               | Present on `@`                                                             |
-| SPF TXT                                                 | `v=spf1 include:spf.messagingengine.com ?all` — **Resend include missing** |
-| Bing Webmaster TXT                                      | Not present                                                                |
+| Check                                                   | Result                                                                                                  |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `/api/health`                                           | `status: ok`                                                                                            |
+| `supabase` / `resend` / `sentry` / `umami` / `calendly` | `true`                                                                                                  |
+| `listmonk`                                              | **`false`** — missing production env                                                                    |
+| Sitemap                                                 | `https://nothing.digital/sitemap.xml` → 200                                                             |
+| Google Search Console TXT                               | Present on `@` — done                                                                                   |
+| SPF TXT                                                 | `v=spf1 include:spf.messagingengine.com include:_spf.resend.com ?all` — `include:_spf.resend.com` added |
+| Bing Webmaster TXT                                      | Not present                                                                                             |
 
 ## Remaining dashboard steps
 
 ### 1. Listmonk Vercel env (blocks newsletter → Listmonk)
+
+ponytail: dashboard steps only (YAGNI runbook).
 
 In Vercel → Project → Settings → Environment Variables (Production + Preview):
 
@@ -54,6 +56,8 @@ Keep Google verification TXT unchanged. Re-check Resend domain → SPF pass.
 ### 5. Sentry Week-1 cadence
 
 `SENTRY_DSN` is live (`integrations.sentry: true`). Daily: Issues filtered to `production`; watch `/api/contact` and `/api/newsletter`. Details: [post-launch-monitoring.md](./post-launch-monitoring.md).
+
+ponytail: sentry in health; no extra check.
 
 ### 6. GitHub branch protection / secret scanning
 
