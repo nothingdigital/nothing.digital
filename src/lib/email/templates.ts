@@ -45,6 +45,7 @@ export function teamNotificationEmailTemplate(
     <p><strong>Company:</strong> ${data.company ?? "—"}</p>
     <p><strong>Service:</strong> ${data.service ?? "—"}</p>
     <p><strong>Budget:</strong> ${data.budget ?? "—"}</p>
+    <p><strong>Timeline:</strong> ${data.timeline ?? "—"}</p>
     <p><strong>Message:</strong><br />${data.message.replace(/\n/g, "<br />")}</p>
     <p style="margin-top: 24px; font-size: 12px; color: #666;">
       Submission ID: ${submissionId}

@@ -12,9 +12,11 @@ type Tables = {
       id: string;
       name: string;
       email: string;
+      phone: string | null;
       company: string | null;
       service: string | null;
       budget: string | null;
+      timeline: string | null;
       message: string;
       status: string;
       created_at: string;
@@ -27,6 +29,7 @@ type Tables = {
       company?: string | null;
       service?: string | null;
       budget?: string | null;
+      timeline?: string | null;
       message: string;
       status?: string;
       created_at?: string;
@@ -39,6 +42,7 @@ type Tables = {
       company?: string | null;
       service?: string | null;
       budget?: string | null;
+      timeline?: string | null;
       message?: string;
       status?: string;
       created_at?: string;

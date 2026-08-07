@@ -61,3 +61,34 @@ export const pricingServices: PricingService[] = [
     href: routes.services.codingSql,
   },
 ];
+
+// ponytail: map + math. YAGNI full quote engine.
+export function mapServiceToScope(
+  service: ServiceSlug | undefined,
+): "small" | "medium" | "large" {
+  if (!service) return "medium";
+  if (
+    [
+      "website-development",
+      "email-marketing",
+      "tech-literacy",
+      "coding-sql",
+    ].includes(service)
+  )
+    return "small";
+  if (["software-solutions"].includes(service)) return "medium";
+  return "large";
+}
+
+export function calcPrice(
+  scope: "small" | "medium" | "large",
+  timelineMonths: number,
+): { min: number; max: number; note: string } {
+  const bases = { small: 5000, medium: 15000, large: 35000 };
+  const base = bases[scope];
+  const urgency = timelineMonths < 3 ? 1.5 : timelineMonths < 6 ? 1.2 : 1;
+  const min = Math.round(base * urgency * 0.8);
+  const max = Math.round(base * urgency * 1.2);
+  const note = timelineMonths < 3 ? "Rush pricing" : "Standard scoping";
+  return { min, max, note };
+}

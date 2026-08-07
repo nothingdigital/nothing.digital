@@ -29,6 +29,7 @@ async function storeSubmission(data: ContactInput) {
       company: data.company ?? null,
       service: data.service ?? null,
       budget: data.budget ?? null,
+      timeline: data.timeline ?? null,
       message: data.message,
       status: "new",
     })

@@ -14,6 +14,7 @@ import { BriefAssistant } from "@/components/contact/brief-assistant";
 import { contactSchema, type ContactInput } from "@/lib/validations/contact";
 import { routes, serviceSlugs } from "@/lib/routes";
 import { serviceSummaries } from "@/lib/services";
+import { mapServiceToScope, calcPrice } from "@/lib/pricing";
 import type { BriefAssistOutput } from "@/lib/ai/types";
 
 // ponytail: extend server schema client-side for phone/privacy; strip before POST.
@@ -50,6 +51,7 @@ function toApiPayload(data: FormValues): ContactInput {
     company: data.company,
     service: data.service,
     budget: data.budget,
+    timeline: data.timeline,
     message: data.message,
     website: data.website,
   };
@@ -75,6 +77,7 @@ export function ContactForm({
     reset,
     setFocus,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(contactFormSchema),
@@ -85,11 +88,19 @@ export function ContactForm({
       company: "",
       service: undefined,
       budget: undefined,
+      timeline: undefined,
       message: "",
       website: "",
       privacyAccepted: false,
     },
   });
+
+  const watchedService = watch("service");
+  const watchedTimeline = watch("timeline");
+  const estimate =
+    watchedService && watchedTimeline
+      ? calcPrice(mapServiceToScope(watchedService), parseInt(watchedTimeline))
+      : null;
 
   function applyBrief(result: BriefAssistOutput) {
     setValue("message", result.message, { shouldValidate: true });
@@ -326,6 +337,42 @@ export function ContactForm({
           </select>
         )}
       />
+
+      <FormField
+        name="timeline"
+        label="Timeline (months) (optional)"
+        control={control}
+        error={errors.timeline}
+        render={(field) => (
+          <select
+            {...field}
+            id={field.name}
+            value={(field.value as string) || ""}
+            onChange={(event) =>
+              field.onChange(event.target.value || undefined)
+            }
+            className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <option value="">Select timeline</option>
+            <option value="1">1 (rush)</option>
+            <option value="3">3</option>
+            <option value="6">6</option>
+            <option value="12">12+</option>
+          </select>
+        )}
+      />
+
+      {estimate && (
+        <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 text-center">
+          <p className="text-sm text-primary">Estimated range (ballpark)</p>
+          <p className="text-2xl font-mono text-primary">
+            ${estimate.min.toLocaleString()} – ${estimate.max.toLocaleString()}
+          </p>
+          <p className="text-xs text-muted-foreground mt-1">
+            {estimate.note}. Fixed quote after call.
+          </p>
+        </div>
+      )}
 
       {briefAssistantEnabled ? <BriefAssistant onApply={applyBrief} /> : null}
 
