@@ -157,6 +157,7 @@ No Stripe Checkout in v1 — payment links/PDFs via invoice `external_url` or em
 | `/admin/work`       | Cross-client work queue                               | Status + sort (due/priority/created); no kanban/assignees in v1                                           |
 | `/admin/newsletter` | Local subscriber mirror                               | Export/manage mirror; **Listmonk is SoT** for campaigns                                                   |
 | `/admin/health`     | Integration chips + Open links                        | Env presence + launchers to Umami/Listmonk/Instantly/etc.; Listmonk drip checklist                        |
+| `/admin/docs`       | Internal knowledge base (handbook / policies)         | Nested spaces/folders/pages; markdown drafts; review → approve; hybrid import; acknowledgments            |
 | `/admin/system-map` | This document (rendered)                              | Operator + agent orientation — how the system works                                                       |
 | `/admin/settings`   | Tool links / config surface                           | Same external dashboards; kill switches are env vars on Vercel                                            |
 
