@@ -427,6 +427,198 @@ type Tables = {
     };
     Relationships: GenericRelationship[];
   };
+  kb_spaces: {
+    Row: {
+      id: string;
+      title: string;
+      slug: string;
+      sort_order: number;
+      created_at: string;
+      updated_at: string;
+    };
+    Insert: {
+      id?: string;
+      title: string;
+      slug: string;
+      sort_order?: number;
+      created_at?: string;
+      updated_at?: string;
+    };
+    Update: {
+      id?: string;
+      title?: string;
+      slug?: string;
+      sort_order?: number;
+      created_at?: string;
+      updated_at?: string;
+    };
+    Relationships: GenericRelationship[];
+  };
+  kb_nodes: {
+    Row: {
+      id: string;
+      space_id: string;
+      parent_id: string | null;
+      type: string;
+      title: string;
+      sort_order: number;
+      created_at: string;
+      updated_at: string;
+    };
+    Insert: {
+      id?: string;
+      space_id: string;
+      parent_id?: string | null;
+      type: string;
+      title: string;
+      sort_order?: number;
+      created_at?: string;
+      updated_at?: string;
+    };
+    Update: {
+      id?: string;
+      space_id?: string;
+      parent_id?: string | null;
+      type?: string;
+      title?: string;
+      sort_order?: number;
+      created_at?: string;
+      updated_at?: string;
+    };
+    Relationships: GenericRelationship[];
+  };
+  kb_pages: {
+    Row: {
+      id: string;
+      node_id: string;
+      body: string;
+      body_text: string | null;
+      status: string;
+      current_version: number;
+      approved_version: number | null;
+      requires_ack: boolean;
+      created_at: string;
+      updated_at: string;
+    };
+    Insert: {
+      id?: string;
+      node_id: string;
+      body?: string;
+      body_text?: string | null;
+      status?: string;
+      current_version?: number;
+      approved_version?: number | null;
+      requires_ack?: boolean;
+      created_at?: string;
+      updated_at?: string;
+    };
+    Update: {
+      id?: string;
+      node_id?: string;
+      body?: string;
+      body_text?: string | null;
+      status?: string;
+      current_version?: number;
+      approved_version?: number | null;
+      requires_ack?: boolean;
+      created_at?: string;
+      updated_at?: string;
+    };
+    Relationships: GenericRelationship[];
+  };
+  kb_versions: {
+    Row: {
+      id: string;
+      page_id: string;
+      version: number;
+      body: string;
+      status: string;
+      author_id: string | null;
+      note: string | null;
+      created_at: string;
+    };
+    Insert: {
+      id?: string;
+      page_id: string;
+      version: number;
+      body?: string;
+      status: string;
+      author_id?: string | null;
+      note?: string | null;
+      created_at?: string;
+    };
+    Update: {
+      id?: string;
+      page_id?: string;
+      version?: number;
+      body?: string;
+      status?: string;
+      author_id?: string | null;
+      note?: string | null;
+      created_at?: string;
+    };
+    Relationships: GenericRelationship[];
+  };
+  kb_attachments: {
+    Row: {
+      id: string;
+      page_id: string;
+      storage_path: string;
+      filename: string;
+      mime: string | null;
+      kind: string;
+      byte_size: number | null;
+      created_at: string;
+      updated_at: string;
+    };
+    Insert: {
+      id?: string;
+      page_id: string;
+      storage_path: string;
+      filename: string;
+      mime?: string | null;
+      kind?: string;
+      byte_size?: number | null;
+      created_at?: string;
+      updated_at?: string;
+    };
+    Update: {
+      id?: string;
+      page_id?: string;
+      storage_path?: string;
+      filename?: string;
+      mime?: string | null;
+      kind?: string;
+      byte_size?: number | null;
+      created_at?: string;
+      updated_at?: string;
+    };
+    Relationships: GenericRelationship[];
+  };
+  kb_acknowledgments: {
+    Row: {
+      id: string;
+      page_id: string;
+      user_id: string;
+      version: number;
+      acked_at: string;
+    };
+    Insert: {
+      id?: string;
+      page_id: string;
+      user_id: string;
+      version: number;
+      acked_at?: string;
+    };
+    Update: {
+      id?: string;
+      page_id?: string;
+      user_id?: string;
+      version?: number;
+      acked_at?: string;
+    };
+    Relationships: GenericRelationship[];
+  };
 };
 
 type Views = Record<string, never>;
