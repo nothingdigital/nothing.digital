@@ -7,8 +7,8 @@
 > **Specialist Agents:** Principal Architect · DevOps Engineer · QA Engineer · Gap Analyst  
 > **Domain:** `nothing.digital`
 
-> **Last Updated:** 2026-08-06 — documentation updated (ops-credentials + master); ponytail: min changes only.  
-> **Next:** Listmonk Vercel env + newsletter E2E; admin-ops-glance-home per superpowers/plans/README. Documentation next: complete listmonk-drip.md runbook.
+> **Last Updated:** 2026-08-06 — Admin follow-ups 1–6 on `feat/admin-followups-wave`; site polish PRs #7–#9 open; next = post-launch ops handoff  
+> **Next:** Merge #7–#9 + admin wave → apply `003` → Listmonk Vercel env + drip (`HANDOFF-post-launch-ops.md`) → Bing/GSC → founding outreach
 
 ---
 
@@ -702,11 +702,11 @@ Applies to **all phases**:
 
 ### Done vs next vs later
 
-|           | Work                                                                                                                                                                                                                                |
-| --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Done**  | `/admin`; Umami + Calendly + Listmonk live; n8n/Kuma code ready; **Pack H** clients/billing/assets/work (admin-only); admin follow-ups 1–6 (ops glance, inbox→client, newsletter CSV, work sort, health chips, asset `monitor_url`) |
-| **Next**  | Apply `003_asset_monitor_url.sql` on Supabase; set Listmonk Vercel env if `/api/health` still `listmonk: false`; Resend SPF + GSC/Bing submit — see `docs/runbooks/ops-credentials.md`                                              |
-| **Later** | Calendly webhook/`bookings`; Kuma; secretary roles; n8n Slack fan-out; IT monitoring                                                                                                                                                |
+|           | Work                                                                                                                                                                                                                                                                                               |
+| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Done**  | `/admin`; Umami + Calendly + Listmonk live; n8n/Kuma code ready; **Pack H** clients/billing/assets/work (admin-only); admin follow-ups 1–6 (ops glance, inbox→client, newsletter CSV, work sort, health chips, asset `monitor_url`)                                                                |
+| **Next**  | Merge site polish PRs (#7–#9) + `feat/admin-followups-wave` to `main`; apply `003_asset_monitor_url.sql`; Listmonk Vercel env if `/api/health` still `listmonk: false`; Bing + GSC sitemap; activate drip — see `docs/superpowers/HANDOFF-post-launch-ops.md` + `docs/runbooks/ops-credentials.md` |
+| **Later** | Calendly webhook/`bookings`; Kuma; secretary roles; n8n Slack fan-out; IT monitoring                                                                                                                                                                                                               |
 
 ### Scope (ponytail order)
 
@@ -762,4 +762,4 @@ Applies to **all phases**:
 ---
 
 _Document maintained by the General Contractor. Updated after each phase completion._  
-_Last Updated: 2026-08-06 — Growth tactics triage + case studies/CTAs/pricing; Umami ops next; Listmonk deferred (see docs/growth-tactics.md)_
+_Last Updated: 2026-08-06 — Admin follow-ups shipped on feature branch; next = post-launch ops (`docs/superpowers/HANDOFF-post-launch-ops.md`)_

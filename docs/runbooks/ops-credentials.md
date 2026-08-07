@@ -66,12 +66,15 @@ Repo `nothingdigital/nothing.digital` → Settings → Branches + Code security.
 ## Done when
 
 - [ ] `listmonk: true` on production `/api/health`
-- [ ] SPF includes `_spf.resend.com`
+- [x] SPF includes `_spf.resend.com` (re-verify in Resend if needed)
 - [ ] GSC verified + sitemap submitted
 - [ ] Bing verified + sitemap submitted
 - [ ] Week-1 Sentry / Umami / Speed Insights reviews started
 - [ ] Live newsletter E2E confirmed
+- [ ] Migration `003_asset_monitor_url.sql` applied on Supabase
+- [ ] Site polish PRs #7–#9 + admin follow-ups wave on `main`
 
 ## Related
 
 - [dns.md](./dns.md) · [monitoring.md](./monitoring.md) · [listmonk-drip.md](./listmonk-drip.md) · [post-launch-monitoring.md](./post-launch-monitoring.md)
+- Next-agent handoff: [../superpowers/HANDOFF-post-launch-ops.md](../superpowers/HANDOFF-post-launch-ops.md)
