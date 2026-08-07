@@ -117,12 +117,15 @@ AI inbox drafts + contact brief assistant are **shipped**. Enablement is env-onl
 1. Vercel → team/project → **AI Gateway** (or [vercel.com/docs/ai-gateway](https://vercel.com/docs/ai-gateway)) → create an API key (set a monthly budget if offered).
 2. Project → **Settings** → **Environment Variables** → Production:
 
-   | Name                         | Value                 | Notes                         |
-   | ---------------------------- | --------------------- | ----------------------------- |
-   | `AI_GATEWAY_API_KEY`         | (secret from step 1)  | Required for both features    |
-   | `AI_MODEL`                   | `openai/gpt-4.1-mini` | Optional; this is the default |
-   | `AI_INBOX_DRAFTS_ENABLED`    | `true`                | Admin `/admin/inbox` drafts   |
-   | `AI_BRIEF_ASSISTANT_ENABLED` | `true`                | Public contact brief helper   |
+   | Name                                  | Value                 | Notes                            |
+   | ------------------------------------- | --------------------- | -------------------------------- |
+   | `AI_GATEWAY_API_KEY`                  | (secret from step 1)  | Required for both features       |
+   | `AI_MODEL`                            | `openai/gpt-4.1-mini` | Optional; this is the default    |
+   | `AI_INBOX_DRAFTS_ENABLED`             | `true`                | Admin `/admin/inbox` drafts      |
+   | `AI_BRIEF_ASSISTANT_ENABLED`          | `true`                | Public contact brief helper      |
+   | `AI_OPS_BRIEF_ENABLED`                | `true`                | Admin `/admin` today brief       |
+   | `AI_INVOICE_COVER_ENABLED`            | `true`                | Invoice cover HITL before Resend |
+   | `AI_OUTBOUND_PERSONALIZATION_ENABLED` | `true`                | Instantly one-line before CSV    |
 
 3. **Redeploy** Production (env changes alone do not always hot-reload server flags).
 4. Confirm `https://nothing.digital/api/health` → `integrations.ai: true`.

@@ -60,6 +60,10 @@ const raw = {
   AI_MODEL: process.env.AI_MODEL,
   AI_INBOX_DRAFTS_ENABLED: process.env.AI_INBOX_DRAFTS_ENABLED,
   AI_BRIEF_ASSISTANT_ENABLED: process.env.AI_BRIEF_ASSISTANT_ENABLED,
+  AI_OPS_BRIEF_ENABLED: process.env.AI_OPS_BRIEF_ENABLED,
+  AI_INVOICE_COVER_ENABLED: process.env.AI_INVOICE_COVER_ENABLED,
+  AI_OUTBOUND_PERSONALIZATION_ENABLED:
+    process.env.AI_OUTBOUND_PERSONALIZATION_ENABLED,
 };
 
 export const env = {
@@ -165,6 +169,21 @@ export const env = {
       "AI_BRIEF_ASSISTANT_ENABLED",
       optionalNonEmpty,
       raw.AI_BRIEF_ASSISTANT_ENABLED,
+    ),
+    AI_OPS_BRIEF_ENABLED: parseField(
+      "AI_OPS_BRIEF_ENABLED",
+      optionalNonEmpty,
+      raw.AI_OPS_BRIEF_ENABLED,
+    ),
+    AI_INVOICE_COVER_ENABLED: parseField(
+      "AI_INVOICE_COVER_ENABLED",
+      optionalNonEmpty,
+      raw.AI_INVOICE_COVER_ENABLED,
+    ),
+    AI_OUTBOUND_PERSONALIZATION_ENABLED: parseField(
+      "AI_OUTBOUND_PERSONALIZATION_ENABLED",
+      optionalNonEmpty,
+      raw.AI_OUTBOUND_PERSONALIZATION_ENABLED,
     ),
   },
 };

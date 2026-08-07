@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 
 import {
@@ -31,6 +32,7 @@ export function InvoiceStatusSelect({
   status: string;
   clientId?: string;
 }) {
+  const router = useRouter();
   const [pending, startTransition] = useTransition();
   const value = isInvoiceStatus(status) ? status : "draft";
 
@@ -47,6 +49,7 @@ export function InvoiceStatusSelect({
             event.target.value as InvoiceStatus,
             clientId,
           );
+          router.refresh();
         });
       }}
     >

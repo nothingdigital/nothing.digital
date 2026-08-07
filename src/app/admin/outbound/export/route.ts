@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin/auth";
 import { buildInstantlyCsv } from "@/lib/admin/outbound/instantly-csv";
 import { listLeadCandidates } from "@/lib/admin/outbound/queries";
+import { isOutboundPersonalizationEnabled } from "@/lib/ai";
 
 export async function GET() {
   await requireAdmin();
@@ -22,7 +23,9 @@ export async function GET() {
       score: row.score,
       reasons: row.reasons,
       status: row.status,
+      personalization: row.personalization,
     })),
+    isOutboundPersonalizationEnabled(),
   );
 
   const date = new Date().toISOString().slice(0, 10);

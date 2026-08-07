@@ -356,6 +356,7 @@ type Tables = {
       rating: number | null;
       review_count: number | null;
       status: string;
+      personalization: string | null;
       created_at: string;
       updated_at: string;
     };
@@ -377,6 +378,7 @@ type Tables = {
       rating?: number | null;
       review_count?: number | null;
       status?: string;
+      personalization?: string | null;
       created_at?: string;
       updated_at?: string;
     };
@@ -398,6 +400,7 @@ type Tables = {
       rating?: number | null;
       review_count?: number | null;
       status?: string;
+      personalization?: string | null;
       created_at?: string;
       updated_at?: string;
     };

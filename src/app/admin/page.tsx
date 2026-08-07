@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { LoopList, RecentlyClosedLoops } from "@/components/admin/loop-list";
+import { OpsBriefPanel } from "@/components/admin/ops-brief-panel";
 import { listInvoices, listWorkItems } from "@/lib/admin/client-ops-queries";
 import { collectLoops } from "@/lib/admin/loops/collect";
 import {
@@ -11,6 +12,7 @@ import {
 import { countLeadsByStatus } from "@/lib/admin/outbound/queries";
 import { countOverdueInvoices } from "@/lib/admin/ops-glance";
 import { listContactSubmissions } from "@/lib/admin/queries";
+import { isOpsBriefEnabled } from "@/lib/ai";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -101,6 +103,8 @@ export default async function AdminIndexPage() {
           {dataError}
         </p>
       ) : null}
+
+      {isOpsBriefEnabled() ? <OpsBriefPanel collection={collection} /> : null}
 
       <section className="space-y-3">
         <LoopList

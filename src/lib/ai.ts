@@ -3,10 +3,24 @@ import { Output, createGateway, generateText } from "ai";
 import {
   briefAssistOutputSchema,
   inboxDraftSchema,
+  invoiceCoverSchema,
+  opsBriefSchema,
+  outboundPersonalizationSchema,
   type BriefAssistInput,
   type BriefAssistOutput,
   type InboxDraft,
+  type InvoiceCoverDraft,
+  type OpsBrief,
+  type OutboundPersonalization,
 } from "@/lib/ai/types";
+import {
+  formatInvoiceCoverInput,
+  formatOpsBriefInput,
+  formatOutboundLineInput,
+  type InvoiceCoverFacts,
+  type OutboundLineFacts,
+} from "@/lib/ai/format-prompt-input";
+import type { LoopCollection } from "@/lib/admin/loops/types";
 import { env } from "@/lib/env";
 
 const DEFAULT_MODEL = "openai/gpt-4.1-mini";
@@ -28,6 +42,27 @@ export function isBriefAssistantEnabled(): boolean {
   return (
     Boolean(env.private.AI_GATEWAY_API_KEY) &&
     flagOn(env.private.AI_BRIEF_ASSISTANT_ENABLED)
+  );
+}
+
+export function isOpsBriefEnabled(): boolean {
+  return (
+    Boolean(env.private.AI_GATEWAY_API_KEY) &&
+    flagOn(env.private.AI_OPS_BRIEF_ENABLED)
+  );
+}
+
+export function isInvoiceCoverEnabled(): boolean {
+  return (
+    Boolean(env.private.AI_GATEWAY_API_KEY) &&
+    flagOn(env.private.AI_INVOICE_COVER_ENABLED)
+  );
+}
+
+export function isOutboundPersonalizationEnabled(): boolean {
+  return (
+    Boolean(env.private.AI_GATEWAY_API_KEY) &&
+    flagOn(env.private.AI_OUTBOUND_PERSONALIZATION_ENABLED)
   );
 }
 
@@ -64,6 +99,28 @@ Rules:
 - suggestedService must be one of the studio's service slugs or null.
 - suggestedBudget must be one of <5k | 5k-15k | 15k-50k | 50k+ or null.
 - Keep message under 2000 characters.`;
+
+const opsBriefSystemPrompt = `You are the founder's ops chief of staff for Nothing.Digital.
+Given today's open/later/recently-closed loops, write a tight briefing.
+Rules:
+- Use only the provided loop facts. Do not invent clients, amounts, or deadlines.
+- Prefer billing/inbox urgency over setup chores.
+- Bullets are actionable and short. No emoji. No pricing guesses.`;
+
+const invoiceCoverSystemPrompt = `You write a short invoice cover note for Nothing.Digital.
+Rules:
+- Use ONLY the amount/due/title provided. Never invent or alter prices or dates.
+- Warm, direct, human. No emoji. No legal promises.
+- coverNote is plain text (2–5 short paragraphs max).
+- subject like "Invoice {number} from Nothing.Digital" unless a clearer variant fits.`;
+
+const outboundPersonalizationSystemPrompt = `You write one Instantly personalization line for Nothing.Digital cold outreach.
+Rules:
+- One sentence, 8–160 characters.
+- Reference only real website/city/vertical/reasons from the input.
+- No fake case studies, no pricing, no invented project names.
+- Do not claim "I loved your redesign of X" unless X is in the input.
+- No emoji. Plain text only.`;
 
 export async function draftInboxReply(submission: {
   name: string;
@@ -115,5 +172,44 @@ export async function draftProjectBrief(
     throw new Error("Model returned no brief.");
   }
 
+  return output;
+}
+
+export async function draftOpsBrief(
+  collection: LoopCollection,
+): Promise<OpsBrief> {
+  const { output } = await generateText({
+    model: getGatewayModel(),
+    system: opsBriefSystemPrompt,
+    prompt: formatOpsBriefInput(collection),
+    output: Output.object({ schema: opsBriefSchema }),
+  });
+  if (!output) throw new Error("Model returned no ops brief.");
+  return output;
+}
+
+export async function draftInvoiceCoverNote(
+  facts: InvoiceCoverFacts,
+): Promise<InvoiceCoverDraft> {
+  const { output } = await generateText({
+    model: getGatewayModel(),
+    system: invoiceCoverSystemPrompt,
+    prompt: formatInvoiceCoverInput(facts),
+    output: Output.object({ schema: invoiceCoverSchema }),
+  });
+  if (!output) throw new Error("Model returned no invoice cover.");
+  return output;
+}
+
+export async function draftOutboundPersonalization(
+  facts: OutboundLineFacts,
+): Promise<OutboundPersonalization> {
+  const { output } = await generateText({
+    model: getGatewayModel(),
+    system: outboundPersonalizationSystemPrompt,
+    prompt: formatOutboundLineInput(facts),
+    output: Output.object({ schema: outboundPersonalizationSchema }),
+  });
+  if (!output) throw new Error("Model returned no personalization line.");
   return output;
 }

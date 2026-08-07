@@ -34,9 +34,11 @@ import {
   createDocumentWithUpload,
   isDocumentKind,
 } from "@/lib/documents/queries";
+import { draftInvoiceCoverNote, isInvoiceCoverEnabled } from "@/lib/ai";
+import { invoiceCoverSchema } from "@/lib/ai/types";
+import { buildInvoiceEmailContext } from "@/lib/invoices/invoice-email-context";
 import { sendInvoiceSentEmail } from "@/lib/invoices/send-invoice-email";
 import { ensureInvoicePdf } from "@/lib/pdf/resolve-view";
-import { env } from "@/lib/env";
 
 function formString(formData: FormData, key: string): string {
   return String(formData.get(key) ?? "").trim();
@@ -189,7 +191,9 @@ export async function createInvoiceAction(formData: FormData): Promise<void> {
   }
 
   if (status === "sent") {
-    await maybeSendInvoiceEmail(result.row.id);
+    if (!isInvoiceCoverEnabled()) {
+      await maybeSendInvoiceEmail(result.row.id);
+    }
   }
 
   revalidatePath("/admin/billing");
@@ -255,7 +259,9 @@ export async function updateInvoiceAction(formData: FormData): Promise<void> {
   }
 
   if (status === "sent" && previousStatus !== "sent") {
-    await maybeSendInvoiceEmail(id);
+    if (!isInvoiceCoverEnabled()) {
+      await maybeSendInvoiceEmail(id);
+    }
   }
 
   revalidatePath("/admin/billing");
@@ -284,12 +290,109 @@ export async function updateInvoiceStatusAction(
   if (!result.ok) return result;
 
   if (status === "sent" && previousStatus !== "sent") {
-    await maybeSendInvoiceEmail(id);
+    if (!isInvoiceCoverEnabled()) {
+      await maybeSendInvoiceEmail(id);
+    }
   }
 
   revalidatePath("/admin/billing");
   if (clientId) revalidatePath(`/admin/clients/${clientId}`);
   return result;
+}
+
+export async function draftInvoiceCoverAction(invoiceId: string) {
+  await requireAdmin();
+
+  if (!isInvoiceCoverEnabled()) {
+    return { ok: false as const, error: "Invoice cover AI is disabled." };
+  }
+
+  const built = await buildInvoiceEmailContext(invoiceId);
+  if (!built.ok) {
+    return { ok: false as const, error: built.error };
+  }
+  if (built.context.sentEmailedAt) {
+    return { ok: false as const, error: "Already emailed." };
+  }
+
+  try {
+    const draft = await draftInvoiceCoverNote(built.context.coverFacts);
+    return { ok: true as const, draft };
+  } catch (err) {
+    return {
+      ok: false as const,
+      error: err instanceof Error ? err.message : "Draft failed.",
+    };
+  }
+}
+
+/** Send pending invoice email. With `cover`: HITL path (flag required). Without: flag-off flush. */
+export async function sendPendingInvoiceEmailAction(
+  invoiceId: string,
+  cover?: { subject: string; coverNote: string },
+) {
+  await requireAdmin();
+
+  let subject: string | undefined;
+  let coverNote: string | undefined;
+  if (cover) {
+    if (!isInvoiceCoverEnabled()) {
+      return { ok: false as const, error: "Invoice cover AI is disabled." };
+    }
+    const parsed = invoiceCoverSchema.safeParse(cover);
+    if (!parsed.success) {
+      return { ok: false as const, error: "Invalid subject or cover note." };
+    }
+    subject = parsed.data.subject;
+    coverNote = parsed.data.coverNote;
+  }
+
+  const built = await buildInvoiceEmailContext(invoiceId);
+  if (!built.ok) {
+    return { ok: false as const, error: built.error };
+  }
+  if (built.context.status !== "sent") {
+    return { ok: false as const, error: "Invoice is not marked sent." };
+  }
+  if (built.context.sentEmailedAt) {
+    return { ok: false as const, error: "Already emailed." };
+  }
+
+  const sent = await sendInvoiceSentEmail({
+    to: built.context.to,
+    clientName: built.context.clientName,
+    number: built.context.number,
+    title: built.context.title,
+    amount_cents: built.context.amount_cents,
+    currency: built.context.currency,
+    due_at: built.context.due_at,
+    viewUrl: built.context.viewUrl,
+    ...(subject !== undefined && coverNote !== undefined
+      ? { subject, coverNote }
+      : {}),
+  });
+
+  if (!sent.ok) {
+    return { ok: false as const, error: sent.error };
+  }
+
+  const stamped = await updateInvoiceSentEmailedAt(invoiceId);
+  revalidatePath("/admin/billing");
+  const invoice = await getInvoice(invoiceId);
+  if (invoice.row) {
+    revalidatePath(`/admin/clients/${invoice.row.client_id}`);
+  }
+
+  if (!stamped.ok) {
+    return {
+      ok: true as const,
+      stampWarning:
+        stamped.error ??
+        "Email sent, but sent_emailed_at was not saved. Do not retry — check Resend and stamp manually.",
+    };
+  }
+
+  return { ok: true as const };
 }
 
 export async function generateInvoicePdfAction(
@@ -309,29 +412,22 @@ export async function generateInvoicePdfAction(
 }
 
 async function maybeSendInvoiceEmail(invoiceId: string): Promise<void> {
-  const existing = await getInvoice(invoiceId);
-  if (!existing.row || existing.row.sent_emailed_at) return;
-
-  const generated = await ensureInvoicePdf(invoiceId);
-  if (!generated.ok) {
-    console.warn("[invoice-email] PDF generate failed:", generated.error);
+  const built = await buildInvoiceEmailContext(invoiceId);
+  if (!built.ok) {
+    console.warn("[invoice-email] context failed:", built.error);
     return;
   }
-
-  const siteUrl =
-    env.public.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ??
-    "https://nothing.digital";
-  const viewUrl = `${siteUrl}/v/${generated.viewToken}`;
+  if (built.context.sentEmailedAt) return;
 
   const sent = await sendInvoiceSentEmail({
-    to: generated.client.primary_email,
-    clientName: generated.client.name,
-    number: generated.invoice.number,
-    title: generated.invoice.title,
-    amount_cents: generated.invoice.amount_cents,
-    currency: generated.invoice.currency,
-    due_at: generated.invoice.due_at,
-    viewUrl,
+    to: built.context.to,
+    clientName: built.context.clientName,
+    number: built.context.number,
+    title: built.context.title,
+    amount_cents: built.context.amount_cents,
+    currency: built.context.currency,
+    due_at: built.context.due_at,
+    viewUrl: built.context.viewUrl,
   });
 
   if (!sent.ok) {

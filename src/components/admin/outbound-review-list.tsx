@@ -3,6 +3,7 @@ import {
   updateLeadEmailAction,
 } from "@/app/admin/outbound/actions";
 import { AdminFilterChip } from "@/components/admin/admin-form";
+import { OutboundPersonalizationPanel } from "@/components/admin/outbound-personalization-panel";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,9 +21,11 @@ const FILTERS = [
 export function OutboundReviewList({
   rows,
   filter,
+  personalizationEnabled = false,
 }: {
   rows: LeadCandidateRow[];
   filter: string;
+  personalizationEnabled?: boolean;
 }) {
   return (
     <div className="space-y-4">
@@ -138,6 +141,16 @@ export function OutboundReviewList({
                   </Button>
                 </form>
               </div>
+
+              {personalizationEnabled ? (
+                <OutboundPersonalizationPanel
+                  leadId={row.id}
+                  initialLine={row.personalization}
+                  showMissingWarning={
+                    row.status === "approved" && Boolean(row.email)
+                  }
+                />
+              ) : null}
             </li>
           ))}
         </ul>

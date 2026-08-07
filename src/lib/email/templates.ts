@@ -88,12 +88,16 @@ export function invoiceSentEmailTemplate(data: {
   amount: string;
   due: string | null;
   viewUrl: string;
+  coverNote?: string | null;
 }): string {
   const dueLine = data.due ? `<p><strong>Due:</strong> ${data.due}</p>` : "";
+  const noteHtml = data.coverNote?.trim()
+    ? `<div style="font-size:15px;line-height:1.5;margin:0 0 16px;">${escapeHtml(data.coverNote).replaceAll("\n", "<br />")}</div>`
+    : `<p>Your invoice is ready.</p>`;
   const body = `
     <h1 style="font-size: 20px; margin: 0 0 16px;">Invoice ${data.number}</h1>
     <p>Hi ${data.clientName},</p>
-    <p>Your invoice is ready.</p>
+    ${noteHtml}
     <p><strong>Title:</strong> ${data.title}</p>
     <p><strong>Amount:</strong> ${data.amount}</p>
     ${dueLine}

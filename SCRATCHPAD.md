@@ -9,7 +9,8 @@
 - [ ] Confirm migration `004_profiles.sql` → [§7](./docs/runbooks/ops-credentials.md)
 - [ ] Newsletter subscribe E2E (live form → Listmonk)
 - [ ] Listmonk welcome drip UI → [`listmonk-drip.md`](./docs/runbooks/listmonk-drip.md)
-- [ ] Optional: AI Gateway env → [§9](./docs/runbooks/ops-credentials.md)
+- [ ] Optional: AI Gateway env + follow-on flags → [§9](./docs/runbooks/ops-credentials.md)
+- [ ] Apply migration `007_lead_personalization.sql` (before outbound personalization)
 - [ ] Week-1 glances → [`post-launch-monitoring.md`](./docs/runbooks/post-launch-monitoring.md)
 
 ## Agent (done this wave)
@@ -18,6 +19,9 @@
 - [x] Lighthouse CI fix + local verify
 - [x] Security smoke → [`runbooks/archive/security-smoke-2026-08-07.md`](./docs/runbooks/archive/security-smoke-2026-08-07.md)
 - [x] Docs consolidate (this board + archives)
+- [x] AI follow-ons (ops brief · invoice cover HITL · outbound personalization) + review fixes  
+      **Uncommitted** — flags: `AI_OPS_BRIEF_ENABLED` · `AI_INVOICE_COVER_ENABLED` · `AI_OUTBOUND_PERSONALIZATION_ENABLED` (+ `AI_GATEWAY_API_KEY`)  
+      Plans: [`docs/superpowers/plans/2026-08-07-ai-followons-README.md`](./docs/superpowers/plans/2026-08-07-ai-followons-README.md)
 
 ## Shipped (don’t re-open)
 

@@ -13,6 +13,8 @@ export type InvoiceEmailPayload = {
   currency: string;
   due_at: string | null;
   viewUrl: string;
+  subject?: string;
+  coverNote?: string | null;
 };
 
 export async function sendInvoiceSentEmail(
@@ -35,7 +37,9 @@ export async function sendInvoiceSentEmail(
   const { error } = await resend.emails.send({
     from: FROM_EMAIL,
     to: payload.to,
-    subject: `Invoice ${payload.number} from Nothing.Digital`,
+    subject:
+      payload.subject?.trim() ||
+      `Invoice ${payload.number} from Nothing.Digital`,
     html: invoiceSentEmailTemplate({
       clientName: payload.clientName,
       number: payload.number,
@@ -43,6 +47,7 @@ export async function sendInvoiceSentEmail(
       amount,
       due,
       viewUrl: payload.viewUrl,
+      coverNote: payload.coverNote,
     }),
   });
 

@@ -92,10 +92,29 @@ export async function importLeadCandidates(
   return { runId, imported: payload.length, error: null };
 }
 
+export async function getLeadCandidate(
+  id: string,
+): Promise<{ row: LeadCandidateRow | null; error: string | null }> {
+  const supabase = getServiceRoleClient();
+  if (!supabase) {
+    return { row: null, error: "Supabase is not configured." };
+  }
+
+  const { data, error } = await supabase
+    .from("lead_candidates")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) return { row: null, error: error.message };
+  return { row: data, error: null };
+}
+
 export async function updateLeadCandidate(input: {
   id: string;
   status?: LeadCandidateStatus;
   email?: string | null;
+  personalization?: string | null;
 }): Promise<{ error: string | null }> {
   const supabase = getServiceRoleClient();
   if (!supabase) return { error: "Supabase is not configured." };
@@ -109,6 +128,9 @@ export async function updateLeadCandidate(input: {
     if (input.email && input.status === undefined) {
       patch.status = "ready";
     }
+  }
+  if (input.personalization !== undefined) {
+    patch.personalization = input.personalization;
   }
 
   const { error } = await supabase

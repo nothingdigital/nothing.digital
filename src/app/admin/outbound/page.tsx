@@ -8,10 +8,12 @@ import { Button } from "@/components/ui/button";
 import { getAdminToolLinks } from "@/lib/admin/config";
 import { listCheckedChecklistKeys } from "@/lib/admin/loops/queries";
 import { INSTANTLY_PREFLIGHT_ITEMS } from "@/lib/admin/loops/rules/runbook-setup";
+import { countMissingPersonalization } from "@/lib/admin/outbound/instantly-csv";
 import {
   listLeadCandidates,
   type LeadCandidateStatus,
 } from "@/lib/admin/outbound/queries";
+import { isOutboundPersonalizationEnabled } from "@/lib/ai";
 
 export const metadata: Metadata = {
   title: "Outbound",
@@ -38,15 +40,35 @@ export default async function AdminOutboundPage({
       : "all";
 
   const tools = getAdminToolLinks();
+  const personalizationEnabled = isOutboundPersonalizationEnabled();
   const [{ rows, error }, checklist, approved] = await Promise.all([
     listLeadCandidates(filter === "all" ? undefined : { status: filter }),
     listCheckedChecklistKeys("instantly-preflight"),
     listLeadCandidates({ status: "approved" }),
   ]);
 
-  const allApproved = (approved.error ? [] : approved.rows).filter((row) =>
+  const approvedReady = (approved.error ? [] : approved.rows).filter((row) =>
     Boolean(row.email),
-  ).length;
+  );
+  const allApproved = approvedReady.length;
+  const missingPersonalization = personalizationEnabled
+    ? countMissingPersonalization(
+        approvedReady.map((row) => ({
+          email: row.email,
+          name: row.name,
+          website: row.website,
+          phone: row.phone,
+          city: row.city,
+          score: row.score,
+          reasons: row.reasons,
+          status: row.status,
+          personalization: row.personalization,
+        })),
+      )
+    : 0;
+  const exportReady = personalizationEnabled
+    ? allApproved - missingPersonalization
+    : allApproved;
 
   return (
     <div className="space-y-8">
@@ -80,6 +102,7 @@ export default async function AdminOutboundPage({
           <OutboundReviewList
             rows={rows}
             filter={filter === "all" ? "all" : filter}
+            personalizationEnabled={personalizationEnabled}
           />
         )}
       </section>
@@ -87,11 +110,22 @@ export default async function AdminOutboundPage({
       <section className="space-y-3 rounded-lg border border-border bg-card px-4 py-5">
         <h3 className="font-medium">3. Send</h3>
         <p className="text-sm text-muted-foreground">
-          <span className="font-medium text-foreground">{allApproved}</span>{" "}
-          approved with email — ready to download.
+          <span className="font-medium text-foreground">{exportReady}</span>{" "}
+          approved with email
+          {personalizationEnabled
+            ? ` ready · ${missingPersonalization} missing personalization (excluded from export)`
+            : " — ready to download"}
+          .
         </p>
+        {personalizationEnabled ? (
+          <p className="text-xs text-muted-foreground">
+            Map Instantly custom variable{" "}
+            <code className="font-mono">{"{{personalization}}"}</code> to the
+            CSV <code className="font-mono">personalization</code> column.
+          </p>
+        ) : null}
         <div className="flex flex-wrap gap-2">
-          {allApproved > 0 ? (
+          {exportReady > 0 ? (
             <Button asChild size="sm">
               <Link href="/admin/outbound/export">Download Instantly CSV</Link>
             </Button>
