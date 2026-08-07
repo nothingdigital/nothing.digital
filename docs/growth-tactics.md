@@ -152,3 +152,4 @@ All quotes fixed after scoping. Ranges are starting points only.
 | Studio portfolio case study | ✅ `content/portfolio/soft-launching-nothing-digital.mdx` (honest; no invented clients) |
 | Founding Client outreach    | Tracker in `docs/sales/founding-client-outreach.md`                                     |
 | Listmonk drip activate      | Runbook `docs/runbooks/listmonk-drip.md` (needs `listmonk: true`)                       |
+| Conversion boost features   | `docs/conversion-boost.md` (YAGNI admin/client + pitch deck)                            |

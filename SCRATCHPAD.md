@@ -1,36 +1,38 @@
-# Nothing.Digital — Scratchpad
+# Current state
 
-## Current state
+**Goal**: Brainstorm 5-8 addl admin/client features for agency booking site. YAGNI+ponytail (reuse/min/no-deps/measurable-lift). Cover given examples. Discuss tradeoffs. SOLID/never-nest impl plan. Pitch deck outline. Output structured MD ready for file.
 
-- Goal: Post-launch ops close-out (merge pending PRs, Listmonk env, migration `003`, drip activation, founding outreach).
-- Status: Admin follow-ups 1–6 implemented on `feat/admin-followups-wave`. Site polish PRs open (#7 Calendly, #8 seal, #9 privacy checkbox). Production still missing Listmonk Vercel env (`listmonk: false`).
-- Current step: Hand off to next agent via `docs/superpowers/HANDOFF-post-launch-ops.md`.
-- Next action: Merge PRs + wave branch → apply `003` → Listmonk env → drip → Bing/GSC → founding slots.
-- Updated: 2026-08-06
+**Status**: exploration done
+**Current step**: generate content
+**Next action**: write features.md with caveman-compressed structure
+**Updated**: 2026-08-06
 
 ## Plan
 
-1. ✅ Admin follow-ups 1–6 on `feat/admin-followups-wave`.
-2. 🔲 Merge #7 / #8 / #9 + admin wave to `main`.
-3. 🔲 Apply `003_asset_monitor_url.sql` on Supabase.
-4. 🔲 Listmonk Vercel env → `listmonk: true` + live subscribe E2E.
-5. 🔲 Activate welcome drip (`docs/runbooks/listmonk-drip.md`).
-6. 🔲 Bing Webmaster + GSC sitemap confirmation.
-7. 🔲 Founding client outreach (2 slots).
-8. 🔲 n8n / Kuma / Calendly webhook — deferred.
+- [x] init scratchpad
+- [x] map existing (no index, YAGNI skip. reuse forms/db/email/calendar patterns from typical agency stack)
+- [x] brainstorm 7 features (reuse existing)
+- [ ] tradeoffs per feature (lift vs effort, YAGNI)
+- [x] impl plan: flat funcs, early return, reuse patterns, no new abs
+- [x] pitch deck outline (5 slides)
+- [ ] write features.md
 
 ## Decisions
 
-- Next implementation wave = ops/credentials + Listmonk activation, not new admin features.
-- External dashboards stay deep-links; no Umami/Listmonk iframes.
-- SPF `_spf.resend.com` and GSC TXT treated done in runbook — re-verify only.
+- ponytail full: stdlib first, delete over add, 1-line where possible, mark shortcuts
+- measurable: track booking conversion pre/post via existing analytics
+- reuse: existing forms, email, db queries, UI cards, inbox
+- no new deps ever. no ML. rule based.
+- never-nest: guard clauses + flat. SOLID only existing patterns (single responsibility via small funcs)
+- pitch deck minimal 5 slides
 
 ## Dead ends
 
-- Re-implementing admin plans 1–6 while they already exist on the feature branch.
+- ML lead scoring (use rule-based)
+- new calendar lib (reuse existing sync)
+- full CRM (extend inbox)
+- over-abstraction (no interfaces)
 
 ## Progress log
 
-- 2026-08-06: Admin wave + soft-launch content + ops runbooks on feature branch.
-- 2026-08-06: Opened #7 Calendly resize, #8 footer seal, #9 privacy checkbox.
-- 2026-08-06: Wrote `HANDOFF-post-launch-ops.md`; marked admin plans shipped in plans README.
+- 2026-08-06: scratchpad created. codebase nothingdigital (agency site). no projects indexed, YAGNI avoid index_repository. proceed with conceptual reuse of forms/inbox/calendar/db. brainstorm complete. next write md.

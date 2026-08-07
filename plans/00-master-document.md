@@ -744,6 +744,7 @@ Applies to **all phases**:
 | **Gap Analysis**             | `/plans/04-gap-analysis.md`          | 67 gaps, risk register, stakeholder questions, compliance requirements               |
 | **PikaPods & Ops Backend**   | `/plans/05-pikapods-integrations.md` | Sidecar OSS pods (Umami/Listmonk/n8n/Kuma), cost rollup, `/admin` + secretary phases |
 | **Growth Tactics**           | `/docs/growth-tactics.md`            | Full yes/no/later triage, cadence, drips, ballpark ranges                            |
+| **Conversion Boost**         | `/docs/conversion-boost.md`          | YAGNI features for booking/scheduling lift; admin/client ideas + pitch deck outline  |
 | **Master Document**          | `/plans/00-master-document.md`       | This document — single source of truth                                               |
 
 ---
