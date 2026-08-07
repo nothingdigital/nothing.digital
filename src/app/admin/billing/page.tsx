@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { AdminFilterChip } from "@/components/admin/admin-form";
 import { InvoiceStatusSelect } from "@/components/admin/client-ops-selects";
+import { InvoicePdfLinks } from "@/components/admin/invoice-pdf-links";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -131,19 +132,11 @@ export default async function AdminBillingPage({
                   {invoice.due_at
                     ? ` · due ${new Date(invoice.due_at).toLocaleDateString()}`
                     : ""}
-                  {invoice.external_url ? (
-                    <>
-                      {" · "}
-                      <a
-                        href={invoice.external_url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-primary underline-offset-4 hover:underline"
-                      >
-                        PDF / link
-                      </a>
-                    </>
-                  ) : null}
+                  <InvoicePdfLinks
+                    externalUrl={invoice.external_url}
+                    viewToken={invoice.view_token}
+                    storagePath={invoice.storage_path}
+                  />
                 </p>
               </div>
               <div className="flex items-center gap-2">

@@ -49,18 +49,21 @@ Empty Billing/Work lists are expected until you create clients and items — the
 
 ## Billing rules (v1)
 
-- Manual status only — no Stripe Checkout, no client portal.
+- Manual status only — no Stripe Checkout.
 - Overdue is **computed on read** when `due_at` is past and status is not `paid`/`void`.
-- `external_url` can hold a PDF or future payment-link URL.
+- `external_url` can hold a PDF or payment-link URL; generated PDFs live in Supabase Storage (`storage_path` + `view_token`).
+- Marking an invoice `sent` generates a PDF (if needed), emails the client via Resend once (`sent_emailed_at`), and links to `/v/{token}`.
 - Cancel = set status to `void` (no hard delete).
+- Client portal: `/portal` — clients sign in with `primary_email`; view-only invoices + documents.
+- Documents: client detail **Files** tab (upload PDF / external URL → `/v/{token}`).
+- Apply migration `006_pdf_documents.sql` (invoice PDF columns, `documents` table, Storage buckets).
 
 ## Deferred
 
-| Item                        | When                                |
-| --------------------------- | ----------------------------------- |
-| IT device/network inventory | IT retainers exist                  |
-| Client login portal         | Never until clients need self-serve |
+| Item                        | When               |
+| --------------------------- | ------------------ |
+| IT device/network inventory | IT retainers exist |
 
 ## Ops gate
 
-If Supabase is not configured or migration is missing, admin lists show an error string — fix env / run `002_client_ops.sql` (and `003_asset_monitor_url.sql` for Monitor URL; `005_admin_loops.sql` for Today / Outbound / checklists).
+If Supabase is not configured or migration is missing, admin lists show an error string — fix env / run `002_client_ops.sql` (and `003_asset_monitor_url.sql` for Monitor URL; `005_admin_loops.sql` for Today / Outbound / checklists; `006_pdf_documents.sql` for invoice PDFs + documents).

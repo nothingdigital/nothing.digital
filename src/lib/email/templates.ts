@@ -63,3 +63,32 @@ export function newsletterWelcomeEmailTemplate(): string {
 
   return baseTemplate("Welcome to Nothing.Digital", body);
 }
+
+export function invoiceSentEmailTemplate(data: {
+  clientName: string;
+  number: string;
+  title: string;
+  amount: string;
+  due: string | null;
+  viewUrl: string;
+}): string {
+  const dueLine = data.due ? `<p><strong>Due:</strong> ${data.due}</p>` : "";
+  const body = `
+    <h1 style="font-size: 20px; margin: 0 0 16px;">Invoice ${data.number}</h1>
+    <p>Hi ${data.clientName},</p>
+    <p>Your invoice is ready.</p>
+    <p><strong>Title:</strong> ${data.title}</p>
+    <p><strong>Amount:</strong> ${data.amount}</p>
+    ${dueLine}
+    <p style="margin-top: 24px;">
+      <a href="${data.viewUrl}" style="display: inline-block; background: #111; color: #fff; padding: 10px 16px; border-radius: 6px; text-decoration: none;">
+        View invoice
+      </a>
+    </p>
+    <p style="margin-top: 16px; font-size: 13px; color: #555;">
+      Or open this link: <a href="${data.viewUrl}" style="color: #111;">${data.viewUrl}</a>
+    </p>
+  `;
+
+  return baseTemplate(`Invoice ${data.number} — Nothing.Digital`, body);
+}

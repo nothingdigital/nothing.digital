@@ -2,12 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { updateInvoiceAction } from "@/app/admin/clients/actions";
+import {
+  generateInvoicePdfAction,
+  updateInvoiceAction,
+} from "@/app/admin/clients/actions";
 import {
   AdminField,
   adminControlClass,
   adminTextareaClass,
 } from "@/components/admin/admin-form";
+import { InvoicePdfLinks } from "@/components/admin/invoice-pdf-links";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { INVOICE_STATUSES } from "@/lib/admin/client-ops";
@@ -79,7 +83,23 @@ export default async function AdminEditInvoicePage({
         <p className="mt-1 text-sm text-muted-foreground">
           To cancel, set status to void (invoices are not deleted).
         </p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          <InvoicePdfLinks
+            externalUrl={invoice.external_url}
+            viewToken={invoice.view_token}
+            storagePath={invoice.storage_path}
+          />
+        </p>
       </div>
+
+      <form
+        action={generateInvoicePdfAction.bind(null, invoice.id, id)}
+        className="max-w-xl"
+      >
+        <Button type="submit" variant="secondary">
+          Generate PDF
+        </Button>
+      </form>
 
       <form action={updateInvoiceAction} className="max-w-xl space-y-4">
         <input type="hidden" name="id" value={invoice.id} />

@@ -257,6 +257,26 @@ export async function updateInvoiceStatus(
   return { ok: true };
 }
 
+export async function updateInvoiceSentEmailedAt(
+  id: string,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const supabase = getServiceRoleClient();
+  if (!supabase) {
+    return { ok: false, error: "Supabase is not configured." };
+  }
+
+  const { error } = await supabase
+    .from("invoices")
+    .update({
+      sent_emailed_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", id);
+
+  if (error) return { ok: false, error: error.message };
+  return { ok: true };
+}
+
 export type UpdateInvoiceInput = {
   number: string;
   title: string;

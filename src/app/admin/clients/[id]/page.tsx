@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import {
   createAssetAction,
+  createDocumentAction,
   createWorkItemAction,
   updateClientAction,
 } from "@/app/admin/clients/actions";
@@ -12,6 +13,7 @@ import {
   adminControlClass,
   adminTextareaClass,
 } from "@/components/admin/admin-form";
+import { InvoicePdfLinks } from "@/components/admin/invoice-pdf-links";
 import {
   AssetStatusSelect,
   InvoiceStatusSelect,
@@ -39,6 +41,7 @@ import {
   listClientInvoices,
   listClientWorkItems,
 } from "@/lib/admin/client-ops-queries";
+import { DOCUMENT_KINDS, listClientDocuments } from "@/lib/documents/queries";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -46,7 +49,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const TABS = ["overview", "billing", "assets", "work"] as const;
+const TABS = ["overview", "billing", "files", "assets", "work"] as const;
 type Tab = (typeof TABS)[number];
 
 function isTab(value: string | undefined): value is Tab {
@@ -76,15 +79,18 @@ export default async function AdminClientDetailPage({
     notFound();
   }
 
-  const [invoicesResult, assetsResult, workResult] = await Promise.all([
-    listClientInvoices(id),
-    listClientAssets(id),
-    listClientWorkItems(id),
-  ]);
+  const [invoicesResult, assetsResult, workResult, documentsResult] =
+    await Promise.all([
+      listClientInvoices(id),
+      listClientAssets(id),
+      listClientWorkItems(id),
+      listClientDocuments(id),
+    ]);
 
   const invoices = invoicesResult.rows;
   const assets = assetsResult.rows;
   const workItems = workResult.rows;
+  const documents = documentsResult.rows;
   const balance = openBalanceCents(invoices);
   const paid = invoices
     .filter((invoice) => invoice.status === "paid")
@@ -272,19 +278,11 @@ export default async function AdminClientDetailPage({
                       {invoice.due_at
                         ? ` · due ${new Date(invoice.due_at).toLocaleDateString()}`
                         : ""}
-                      {invoice.external_url ? (
-                        <>
-                          {" · "}
-                          <a
-                            href={invoice.external_url}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-primary underline-offset-4 hover:underline"
-                          >
-                            PDF / link
-                          </a>
-                        </>
-                      ) : null}
+                      <InvoicePdfLinks
+                        externalUrl={invoice.external_url}
+                        viewToken={invoice.view_token}
+                        storagePath={invoice.storage_path}
+                      />
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
@@ -310,6 +308,103 @@ export default async function AdminClientDetailPage({
                 </li>
               );
             })}
+          </ul>
+        </div>
+      ) : null}
+
+      {tab === "files" ? (
+        <div className="space-y-6">
+          <form
+            action={createDocumentAction}
+            className="max-w-xl space-y-3 rounded-lg border border-border p-4"
+            encType="multipart/form-data"
+          >
+            <input type="hidden" name="client_id" value={id} />
+            <h3 className="font-medium">Add document</h3>
+            <AdminField label="Title" htmlFor="doc-title">
+              <Input id="doc-title" name="title" required />
+            </AdminField>
+            <AdminField label="Kind" htmlFor="doc-kind">
+              <select
+                id="doc-kind"
+                name="kind"
+                defaultValue="other"
+                className={adminControlClass}
+              >
+                {DOCUMENT_KINDS.map((kind) => (
+                  <option key={kind} value={kind}>
+                    {kind}
+                  </option>
+                ))}
+              </select>
+            </AdminField>
+            <AdminField label="PDF file" htmlFor="doc-file">
+              <Input
+                id="doc-file"
+                name="file"
+                type="file"
+                accept="application/pdf,.pdf"
+              />
+            </AdminField>
+            <AdminField label="External URL (optional)" htmlFor="doc-url">
+              <Input id="doc-url" name="external_url" type="url" />
+            </AdminField>
+            <AdminField label="Notes" htmlFor="doc-notes">
+              <textarea
+                id="doc-notes"
+                name="notes"
+                className={adminTextareaClass}
+              />
+            </AdminField>
+            <Button type="submit">Upload document</Button>
+          </form>
+
+          {documentsResult.error ? (
+            <p className="text-sm text-destructive">{documentsResult.error}</p>
+          ) : null}
+          {documents.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No documents yet.</p>
+          ) : null}
+          <ul className="space-y-3">
+            {documents.map((document) => (
+              <li
+                key={document.id}
+                className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border px-4 py-3"
+              >
+                <div>
+                  <p className="font-medium">
+                    {document.title}{" "}
+                    <span className="text-sm font-normal text-muted-foreground">
+                      · {document.kind}
+                    </span>
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {document.view_token ? (
+                      <Link
+                        href={`/v/${document.view_token}`}
+                        className="text-primary underline-offset-4 hover:underline"
+                      >
+                        View
+                      </Link>
+                    ) : null}
+                    {document.external_url ? (
+                      <>
+                        {document.view_token ? " · " : null}
+                        <a
+                          href={document.external_url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-primary underline-offset-4 hover:underline"
+                        >
+                          External link
+                        </a>
+                      </>
+                    ) : null}
+                  </p>
+                </div>
+                <Badge variant="secondary">{document.kind}</Badge>
+              </li>
+            ))}
           </ul>
         </div>
       ) : null}

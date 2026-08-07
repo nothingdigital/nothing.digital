@@ -13,11 +13,20 @@ export async function middleware(request: NextRequest) {
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  const isLogin = pathname === "/admin/login";
+  const isAdminPath = pathname.startsWith("/admin");
+  const isPortalPath = pathname.startsWith("/portal");
+  const isAdminLogin = pathname === "/admin/login";
+  const isPortalLogin = pathname === "/portal/login";
 
   if (!url || !key) {
-    if (isLogin) return response;
-    return NextResponse.redirect(new URL("/admin/login", request.url));
+    if (isAdminLogin || isPortalLogin) return response;
+    if (isAdminPath) {
+      return NextResponse.redirect(new URL("/admin/login", request.url));
+    }
+    if (isPortalPath) {
+      return NextResponse.redirect(new URL("/portal/login", request.url));
+    }
+    return response;
   }
 
   const supabase = createServerClient(url, key, {
@@ -41,21 +50,33 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const allowed = Boolean(user && isAdminEmail(user.email));
+  if (isAdminPath) {
+    const allowed = Boolean(user && isAdminEmail(user.email));
 
-  if (!allowed && !isLogin) {
-    const loginUrl = new URL("/admin/login", request.url);
-    loginUrl.searchParams.set("next", pathname);
-    return NextResponse.redirect(loginUrl);
+    if (!allowed && !isAdminLogin) {
+      const loginUrl = new URL("/admin/login", request.url);
+      loginUrl.searchParams.set("next", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+
+    if (allowed && isAdminLogin) {
+      return NextResponse.redirect(new URL("/admin", request.url));
+    }
+
+    return response;
   }
 
-  if (allowed && isLogin) {
-    return NextResponse.redirect(new URL("/admin", request.url));
+  if (isPortalPath) {
+    if (!user && !isPortalLogin) {
+      return NextResponse.redirect(new URL("/portal/login", request.url));
+    }
+
+    return response;
   }
 
   return response;
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*", "/portal/:path*"],
 };

@@ -20,14 +20,23 @@ import {
   createInvoice,
   createWorkItem,
   deleteWorkItem,
+  getInvoice,
   updateClient,
   updateClientAsset,
   updateClientAssetStatus,
   updateInvoice,
+  updateInvoiceSentEmailedAt,
   updateInvoiceStatus,
   updateWorkItem,
   updateWorkItemStatus,
 } from "@/lib/admin/client-ops-queries";
+import {
+  createDocumentWithUpload,
+  isDocumentKind,
+} from "@/lib/documents/queries";
+import { sendInvoiceSentEmail } from "@/lib/invoices/send-invoice-email";
+import { ensureInvoicePdf } from "@/lib/pdf/resolve-view";
+import { env } from "@/lib/env";
 
 function formString(formData: FormData, key: string): string {
   return String(formData.get(key) ?? "").trim();
@@ -179,6 +188,10 @@ export async function createInvoiceAction(formData: FormData): Promise<void> {
     throw new Error(result.error ?? "Create failed.");
   }
 
+  if (status === "sent") {
+    await maybeSendInvoiceEmail(result.row.id);
+  }
+
   revalidatePath("/admin/billing");
   revalidatePath(`/admin/clients/${client_id}`);
   redirect(`/admin/clients/${client_id}?tab=billing`);
@@ -215,6 +228,9 @@ export async function updateInvoiceAction(formData: FormData): Promise<void> {
     throw new Error("Invalid invoice status.");
   }
 
+  const prior = await getInvoice(id);
+  const previousStatus = prior.row?.status ?? null;
+
   const paid_at =
     status === "paid"
       ? (dateOrNull(formOptional(formData, "paid_at")) ??
@@ -238,6 +254,10 @@ export async function updateInvoiceAction(formData: FormData): Promise<void> {
     throw new Error(result.error);
   }
 
+  if (status === "sent" && previousStatus !== "sent") {
+    await maybeSendInvoiceEmail(id);
+  }
+
   revalidatePath("/admin/billing");
   revalidatePath(`/admin/clients/${client_id}`);
   redirect(`/admin/clients/${client_id}?tab=billing`);
@@ -254,12 +274,116 @@ export async function updateInvoiceStatusAction(
     return { ok: false as const, error: "Invalid status." };
   }
 
-  const result = await updateInvoiceStatus(id, status);
-  if (result.ok) {
-    revalidatePath("/admin/billing");
-    if (clientId) revalidatePath(`/admin/clients/${clientId}`);
+  const existing = await getInvoice(id);
+  if (existing.error || !existing.row) {
+    return { ok: false as const, error: existing.error ?? "Not found." };
   }
+
+  const previousStatus = existing.row.status;
+  const result = await updateInvoiceStatus(id, status);
+  if (!result.ok) return result;
+
+  if (status === "sent" && previousStatus !== "sent") {
+    await maybeSendInvoiceEmail(id);
+  }
+
+  revalidatePath("/admin/billing");
+  if (clientId) revalidatePath(`/admin/clients/${clientId}`);
   return result;
+}
+
+export async function generateInvoicePdfAction(
+  invoiceId: string,
+  clientId: string,
+): Promise<void> {
+  await requireAdmin();
+
+  const generated = await ensureInvoicePdf(invoiceId);
+  if (!generated.ok) {
+    throw new Error(generated.error);
+  }
+
+  revalidatePath("/admin/billing");
+  revalidatePath(`/admin/clients/${clientId}`);
+  revalidatePath(`/admin/clients/${clientId}/invoices/${invoiceId}/edit`);
+}
+
+async function maybeSendInvoiceEmail(invoiceId: string): Promise<void> {
+  const existing = await getInvoice(invoiceId);
+  if (!existing.row || existing.row.sent_emailed_at) return;
+
+  const generated = await ensureInvoicePdf(invoiceId);
+  if (!generated.ok) {
+    console.warn("[invoice-email] PDF generate failed:", generated.error);
+    return;
+  }
+
+  const siteUrl =
+    env.public.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ??
+    "https://nothing.digital";
+  const viewUrl = `${siteUrl}/v/${generated.viewToken}`;
+
+  const sent = await sendInvoiceSentEmail({
+    to: generated.client.primary_email,
+    clientName: generated.client.name,
+    number: generated.invoice.number,
+    title: generated.invoice.title,
+    amount_cents: generated.invoice.amount_cents,
+    currency: generated.invoice.currency,
+    due_at: generated.invoice.due_at,
+    viewUrl,
+  });
+
+  if (!sent.ok) {
+    console.warn("[invoice-email] send failed:", sent.error);
+    return;
+  }
+
+  await updateInvoiceSentEmailedAt(invoiceId);
+}
+
+export async function createDocumentAction(formData: FormData): Promise<void> {
+  await requireAdmin();
+
+  const client_id = formString(formData, "client_id");
+  const title = formString(formData, "title");
+  const kind = formString(formData, "kind");
+  const file = formData.get("file");
+
+  if (!client_id || !title) {
+    throw new Error("Client and title are required.");
+  }
+  if (!isDocumentKind(kind)) {
+    throw new Error("Invalid document kind.");
+  }
+
+  let fileBytes: Buffer | null = null;
+  if (file instanceof File && file.size > 0) {
+    if (file.size > 15 * 1024 * 1024) {
+      throw new Error("PDF must be under 15MB.");
+    }
+    const type = file.type || "";
+    if (type && type !== "application/pdf") {
+      throw new Error("Only PDF uploads are supported.");
+    }
+    fileBytes = Buffer.from(await file.arrayBuffer());
+  }
+
+  const result = await createDocumentWithUpload({
+    client_id,
+    title,
+    kind,
+    notes: formOptional(formData, "notes"),
+    external_url: formOptional(formData, "external_url"),
+    fileBytes,
+  });
+
+  if (result.error || !result.row) {
+    throw new Error(result.error ?? "Create failed.");
+  }
+
+  revalidatePath(`/admin/clients/${client_id}`);
+  redirect(`/admin/clients/${client_id}?tab=files`);
 }
 
 export async function createAssetAction(formData: FormData): Promise<void> {
