@@ -66,3 +66,22 @@ Updated: 2026-08-06.
 Link in master. Commit after test.
 
 #ponytail: n8n is glue only. Resend primary. Measure before scaling. 1 workflow per event. No RAG or agents.
+
+## No Slack Alternative (Email Node)
+
+1. After Code node (format with to/subject/message), add Email > Send Email node.
+2. Credential: SMTP, host smtp.resend.com, port 587, user resend, password = RESEND_API_KEY from Vercel.
+3. From: n8n <hello@nothing.digital>
+4. To: {{ $json.to }} or team@nothing.digital
+5. Subject: {{ $json.subject }}
+6. Text: {{ $json.message }}
+7. Test with Listen + sample JSON - email arrives in team inbox.
+8. This reuses existing Resend, no new credential or Slack app.
+
+Update this md with your Email node screenshot + test email. Commit after successful test with real form.
+
+**full test command (replace URL)**: curl -X POST -H "Content-Type: application/json" -d '{"event":"contact","name":"Test","email":"test@example.com","message":"test","service":"website-development"}' YOUR_TEST_URL
+
+Run after each change: pnpm lint && pnpm type-check && pnpm test. Commit docs only. Push. Create PR for review.
+
+Updated: 2026-08-06.
