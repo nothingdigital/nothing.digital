@@ -1,6 +1,6 @@
 # Live board — Nothing.Digital
 
-> **Single remaining-work board.** Topic how-tos live in `docs/runbooks/`. Index: [`docs/README.md`](./docs/README.md).  
+> **Single remaining-work board.** How the system works: [`docs/SYSTEM-MAP.md`](./docs/SYSTEM-MAP.md). Topic how-tos: `docs/runbooks/`. Index: [`docs/README.md`](./docs/README.md).  
 > Updated: 2026-08-07
 
 ## Owner (you)
@@ -35,8 +35,9 @@ n8n · Kuma · Shlink · secretary Phase B · Instantly cold outbound (until pil
 
 | Topic            | Doc                                           |
 | ---------------- | --------------------------------------------- |
+| System map       | `docs/SYSTEM-MAP.md`                          |
 | Credentials      | `docs/runbooks/ops-credentials.md`            |
 | Drip             | `docs/runbooks/listmonk-drip.md`              |
 | Cadence          | `docs/runbooks/post-launch-monitoring.md`     |
 | Agent paste      | `docs/superpowers/HANDOFF-post-launch-ops.md` |
-| Master narrative | `plans/00-master-document.md`                 |
+| Master narrative | `plans/00-master-document.md` (historical)    |

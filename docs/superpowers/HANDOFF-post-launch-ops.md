@@ -13,9 +13,10 @@ You are continuing **Nothing.Digital** at `/Users/DeSchroyer/workspace/nothingdi
 ### Read first (in order)
 
 1. [`SCRATCHPAD.md`](../../SCRATCHPAD.md) — live remaining work (only board)
-2. [`docs/README.md`](../README.md) — doc map
-3. [`docs/runbooks/ops-credentials.md`](../runbooks/ops-credentials.md) — owner dashboard steps
-4. Topic runbooks only as needed: `listmonk-drip.md`, `post-launch-monitoring.md`, `client-ops.md`
+2. [`docs/SYSTEM-MAP.md`](../SYSTEM-MAP.md) — how the system works (client, admin, integrations)
+3. [`docs/README.md`](../README.md) — doc map
+4. [`docs/runbooks/ops-credentials.md`](../runbooks/ops-credentials.md) — owner dashboard steps
+5. Topic runbooks only as needed: `listmonk-drip.md`, `post-launch-monitoring.md`, `client-ops.md`
 
 ### Rules
 
