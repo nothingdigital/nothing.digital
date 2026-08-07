@@ -66,4 +66,15 @@ Empty Billing/Work lists are expected until you create clients and items — the
 
 ## Ops gate
 
-If Supabase is not configured or migration is missing, admin lists show an error string — fix env / run `002_client_ops.sql` (and `003_asset_monitor_url.sql` for Monitor URL; `005_admin_loops.sql` for Today / Outbound / checklists; `006_pdf_documents.sql` for invoice PDFs + documents).
+If Supabase is not configured or migration is missing, admin lists show an error string — fix env / run `002_client_ops.sql` (and `003_asset_monitor_url.sql` for Monitor URL; `004_profiles.sql` for secretary roles; `005_admin_loops.sql` for Today / Outbound / checklists; `006_pdf_documents.sql` for invoice PDFs + documents).
+
+## Secretary roles (Phase B on hire)
+
+- Create profile with `app_role` 'staff' or 'owner' (magic link login via ADMIN_EMAILS or profiles table).
+- RLS on all tables uses `is_staff()` for authenticated staff access (view/manage clients, work, invoices, assets, submissions).
+- Owner role can manage profiles (invite staff).
+- Least-privilege: staff cannot delete/export/settings.
+- Test with staff account: login, lists work, no admin settings.
+- Run `004_profiles.sql` first. Update on hire day.
+
+ponytail: min RLS + profiles; full CRM Phase C on volume.
