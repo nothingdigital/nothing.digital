@@ -58,8 +58,10 @@
 | Date       | Tester                  | Tool                                        | Result | Notes                                                                          |
 | ---------- | ----------------------- | ------------------------------------------- | ------ | ------------------------------------------------------------------------------ |
 | 2026-08-06 | Implementation Engineer | Keyboard/screen reader/reduced-motion smoke | Pass   | Skip links, form error association, live regions, reduced-motion checks added. |
+| 2026-08-06 | QA Engineer agent       | Full manual + axe                           | Pass   | Full report: [archive/a11y-manual-pass.md](./archive/a11y-manual-pass.md)      |
+| 2026-08-07 | Agent wave              | Cookie dialog + mobile menu focus trap      | Pass   | `src/lib/a11y.ts`; both traps shipped                                          |
 
-Fill in the row after running the checks above.
+Fill in a row after re-running checks. Do not duplicate full reports here — put dated evidence under `archive/`.
 
 ## Automated run details
 

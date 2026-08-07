@@ -1,5 +1,7 @@
 # Phase 2 Checklist — Core Development
 
+> **HISTORICAL — archived.** Do not execute open boxes. Live board: [`../../SCRATCHPAD.md`](../../SCRATCHPAD.md).
+
 > **Status:** In Progress  
 > **Goal:** All core pages built, forms functional, content populated.  
 > **Gate:** All pages render correctly, forms submit to Supabase + Resend, Lighthouse scores ≥ 90.

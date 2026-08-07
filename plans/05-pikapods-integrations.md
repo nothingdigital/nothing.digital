@@ -25,7 +25,7 @@ Client site stays on Vercel. PikaPods hosts **sidecar OSS tools**. Admin/ops liv
 | **Pack C — n8n**                 | 🟡 Code ready / ops open | `notifyN8n()` after contact/newsletter; no-op without env. Admin launcher.                                                                  |
 | **Kuma / secondary / secretary** | ⬜ Deferred              | Kuma admin link ready via `KUMA_DASHBOARD_URL`. See §5–§8.                                                                                  |
 
-**Next to complete:** n8n pod + webhook env (only if Slack/Listmonk fan-out needed). **After that:** UptimeRobot free or Uptime Kuma if sub-minute checks matter. Drip outline + cadence: [`docs/growth-tactics.md`](../docs/growth-tactics.md).
+**Live remaining work:** [`../SCRATCHPAD.md`](../SCRATCHPAD.md). Sidecar next (only if needed): n8n webhook env · UptimeRobot free before Kuma · secondary pods stay deferred. Drip: [`../docs/runbooks/listmonk-drip.md`](../docs/runbooks/listmonk-drip.md).
 
 **Growth drip acceptance (when Pack B live):**
 

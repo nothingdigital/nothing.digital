@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import { UmamiScript } from "@/components/atoms/umami-script";
+import { focusMainContent, trapTabKey } from "@/lib/a11y";
 
 type Consent = "accepted" | "declined" | null;
 
@@ -13,6 +14,9 @@ const STORAGE_KEY = "nd-cookie-consent";
 export function CookieConsent() {
   const [consent, setConsent] = useState<Consent>(null);
   const [mounted, setMounted] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const firstActionRef = useRef<HTMLButtonElement>(null);
+  const titleId = useId();
 
   useEffect(() => {
     setMounted(true);
@@ -20,9 +24,24 @@ export function CookieConsent() {
     if (stored === "accepted" || stored === "declined") setConsent(stored);
   }, []);
 
+  useEffect(() => {
+    if (!mounted || consent !== null) return;
+
+    firstActionRef.current?.focus();
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (!dialogRef.current) return;
+      trapTabKey(dialogRef.current, event);
+    }
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [mounted, consent]);
+
   const choose = (value: Exclude<Consent, null>) => {
     localStorage.setItem(STORAGE_KEY, value);
     setConsent(value);
+    focusMainContent();
   };
 
   if (!mounted) return null;
@@ -37,9 +56,18 @@ export function CookieConsent() {
       )}
 
       {consent === null && (
-        <div className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-card/95 backdrop-blur">
+        <div
+          ref={dialogRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={titleId}
+          className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-card/95 backdrop-blur"
+        >
           <div className="mx-auto flex max-w-5xl flex-col items-start gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-sm leading-relaxed text-muted-foreground">
+            <p
+              id={titleId}
+              className="text-sm leading-relaxed text-muted-foreground"
+            >
               We use privacy-friendly analytics to improve the site. No ad
               trackers, no data selling. See our{" "}
               <a
@@ -52,6 +80,7 @@ export function CookieConsent() {
             </p>
             <div className="flex gap-2">
               <button
+                ref={firstActionRef}
                 type="button"
                 onClick={() => choose("declined")}
                 className="rounded-md border border-input px-4 py-2 text-sm font-medium hover:bg-muted"

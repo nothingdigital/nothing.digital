@@ -67,41 +67,14 @@ To add more monitors later:
 
 ## Search engine submission
 
-Prerequisites: DNS records below must be added at your DNS provider (Cloudflare / Sav.com). This repo already generates `/sitemap.xml` and `/robots.txt`.
+Sitemap: `https://nothing.digital/sitemap.xml` (200). **Setup + remaining Bing submit:** [ops-credentials.md](./ops-credentials.md) §3–4. **Weekly cadence:** [post-launch-monitoring.md](./post-launch-monitoring.md).
 
-### DNS verification records
+| Provider              | Status                               |
+| --------------------- | ------------------------------------ |
+| Google Search Console | Done (verified + sitemap 2026-08-07) |
+| Bing Webmaster Tools  | Sitemap submit remaining             |
 
-| Provider              | Type  | Name | Value                                                                  | Status        |
-| --------------------- | ----- | ---- | ---------------------------------------------------------------------- | ------------- |
-| Google Search Console | `TXT` | `@`  | `google-site-verification=HCvoYYwD9dDCDD8G1170_RhhsRb5SuGhFY6BTapwq5o` | present       |
-| Bing Webmaster Tools  | `TXT` | `@`  | `REPLACE_ME`                                                           | pending token |
-
-Paste the tokens from each dashboard and update the table above, then add the records.
-
-### Google Search Console
-
-1. Open <https://search.google.com/search-console>.
-2. Choose **Domain** property and enter `nothing.digital`.
-3. Copy the provided `TXT` verification record.
-4. Add the `TXT` record on `@` in your DNS provider.
-5. Click **Verify** in Search Console.
-6. Go to **Sitemaps** → enter `https://nothing.digital/sitemap.xml` and submit.
-
-### Bing Webmaster Tools
-
-1. Open <https://www.bing.com/webmasters>.
-2. Add site — use **Import from Google Search Console** if available, otherwise verify by DNS `TXT` record.
-3. Submit sitemap `https://nothing.digital/sitemap.xml`.
-
-### Verification checklist
-
-- [ ] Google Search Console domain property verified (DNS token already in place)
-- [ ] Bing Webmaster Tools site verified (add Bing-provided TXT record first)
-- [ ] `https://nothing.digital/sitemap.xml` submitted to both
-
-**Ready now:** sitemap serves `200` at `https://nothing.digital/sitemap.xml`. Google verification TXT is in DNS; Bing verification TXT is not yet added.
-
-**Credential queue:** [ops-credentials.md](./ops-credentials.md) (Listmonk env, Resend SPF, GSC/Bing submit, Sentry week-1).
+DNS TXT for GSC is on `@`. Bing TXT only if not importing from GSC — paste token into ops-credentials when used.
 
 ## Runbooks
 
@@ -126,6 +99,7 @@ Paste the tokens from each dashboard and update the table above, then add the re
 
 ## Related
 
-- Phase 6 plan: [`plans/05-pikapods-integrations.md`](../../plans/05-pikapods-integrations.md)
-- DevOps checklist: [`plans/phase-3-devops-checklist.md`](../../plans/phase-3-devops-checklist.md)
-- CSP allowlist: [`infra/cloudflare/security-headers.md`](../../infra/cloudflare/security-headers.md)
+- Live board: [`../../SCRATCHPAD.md`](../../SCRATCHPAD.md)
+- Phase 6 plan: [`../../plans/05-pikapods-integrations.md`](../../plans/05-pikapods-integrations.md)
+- Historical devops checklist: [`../../plans/archive/phase-3-devops-checklist.md`](../../plans/archive/phase-3-devops-checklist.md)
+- CSP allowlist: [`../../infra/cloudflare/security-headers.md`](../../infra/cloudflare/security-headers.md)

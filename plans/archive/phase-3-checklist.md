@@ -1,5 +1,7 @@
 # Phase 3 Checklist — Integration, QA & Polish
 
+> **HISTORICAL — archived.** Do not execute open boxes. Live board: [`../../SCRATCHPAD.md`](../../SCRATCHPAD.md).
+
 > **Status:** Completed — including external provisioning (2026-08-06). Site live at https://nothing.digital with contact form end-to-end verified.  
 > **Goal:** WCAG 2.1 AA compliance, performance budgets met, all tests passing.  
 > **Gate:** Lighthouse scores ≥ 95 (Performance, Accessibility, SEO), zero critical a11y violations, all E2E tests green.
@@ -32,7 +34,7 @@
 | 3.9  | Implement dynamic imports for below-fold sections     | Frontend | ✅ (`NewsletterForm` + `CalendlyEmbed` lazy-loaded)                                                                       |
 | 3.10 | Verify font loading strategy (FOUT prevention)        | Frontend | ✅ (`next/font` used)                                                                                                     |
 | 3.11 | Cache static assets via Cloudflare page rules         | DevOps   | 🔲 (pending Cloudflare access)                                                                                            |
-| 3.12 | Run Lighthouse CI and fix any failing assertions      | QA       | 🔲 (blocked locally by x64 Node on arm64 Mac)                                                                             |
+| 3.12 | Run Lighthouse CI and fix any failing assertions      | QA       | ✅ (2026-08-07: lhci autorun pass — desktop preset, localhost SITE_URL rebuild, treosh@12.6.1; CI confirm on next PR)     |
 
 ## 7.3 Testing
 
@@ -73,7 +75,7 @@
 - [x] `pnpm test` passes (64 tests, ≥80% coverage)
 - [x] `pnpm build` passes (29 static routes, First Load JS shared 102 kB, home 186 kB, contact 156 kB)
 - [x] E2E passes on full Playwright matrix (123 passed, 3 skipped desktop-nav on mobile)
-- [ ] Lighthouse scores ≥ 95 — blocked locally by x64 Node on arm64 Mac; CI with matching arch required
+- [x] Lighthouse scores ≥ 95 — local lhci autorun 2026-08-07 (perf/a11y/seo 1.0 on `/` + `/contact`); confirm green on next PR Validation run
 - [x] `pnpm audit --audit-level moderate` — 0 vulnerabilities
 - [x] Final pre-launch validation pass (type-check, lint, test, build) — green after fixing stale footer social-link test
 

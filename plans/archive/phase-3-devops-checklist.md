@@ -1,5 +1,7 @@
 # Phase 3 — DevOps External Setup Checklist
 
+> **HISTORICAL — archived.** Do not execute open boxes. Live board: [`../../SCRATCHPAD.md`](../../SCRATCHPAD.md). Credentials: [`../../docs/runbooks/ops-credentials.md`](../../docs/runbooks/ops-credentials.md).
+
 > **Status:** Production live — Sentry, Umami, Calendly, Listmonk wired; UptimeRobot runbook + CSP fallback + search-engine submission steps done
 > **Goal:** Complete account provisioning, env vars, preview/production deployments, and monitoring dashboards.  
 > **Note:** Sentry, Umami, Calendly, and Listmonk env vars and pods are now live. UptimeRobot setup is documented (manual, no API creds), CSP allowlist is documented and enforced via `next.config.mjs`, and sitemap submission steps are documented.

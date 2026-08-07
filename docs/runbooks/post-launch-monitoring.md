@@ -1,8 +1,9 @@
 # Post-Launch Monitoring Runbook — Nothing.Digital
 
 > **Owner:** QA + DevOps  
-> **Cadence:** Daily for the first week, then weekly through Month 1.  
-> **Goal:** Catch regressions, outages, and user pain early after launch.
+> **Cadence:** Daily Week-1, then weekly Month-1.  
+> **Goal:** Catch regressions early.  
+> **Setup / credentials:** [`ops-credentials.md`](./ops-credentials.md) · **Live board:** [`../../SCRATCHPAD.md`](../../SCRATCHPAD.md)
 
 ## Dashboards
 
@@ -56,9 +57,9 @@
 
 ### Search & SEO
 
-- [ ] Google Search Console: check indexing coverage, sitemap status, mobile usability.
-- [ ] Bing Webmaster Tools (when configured): same checks.
-- [ ] Review top search queries and click-through rates; flag pages with impressions but no clicks.
+- [x] Google Search Console: verified + sitemap (2026-08-07). Ongoing: Coverage / CWV.
+- [ ] Bing: sitemap submit — steps in [`ops-credentials.md`](./ops-credentials.md) §4 (not duplicated here).
+- [ ] Review top search queries; flag pages with impressions but no clicks.
 
 ### Error & security hygiene
 

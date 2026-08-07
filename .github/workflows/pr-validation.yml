@@ -77,14 +77,19 @@ jobs:
           node-version: 20
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
-      - uses: actions/download-artifact@v4
-        with:
-          name: next-build
-          path: .next
+      # Rebuild for LHCI so canonicals match localhost (prod metadataBase
+      # on localhost fails SEO at 0.92 under older LH; keeps scores honest).
+      - run: pnpm build
+        env:
+          NEXT_PUBLIC_SITE_URL: http://localhost:3000
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
       - name: Run Lighthouse CI
-        uses: treosh/lighthouse-ci-action@v11
+        uses: treosh/lighthouse-ci-action@12.6.1
         with:
           configPath: "./lighthouserc.json"
+          uploadArtifacts: true
 
   accessibility:
     name: Accessibility (axe-core)

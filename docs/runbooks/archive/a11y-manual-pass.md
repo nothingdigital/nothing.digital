@@ -1,5 +1,7 @@
 # Manual Accessibility Pass Report — Nothing.Digital
 
+> **ARCHIVED evidence** (2026-08-06). Procedure: [`../a11y-manual.md`](../a11y-manual.md). Live board: [`../../../SCRATCHPAD.md`](../../../SCRATCHPAD.md).
+
 > **Date:** 2026-08-06  
 > **Tester:** QA Engineer agent  
 > **Scope:** Public marketing pages (`/`, `/services`, `/services/*`, `/pricing`, `/about`, `/blog`, `/blog/*`, `/contact`, `/privacy`, `/terms`, `/accessibility`)  
@@ -15,8 +17,8 @@
 | Color contrast            | ✅ Pass         | Axe contrast rules pass; clock-themed palette meets 4.5:1 for normal text.                                                                                                         |
 | `prefers-reduced-motion`  | ✅ Pass / 1 fix | Global CSS resets motion; `Reveal`, `CursorGlow`, `HeroClock` tilt respect the preference; `ServiceCard` hover animation fixed to respect it.                                      |
 | Form status announcements | ✅ Pass         | Newsletter form uses `role="status"`/`role="alert"` with `aria-live="polite"`; contact form success/error messages use the same pattern.                                           |
-| Cookie consent banner     | ⚠️ Open         | Banner renders with usable Accept/Decline buttons, but focus is not moved to the banner when it appears. Users tab through page content before reaching it.                        |
-| Mobile menu focus trap    | ⚠️ Open         | Escape closes the menu and returns focus to the toggle, but focus is not trapped inside the open menu. Not a WCAG failure, but recommended for usability.                          |
+| Cookie consent banner     | ✅ Pass         | Banner uses `role="dialog"` / `aria-modal`, focuses Decline on appear, traps Tab, restores focus to `#main` on dismiss.                                                            |
+| Mobile menu focus trap    | ✅ Pass         | Escape closes and returns focus to the toggle; Tab / Shift+Tab cycle within the open mobile header + menu panel.                                                                   |
 | WebKit tablet scans       | ⚠️ Flaky        | Local Playwright WebKit projects intermittently hit dev-server 500 errors (`<html>` missing `lang`), so automated results for those projects are not reliable in this environment. |
 
 ## Keyboard navigation checklist
@@ -27,7 +29,7 @@
 - [x] `Enter` activates links and buttons; `Space` activates native buttons.
 - [x] Contact form and newsletter form can be completed without a mouse.
 - [x] Mobile menu opens/closes with the toggle; `Escape` closes it and returns focus to the toggle.
-- [x] No focus traps detected.
+- [x] No accidental focus traps on static page content; cookie dialog and open mobile menu intentionally trap Tab.
 
 ## Screen reader checklist
 
@@ -56,19 +58,15 @@
 
 ## Open findings
 
-1. **Cookie consent banner focus management**
-   - Location: `src/components/molecules/cookie-consent.tsx`
-   - Issue: When the banner appears, focus remains on the page. Screen-reader/keyboard users must Tab through the entire page to reach Accept/Decline.
-   - Suggested fix: Move focus to the first banner button on mount, add `role="dialog"` with `aria-modal="true"`, and return focus to the triggering element (or page) on dismiss.
-
-2. **Mobile menu focus trap (enhancement)**
-   - Location: `src/components/organisms/navigation.tsx`
-   - Issue: Focus can leave the open menu and move into the page behind it.
-   - Suggested fix: Trap focus within the open menu panel using `Tab`/`Shift+Tab` handling.
-
-3. **WebKit tablet E2E instability**
+1. **WebKit tablet E2E instability**
    - Local Playwright WebKit projects return 500 errors and stripped `<html lang="en">`, producing false `html-has-lang` axe violations.
    - This is an environment/dev-server issue, not a production a11y defect. Re-run in CI with matching architecture.
+
+## Fixed after this pass (engineering)
+
+- `src/components/molecules/cookie-consent.tsx` — dialog semantics, initial focus, Tab trap, restore focus to `#main`.
+- `src/components/organisms/navigation.tsx` — Tab / Shift+Tab focus trap while mobile menu is open.
+- `src/lib/a11y.ts` — shared focusable query + Tab trap helpers.
 
 ## Fixed during this pass
 
@@ -81,5 +79,5 @@
 
 - [x] Manual pass completed.
 - [x] Automated axe-core scan green on reliable projects.
-- [ ] Cookie consent focus enhancement pending engineering.
-- [ ] Mobile menu focus trap optional enhancement pending engineering.
+- [x] Cookie consent focus enhancement complete.
+- [x] Mobile menu focus trap enhancement complete.

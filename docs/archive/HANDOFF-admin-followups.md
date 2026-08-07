@@ -1,7 +1,10 @@
 # Handoff prompt — Admin follow-up plans
 
+> **ARCHIVED.** Shipped on `main`. Do not re-run.  
+> Live board: [`../../SCRATCHPAD.md`](../../SCRATCHPAD.md) · Current handoff: [`../superpowers/HANDOFF-post-launch-ops.md`](../superpowers/HANDOFF-post-launch-ops.md)
+
 > **Status (2026-08-06):** **Shipped on** `feat/admin-followups-wave` (plans 1–6 implemented).  
-> **Next agent:** use [HANDOFF-post-launch-ops.md](./HANDOFF-post-launch-ops.md) — do not re-run this wave.
+> **Next agent:** use HANDOFF-post-launch-ops — do not re-run this wave.
 
 Copy everything below the line only if you must re-verify or finish merging this wave to `main`.
 

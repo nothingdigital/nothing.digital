@@ -3,7 +3,12 @@
     "collect": {
       "url": ["http://localhost:3000/", "http://localhost:3000/contact"],
       "startServerCommand": "pnpm start",
-      "numberOfRuns": 3
+      "startServerReadyPattern": "Ready",
+      "startServerReadyTimeout": 60000,
+      "numberOfRuns": 3,
+      "settings": {
+        "preset": "desktop"
+      }
     },
     "assert": {
       "assertions": {

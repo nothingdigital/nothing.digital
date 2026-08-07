@@ -1,5 +1,7 @@
 # Agent Handoff Prompt — Phase 3 DevOps / Production Deployment
 
+> **HISTORICAL — archived.** Superseded by [`../../docs/superpowers/HANDOFF-post-launch-ops.md`](../../docs/superpowers/HANDOFF-post-launch-ops.md). Live board: [`../../SCRATCHPAD.md`](../../SCRATCHPAD.md).
+
 > **Scope:** Complete external account setup and first production deployment of the Nothing.Digital web app.
 > **Owner:** DevOps / Deployment Agent
 > **Start date:** 2026-08-04

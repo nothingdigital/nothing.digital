@@ -1,5 +1,8 @@
 # Phase 1 Checklist — Foundation & Infrastructure
 
+> **HISTORICAL — archived.** Do not execute open boxes. Live board: [`../../SCRATCHPAD.md`](../../SCRATCHPAD.md).  
+> Original path: `plans/phase-1-checklist.md` → `plans/archive/`.
+
 > **Status:** Local Implementation Complete — External Account Setup Pending  
 > **Goal:** Repository, CI/CD, infrastructure, and design system are ready for development.  
 > **Gate:** All environment variables configured, first preview deployment successful.

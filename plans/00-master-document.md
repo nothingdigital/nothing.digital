@@ -7,8 +7,8 @@
 > **Specialist Agents:** Principal Architect · DevOps Engineer · QA Engineer · Gap Analyst  
 > **Domain:** `nothing.digital`
 
-> **Last Updated:** 2026-08-06 — Admin follow-ups 1–6 on `feat/admin-followups-wave`; site polish PRs #7–#9 open; next = post-launch ops handoff  
-> **Next:** Merge #7–#9 + admin wave → apply `003` → Listmonk Vercel env + drip (`HANDOFF-post-launch-ops.md`) → Bing/GSC → founding outreach
+> **Last Updated:** 2026-08-07 — Admin wave + site polish on `main`; docs consolidated  
+> **Next (live board only):** [`SCRATCHPAD.md`](../SCRATCHPAD.md) — do not duplicate remaining work here
 
 ---
 
@@ -745,8 +745,11 @@ Applies to **all phases**:
 | **PikaPods & Ops Backend**   | `/plans/05-pikapods-integrations.md` | Sidecar OSS pods (Umami/Listmonk/n8n/Kuma), cost rollup, `/admin` + secretary phases |
 | **Growth Tactics**           | `/docs/growth-tactics.md`            | Full yes/no/later triage, cadence, drips, ballpark ranges                            |
 | **Conversion Boost**         | `/docs/conversion-boost.md`          | YAGNI features for booking/scheduling lift; admin/client ideas + pitch deck outline  |
-| **Next Steps**               | `/docs/next-steps.md`                | Thorough steps for a11y pass, GSC/Bing, Lighthouse CI, CRM on hire                   |
-| **Master Document**          | `/plans/00-master-document.md`       | This document — single source of truth                                               |
+| **Live board**               | `/SCRATCHPAD.md`                     | Remaining owner/agent work — only live checklist                                     |
+| **Docs index**               | `/docs/README.md`                    | Map of SoTs vs archive                                                               |
+| **Ops credentials**          | `/docs/runbooks/ops-credentials.md`  | Dashboard / env / migrations / AI enablement                                         |
+| **Next Steps**               | `/docs/next-steps.md`                | Stub → SCRATCHPAD; hire-deferred CRM outline only                                    |
+| **Master Document**          | `/plans/00-master-document.md`       | This document — roadmap narrative (not the live board)                               |
 
 ---
 
@@ -764,4 +767,4 @@ Applies to **all phases**:
 ---
 
 _Document maintained by the General Contractor. Updated after each phase completion._  
-_Last Updated: 2026-08-06 — Admin follow-ups shipped on feature branch; next = post-launch ops (`docs/superpowers/HANDOFF-post-launch-ops.md`)_
+_Last Updated: 2026-08-07 — Docs consolidated; live board = `SCRATCHPAD.md`_
