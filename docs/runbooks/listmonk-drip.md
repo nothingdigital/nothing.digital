@@ -2,7 +2,8 @@
 
 > **Prerequisite:** Production `LISTMONK_*` env set (`/api/health` → `listmonk: true`).  
 > **Copy source:** [`content/emails/welcome-drip.md`](../../content/emails/welcome-drip.md)  
-> **Monthly broadcast draft:** [`content/newsletters/first-campaign.md`](../../content/newsletters/first-campaign.md)
+> **Monthly broadcast draft:** [`content/newsletters/first-campaign.md`](../../content/newsletters/first-campaign.md)  
+> **Cold outbound:** Instantly only — see [`outbound-instantly.md`](./outbound-instantly.md). **Never** import cold CSVs here.
 
 ## One-time setup
 

@@ -63,6 +63,12 @@ Apply on production (SQL editor or CLI), in order if not already applied:
 
 Smoke: client asset edit + optional `monitor_url` link.
 
+### 8. Instantly cold outbound (hybrid)
+
+Dashboard-only: Instantly account, sending domain DNS, warmup, suppression sync.  
+Runbooks: [outbound-instantly.md](./outbound-instantly.md) · [outbound-pilot.md](./outbound-pilot.md).  
+CLI: `pnpm lead-finder` (needs `GOOGLE_PLACES_API_KEY`). Never import cold CSVs into Listmonk.
+
 ## Done when
 
 - [x] `listmonk: true` on production `/api/health`
@@ -76,5 +82,5 @@ Smoke: client asset edit + optional `monitor_url` link.
 
 ## Related
 
-- [dns.md](./dns.md) · [monitoring.md](./monitoring.md) · [listmonk-drip.md](./listmonk-drip.md) · [post-launch-monitoring.md](./post-launch-monitoring.md)
+- [dns.md](./dns.md) · [monitoring.md](./monitoring.md) · [listmonk-drip.md](./listmonk-drip.md) · [post-launch-monitoring.md](./post-launch-monitoring.md) · [outbound-instantly.md](./outbound-instantly.md) · [outbound-managed-service.md](./outbound-managed-service.md)
 - Next-agent handoff: [../superpowers/HANDOFF-post-launch-ops.md](../superpowers/HANDOFF-post-launch-ops.md)

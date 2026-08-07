@@ -76,12 +76,13 @@ Newsletter → Listmonk drips → Soft CTA → Contact / Calendly
 
 ### Low-Hanging Fruit
 
-| Tactic               | Verdict | Why                                                   |
-| -------------------- | ------- | ----------------------------------------------------- |
-| Clear CTA Buttons    | **YES** | Primary = scoping call; nav CTA; blog newsletter form |
-| Mobile Optimization  | **YES** | Polish pass, not rebuild                              |
-| SEO Optimization     | **YES** | Blog in sitemap + OG metadata                         |
-| Email Drip Campaigns | **YES** | Listmonk + n8n when pods live                         |
+| Tactic               | Verdict | Why                                                                                                                       |
+| -------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Clear CTA Buttons    | **YES** | Primary = scoping call; nav CTA; blog newsletter form                                                                     |
+| Mobile Optimization  | **YES** | Polish pass, not rebuild                                                                                                  |
+| SEO Optimization     | **YES** | Blog in sitemap + OG metadata                                                                                             |
+| Email Drip Campaigns | **YES** | Listmonk + n8n when pods live                                                                                             |
+| Cold local outreach  | **YES** | Places + lead-finder → Instantly; Listmonk stays warm ([`docs/runbooks/outbound-pilot.md`](./runbooks/outbound-pilot.md)) |
 
 ---
 
@@ -152,4 +153,5 @@ All quotes fixed after scoping. Ranges are starting points only.
 | Studio portfolio case study | ✅ `content/portfolio/soft-launching-nothing-digital.mdx` (honest; no invented clients) |
 | Founding Client outreach    | Tracker in `docs/sales/founding-client-outreach.md`                                     |
 | Listmonk drip activate      | Runbook `docs/runbooks/listmonk-drip.md` (needs `listmonk: true`)                       |
+| Cold outbound hybrid        | ✅ `pnpm lead-finder` + `docs/runbooks/outbound-*.md` + Northport Instantly copy        |
 | Conversion boost features   | `docs/conversion-boost.md` (YAGNI admin/client + pitch deck)                            |
