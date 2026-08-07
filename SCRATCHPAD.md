@@ -19,9 +19,8 @@
 - [x] Lighthouse CI fix + local verify
 - [x] Security smoke → [`runbooks/archive/security-smoke-2026-08-07.md`](./docs/runbooks/archive/security-smoke-2026-08-07.md)
 - [x] Docs consolidate (this board + archives)
-- [x] AI follow-ons (ops brief · invoice cover HITL · outbound personalization) + review fixes  
-      **Uncommitted** — flags: `AI_OPS_BRIEF_ENABLED` · `AI_INVOICE_COVER_ENABLED` · `AI_OUTBOUND_PERSONALIZATION_ENABLED` (+ `AI_GATEWAY_API_KEY`)  
-      Plans: [`docs/superpowers/plans/2026-08-07-ai-followons-README.md`](./docs/superpowers/plans/2026-08-07-ai-followons-README.md)
+- [x] AI follow-ons (ops brief · invoice cover HITL · outbound personalization) + review fixes — on `main`
+- [x] AI polish (server-owned ops brief · admin draft rate limits · sanitized errors · Settings flag rows)
 
 ## Shipped (don’t re-open)
 

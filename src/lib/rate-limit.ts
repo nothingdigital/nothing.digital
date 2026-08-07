@@ -34,6 +34,8 @@ function createMemoryRateLimiter(): RateLimiter {
   };
 }
 
+const sharedLimiter = createMemoryRateLimiter();
+
 export function getRateLimiter(): RateLimiter {
-  return createMemoryRateLimiter();
+  return sharedLimiter;
 }

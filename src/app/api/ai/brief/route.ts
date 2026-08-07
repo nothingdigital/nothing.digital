@@ -50,7 +50,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const output = await draftProjectBrief(parsed.data);
     return NextResponse.json(output);
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Brief failed.";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("[ai-brief]", err);
+    return NextResponse.json(
+      { error: "Brief failed. Try again." },
+      { status: 500 },
+    );
   }
 }

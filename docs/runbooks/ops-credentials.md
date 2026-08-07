@@ -130,11 +130,16 @@ AI inbox drafts + contact brief assistant are **shipped**. Enablement is env-onl
 3. **Redeploy** Production (env changes alone do not always hot-reload server flags).
 4. Confirm `https://nothing.digital/api/health` → `integrations.ai: true`.
 5. Smoke:
+   - `/admin/settings` → AI rows show gateway + effective flag state (on only when key + flag are set)
    - `/admin/inbox` → open a submission → **Draft reply** appears → generate → edit → do **not** send a real client until you trust the draft.
    - `/contact` → **Help me write a brief** → generate → fields fill → you can discard without submitting.
-6. Kill switch: set either flag to `false` (or remove `AI_GATEWAY_API_KEY`) and redeploy — CTAs hide.
+   - `/admin` → **Draft today brief** (ops)
+   - Invoice cover + outbound personalization when those flags are on (outbound needs migration `007`)
+6. Kill switch: set any flag to `false` (or remove `AI_GATEWAY_API_KEY`) and redeploy — CTAs hide; Settings rows flip to `off`.
 
 Local: mirror the same keys in `.env.local` (see `.env.local.example`).
+
+Admin AI drafts are rate-limited per admin email + feature (same in-memory limiter as public brief).
 
 ## Done when
 
