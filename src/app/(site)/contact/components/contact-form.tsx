@@ -328,7 +328,7 @@ export function ContactForm() {
       />
 
       <div className="space-y-2">
-        <div className="flex items-center gap-3">
+        <div className="flex items-start gap-4">
           <Controller
             name="privacyAccepted"
             control={control}
@@ -344,7 +344,7 @@ export function ContactForm() {
                 aria-describedby={
                   errors.privacyAccepted ? "privacyAccepted-error" : undefined
                 }
-                className="h-4 w-4 shrink-0 rounded border-input text-primary focus:ring-ring"
+                className="mt-1 h-4 w-4 shrink-0 rounded border-input text-primary focus:ring-ring"
               />
             )}
           />
