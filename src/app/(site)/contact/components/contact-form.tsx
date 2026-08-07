@@ -327,8 +327,9 @@ export function ContactForm() {
         )}
       />
 
+      {/* ponytail: FormField stacks label then control; inline label puts checkbox after "Policy". */}
       <div className="space-y-2">
-        <div className="flex items-start gap-4">
+        <div className="flex items-center gap-3">
           <Controller
             name="privacyAccepted"
             control={control}
@@ -344,13 +345,13 @@ export function ContactForm() {
                 aria-describedby={
                   errors.privacyAccepted ? "privacyAccepted-error" : undefined
                 }
-                className="mt-1 h-4 w-4 shrink-0 rounded border-input text-primary focus:ring-ring"
+                className="h-4 w-4 shrink-0 rounded border-input text-primary focus:ring-ring"
               />
             )}
           />
           <LabelPrimitive.Root
             htmlFor="privacyAccepted"
-            className="text-sm font-medium leading-snug peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           >
             I agree to the{" "}
             <a
