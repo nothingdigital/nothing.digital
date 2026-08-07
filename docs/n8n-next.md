@@ -59,6 +59,8 @@ ponytail: pod only on volume. Workflow with existing nodes, no custom. Delete if
 4. Add nodes, test with real form after setting production URL in Vercel env + redeploy.
 5. If no event, check URL exact match, workflow active, no auth mismatch.
 
+Tested with sample payload - workflow triggers on POST to test URL. Production next after Vercel env + redeploy.
+
 Updated: 2026-08-06.
 
 Link in master. Commit after test.
