@@ -118,6 +118,7 @@ Newsletter → Listmonk drips → Soft CTA → Contact / Calendly
 - Related services on each service page (siblings).
 - After contact submit: thank-you + links to pricing, related service, blog.
 - Proposal add-ons offline: email retainer, maintenance care plan.
+- **Founding Client** (invite-only, max 2): $2,500 build + 12 mo care included → $99+/mo after. Pitch: `docs/sales/founding-client-pitch.md`. Spec: `docs/superpowers/specs/2026-08-06-founding-client-package-design.md`. Not a public `/pricing` SKU.
 
 ---
 
@@ -139,11 +140,16 @@ All quotes fixed after scoping. Ranges are starting points only.
 
 ## Implementation map
 
-| Slice                       | Status                                                 |
-| --------------------------- | ------------------------------------------------------ |
-| CTAs + SEO (sitemap/OG)     | Code                                                   |
-| Pricing ballparks           | Code                                                   |
-| Case studies + home feature | Code (anonymized)                                      |
-| Cross-sell                  | Code                                                   |
-| Mobile polish               | Code                                                   |
-| Listmonk cutover + drips    | ✅ Live; drip copy in `content/emails/welcome-drip.md` |
+| Slice                       | Status                                                                                  |
+| --------------------------- | --------------------------------------------------------------------------------------- |
+| CTAs + SEO (sitemap/OG)     | Code                                                                                    |
+| Pricing ballparks           | Code                                                                                    |
+| Case studies + home feature | Code (anonymized)                                                                       |
+| Cross-sell                  | Code                                                                                    |
+| Mobile polish               | Code                                                                                    |
+| Listmonk cutover + drips    | ✅ Live; drip copy in `content/emails/welcome-drip.md`                                  |
+| Soft-launch blog            | ✅ `content/blog/soft-launch-notes.mdx`                                                 |
+| Studio portfolio case study | ✅ `content/portfolio/soft-launching-nothing-digital.mdx` (honest; no invented clients) |
+| Founding Client outreach    | Tracker in `docs/sales/founding-client-outreach.md`                                     |
+| Listmonk drip activate      | Runbook `docs/runbooks/listmonk-drip.md` (needs `listmonk: true`)                       |
+| Conversion boost features   | `docs/conversion-boost.md` (YAGNI admin/client + pitch deck)                            |

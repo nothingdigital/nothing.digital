@@ -25,14 +25,14 @@
 
 ## 7.2 Performance Optimization
 
-| #    | Task                                                  | Owner    | Status                                              |
-| ---- | ----------------------------------------------------- | -------- | --------------------------------------------------- |
-| 3.7  | Audit bundle size with `@next/bundle-analyzer`        | QA       | 🔲                                                  |
-| 3.8  | Optimize images (WebP/AVIF, next/image, lazy loading) | Frontend | ✅ (existing `next/image` usage)                    |
-| 3.9  | Implement dynamic imports for below-fold sections     | Frontend | ✅ (`NewsletterForm` + `CalendlyEmbed` lazy-loaded) |
-| 3.10 | Verify font loading strategy (FOUT prevention)        | Frontend | ✅ (`next/font` used)                               |
-| 3.11 | Cache static assets via Cloudflare page rules         | DevOps   | 🔲 (pending Cloudflare access)                      |
-| 3.12 | Run Lighthouse CI and fix any failing assertions      | QA       | 🔲 (blocked locally by x64 Node on arm64 Mac)       |
+| #    | Task                                                  | Owner    | Status                                                                                                                    |
+| ---- | ----------------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------- |
+| 3.7  | Audit bundle size with `@next/bundle-analyzer`        | QA       | ✅ (build-route sizes audited; analyzer dep removed due to Next 15 webpack conflict; rely on build output + `pnpm build`) |
+| 3.8  | Optimize images (WebP/AVIF, next/image, lazy loading) | Frontend | ✅ (existing `next/image` usage)                                                                                          |
+| 3.9  | Implement dynamic imports for below-fold sections     | Frontend | ✅ (`NewsletterForm` + `CalendlyEmbed` lazy-loaded)                                                                       |
+| 3.10 | Verify font loading strategy (FOUT prevention)        | Frontend | ✅ (`next/font` used)                                                                                                     |
+| 3.11 | Cache static assets via Cloudflare page rules         | DevOps   | 🔲 (pending Cloudflare access)                                                                                            |
+| 3.12 | Run Lighthouse CI and fix any failing assertions      | QA       | 🔲 (blocked locally by x64 Node on arm64 Mac)                                                                             |
 
 ## 7.3 Testing
 
@@ -71,7 +71,7 @@
 - [x] `pnpm type-check` passes
 - [x] `pnpm lint` passes
 - [x] `pnpm test` passes (64 tests, ≥80% coverage)
-- [x] `pnpm build` passes (29 static routes, First Load JS 192 kB)
+- [x] `pnpm build` passes (29 static routes, First Load JS shared 102 kB, home 186 kB, contact 156 kB)
 - [x] E2E passes on full Playwright matrix (123 passed, 3 skipped desktop-nav on mobile)
 - [ ] Lighthouse scores ≥ 95 — blocked locally by x64 Node on arm64 Mac; CI with matching arch required
 - [x] `pnpm audit --audit-level moderate` — 0 vulnerabilities

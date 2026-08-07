@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 
 export interface ServiceCardProps {
@@ -18,10 +18,11 @@ export function ServiceCard({
   icon,
   href,
 }: ServiceCardProps) {
+  const reduceMotion = useReducedMotion();
   return (
     <Link href={href} className="group block">
       <motion.div
-        whileHover={{ y: -6 }}
+        whileHover={reduceMotion ? undefined : { y: -6 }}
         transition={{ duration: 0.2 }}
         className="h-full rounded-xl border-2 border-border bg-card p-6 shadow-md transition-colors hover:border-primary hover:shadow-xl"
       >

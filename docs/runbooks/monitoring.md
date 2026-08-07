@@ -24,6 +24,14 @@ Monitors live:
 
 Alert contact: `alexander@nothing.digital`.
 
+### Admin launcher
+
+Optional env `UPTIMEROBOT_DASHBOARD_URL` deep-links the UptimeRobot dashboard from `/admin/health` and Settings. No API key — Open link only.
+
+### Client asset monitor links
+
+Paste a public UptimeRobot or Kuma status-page URL into a client asset’s **Monitor URL** field (`/admin/clients/{id}?tab=assets`). That opens from the Assets list as **monitor**. See [client-ops.md](./client-ops.md). No API key or webhook — plain URL only.
+
 To add more monitors later:
 
 1. Sign up / log in at <https://uptimerobot.com>.
@@ -92,6 +100,8 @@ Paste the tokens from each dashboard and update the table above, then add the re
 - [ ] `https://nothing.digital/sitemap.xml` submitted to both
 
 **Ready now:** sitemap serves `200` at `https://nothing.digital/sitemap.xml`. Google verification TXT is in DNS; Bing verification TXT is not yet added.
+
+**Credential queue:** [ops-credentials.md](./ops-credentials.md) (Listmonk env, Resend SPF, GSC/Bing submit, Sentry week-1).
 
 ## Runbooks
 

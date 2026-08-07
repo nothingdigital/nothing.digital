@@ -33,6 +33,7 @@ export function getAdminToolLinks() {
     listmonk: env.private.LISTMONK_DASHBOARD_URL,
     n8n: env.private.N8N_DASHBOARD_URL,
     kuma: env.private.KUMA_DASHBOARD_URL,
+    uptimerobot: env.private.UPTIMEROBOT_DASHBOARD_URL,
     vercel: "https://vercel.com/dashboard",
     sentry: "https://sentry.io",
   };

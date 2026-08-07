@@ -55,6 +55,7 @@ const raw = {
   N8N_WEBHOOK_SECRET: process.env.N8N_WEBHOOK_SECRET,
   N8N_DASHBOARD_URL: process.env.N8N_DASHBOARD_URL,
   KUMA_DASHBOARD_URL: process.env.KUMA_DASHBOARD_URL,
+  UPTIMEROBOT_DASHBOARD_URL: process.env.UPTIMEROBOT_DASHBOARD_URL,
 };
 
 export const env = {
@@ -139,6 +140,11 @@ export const env = {
       "KUMA_DASHBOARD_URL",
       optionalUrl,
       raw.KUMA_DASHBOARD_URL,
+    ),
+    UPTIMEROBOT_DASHBOARD_URL: parseField(
+      "UPTIMEROBOT_DASHBOARD_URL",
+      optionalUrl,
+      raw.UPTIMEROBOT_DASHBOARD_URL,
     ),
   },
 };

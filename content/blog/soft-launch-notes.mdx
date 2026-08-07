@@ -1,0 +1,36 @@
+---
+title: Soft launch notes — what we shipped first
+description: What went live on nothing.digital, what we deferred on purpose, and how we measure the first weeks.
+slug: soft-launch-notes
+date: '2026-08-06'
+author: Alexander Schroyer
+authorRole: Founder
+tags:
+  - Launch
+  - Process
+  - Agency
+coverImage: /images/placeholder.svg
+---
+
+Nothing.Digital soft-launched on a boringly solid stack: Next.js on Vercel, forms into Supabase + Resend, cookieless analytics on Umami, and a Calendly path for scoping calls. This post is the public record of what shipped and what we deliberately left out.
+
+## What is live
+
+- Marketing site with services, pricing ballparks, contact form, and newsletter signup.
+- Admin ops for inbox, clients, billing, assets, and work — owner-only, not a client portal.
+- Monitoring via UptimeRobot and Sentry; Core Web Vitals through Vercel Speed Insights.
+
+## What we skipped on purpose
+
+- Fake portfolio case studies. Empty portfolio beats invented clients.
+- Chat widgets, exit-intent popups, and protocol gimmicks (`nothing://` stays brand metaphor only).
+- n8n and Uptime Kuma until there is a real fan-out or uptime gap.
+
+## How we will judge the first weeks
+
+1. Contact form and Calendly bookings actually arrive.
+2. Newsletter list grows without spam complaints.
+3. Search Console starts indexing the sitemap.
+4. No surprise errors in Sentry on `/api/contact` or `/api/newsletter`.
+
+If you want a site built the same way — fixed scope, senior hands, on time — [book a free scoping call](/contact).

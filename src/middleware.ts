@@ -50,7 +50,7 @@ export async function middleware(request: NextRequest) {
   }
 
   if (allowed && isLogin) {
-    return NextResponse.redirect(new URL("/admin/inbox", request.url));
+    return NextResponse.redirect(new URL("/admin", request.url));
   }
 
   return response;

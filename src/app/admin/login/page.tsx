@@ -23,7 +23,7 @@ export default async function AdminLoginPage({
   const nextPath =
     params.next?.startsWith("/admin") && params.next !== "/admin/login"
       ? params.next
-      : "/admin/inbox";
+      : "/admin";
   const errorMessage = params.error ? ERROR_COPY[params.error] : null;
 
   return (

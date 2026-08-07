@@ -103,8 +103,8 @@
 - [x] `pnpm type-check` passes
 - [x] `pnpm lint` passes
 - [x] `pnpm test` passes
-- [x] `pnpm build` passes
-- [ ] Lighthouse scores ≥ 90 — blocked locally by x64 Node on arm64 Mac (Lighthouse refuses Rosetta). Build metrics are healthy (First Load JS 182 kB, SSG).
+- [x] `pnpm build` passes (First Load JS / 186 kB home, 156 kB contact, SSG)
+- [ ] Lighthouse scores ≥ 90 — blocked locally by x64 Node on arm64 Mac (Lighthouse refuses Rosetta); CI runner with matching arch required.
 
 ## Deliverables
 

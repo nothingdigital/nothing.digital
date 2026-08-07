@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
 
+import { Badge } from "@/components/ui/badge";
 import { getAdminToolLinks } from "@/lib/admin/config";
+import {
+  HEALTH_INTEGRATION_KEYS,
+  chipToneForConfigured,
+  labelForIntegration,
+  parseHealthPayload,
+} from "@/lib/admin/health";
 import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -13,11 +20,16 @@ export default async function AdminHealthPage() {
   const healthUrl = `${siteConfig.url}/api/health`;
 
   let healthLabel = "unreachable";
+  let health = parseHealthPayload(null);
+
   try {
     const response = await fetch(healthUrl, { cache: "no-store" });
     healthLabel = response.ok
       ? `ok (${response.status})`
       : `fail (${response.status})`;
+    if (response.ok) {
+      health = parseHealthPayload(await response.json());
+    }
   } catch {
     healthLabel = "unreachable";
   }
@@ -40,6 +52,11 @@ export default async function AdminHealthPage() {
       note: tools.n8n ? "configured" : "env missing",
     },
     {
+      label: "UptimeRobot",
+      href: tools.uptimerobot,
+      note: tools.uptimerobot ? "configured" : "env missing",
+    },
+    {
       label: "Uptime Kuma",
       href: tools.kuma,
       note: tools.kuma ? "configured" : "env missing",
@@ -58,34 +75,64 @@ export default async function AdminHealthPage() {
       <div>
         <h2 className="font-display text-3xl tracking-tight">Health</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Quick links — no reimplemented charts.
+          Env-presence chips from /api/health — not live uptime. Dashboards stay
+          Open links (no charts or iframes).
         </p>
       </div>
-      <ul className="space-y-3">
-        {links.map((link) => (
-          <li
-            key={link.label}
-            className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border px-4 py-3"
-          >
-            <div>
-              <p className="font-medium">{link.label}</p>
-              <p className="text-sm text-muted-foreground">{link.note}</p>
-            </div>
-            {link.href ? (
-              <a
-                href={link.href}
-                target="_blank"
-                rel="noreferrer"
-                className="text-sm text-primary underline-offset-4 hover:underline"
-              >
-                Open
-              </a>
-            ) : (
-              <span className="text-sm text-muted-foreground">—</span>
-            )}
-          </li>
-        ))}
-      </ul>
+
+      <section className="space-y-3">
+        <h3 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
+          Integrations
+        </h3>
+        {!health.ok ? (
+          <p className="text-sm text-muted-foreground">
+            Could not read integration flags ({healthLabel}).
+          </p>
+        ) : null}
+        <div className="flex flex-wrap gap-2">
+          {HEALTH_INTEGRATION_KEYS.map((key) => {
+            const configured = health.integrations[key];
+            const tone = chipToneForConfigured(configured);
+            return (
+              <Badge key={key} variant={tone === "ok" ? "default" : "outline"}>
+                {labelForIntegration(key)}:{" "}
+                {configured ? "configured" : "missing"}
+              </Badge>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="space-y-3">
+        <h3 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
+          Tools
+        </h3>
+        <ul className="space-y-3">
+          {links.map((link) => (
+            <li
+              key={link.label}
+              className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border px-4 py-3"
+            >
+              <div>
+                <p className="font-medium">{link.label}</p>
+                <p className="text-sm text-muted-foreground">{link.note}</p>
+              </div>
+              {link.href ? (
+                <a
+                  href={link.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-sm text-primary underline-offset-4 hover:underline"
+                >
+                  Open
+                </a>
+              ) : (
+                <span className="text-sm text-muted-foreground">—</span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </section>
     </div>
   );
 }

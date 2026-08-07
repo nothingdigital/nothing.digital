@@ -1,16 +1,21 @@
 # Handoff prompt — Admin follow-up plans
 
-Copy everything below the line into a new Cursor agent chat to continue this work.
+> **Status (2026-08-06):** **Shipped on** `feat/admin-followups-wave` (plans 1–6 implemented).  
+> **Next agent:** use [HANDOFF-post-launch-ops.md](./HANDOFF-post-launch-ops.md) — do not re-run this wave.
+
+Copy everything below the line only if you must re-verify or finish merging this wave to `main`.
 
 ---
 
-## Prompt (paste into next agent)
+## Prompt (paste into next agent) — LEGACY
 
 You are continuing work on **Nothing.Digital** admin portal polish at `/Users/DeSchroyer/workspace/nothingdigital`.
 
 ### Mission
 
 Implement the **admin follow-up plans** already written under `docs/superpowers/plans/`. Do **not** invent a new roadmap. Do **not** rebuild Umami charts or iframe Listmonk/n8n/Kuma. External dashboards stay deep-links.
+
+**If code for plans 1–6 already exists on `feat/admin-followups-wave`:** prefer merging that branch to `main` over re-implementing. Then switch to [HANDOFF-post-launch-ops.md](./HANDOFF-post-launch-ops.md).
 
 ### First actions (required)
 
@@ -72,4 +77,4 @@ Implement the **admin follow-up plans** already written under `docs/superpowers/
 
 ### Suggested first message after agents return
 
-Confirm plan order with the user, then begin plan **1 (ops glance home)** unless they pick otherwise.
+Confirm plan order with the user, then begin plan **1 (ops glance home)** unless they pick otherwise — **or** if the feature branch already contains 1–6, open/merge the PR and hand off to post-launch ops.

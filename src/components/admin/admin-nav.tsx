@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 const links = [
+  { href: "/admin", label: "Home", exact: true },
   { href: "/admin/inbox", label: "Inbox" },
   { href: "/admin/clients", label: "Clients" },
   { href: "/admin/billing", label: "Billing" },
@@ -21,8 +22,10 @@ export function AdminNav() {
   return (
     <nav className="flex flex-wrap gap-1 border-b border-border pb-3">
       {links.map((link) => {
-        const active =
-          pathname === link.href || pathname.startsWith(`${link.href}/`);
+        const exact = "exact" in link && link.exact;
+        const active = exact
+          ? pathname === link.href
+          : pathname === link.href || pathname.startsWith(`${link.href}/`);
         return (
           <Link
             key={link.href}
