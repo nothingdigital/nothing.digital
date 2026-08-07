@@ -735,21 +735,22 @@ Applies to **all phases**:
 
 ## 13. Reference Documents
 
-| Document                     | Path                                 | Description                                                                          |
-| ---------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------ |
-| **Project Brief**            | Original attachment                  | Source requirements from stakeholder                                                 |
-| **Principal Architect Plan** | `/plans/01-principal-architect.md`   | Full architecture, component design, `nothing://` deep-dive                          |
-| **DevOps Plan**              | `/plans/02-devops-engineer.md`       | CI/CD, infrastructure, security, monitoring, cost details                            |
-| **QA Strategy**              | `/plans/03-qa-engineer.md`           | Testing pyramid, a11y compliance, performance budgets, E2E specs                     |
-| **Gap Analysis**             | `/plans/04-gap-analysis.md`          | 67 gaps, risk register, stakeholder questions, compliance requirements               |
-| **PikaPods & Ops Backend**   | `/plans/05-pikapods-integrations.md` | Sidecar OSS pods (Umami/Listmonk/n8n/Kuma), cost rollup, `/admin` + secretary phases |
-| **Growth Tactics**           | `/docs/growth-tactics.md`            | Full yes/no/later triage, cadence, drips, ballpark ranges                            |
-| **Conversion Boost**         | `/docs/conversion-boost.md`          | YAGNI features for booking/scheduling lift; admin/client ideas + pitch deck outline  |
-| **Live board**               | `/SCRATCHPAD.md`                     | Remaining owner/agent work — only live checklist                                     |
-| **Docs index**               | `/docs/README.md`                    | Map of SoTs vs archive                                                               |
-| **Ops credentials**          | `/docs/runbooks/ops-credentials.md`  | Dashboard / env / migrations / AI enablement                                         |
-| **Next Steps**               | `/docs/next-steps.md`                | Stub → SCRATCHPAD; hire-deferred CRM outline only                                    |
-| **Master Document**          | `/plans/00-master-document.md`       | This document — roadmap narrative (not the live board)                               |
+| Document                     | Path                                 | Description                                                                                                            |
+| ---------------------------- | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| **Project Brief**            | Original attachment                  | Source requirements from stakeholder                                                                                   |
+| **Principal Architect Plan** | `/plans/01-principal-architect.md`   | Full architecture, component design, `nothing://` deep-dive                                                            |
+| **DevOps Plan**              | `/plans/02-devops-engineer.md`       | CI/CD, infrastructure, security, monitoring, cost details                                                              |
+| **QA Strategy**              | `/plans/03-qa-engineer.md`           | Testing pyramid, a11y compliance, performance budgets, E2E specs                                                       |
+| **Gap Analysis**             | `/plans/04-gap-analysis.md`          | 67 gaps, risk register, stakeholder questions, compliance requirements                                                 |
+| **PikaPods & Ops Backend**   | `/plans/05-pikapods-integrations.md` | Sidecar OSS pods (Umami/Listmonk/n8n/Kuma), cost rollup, `/admin` + secretary phases                                   |
+| **Growth Tactics**           | `/docs/growth-tactics.md`            | Full yes/no/later triage, cadence, drips, ballpark ranges                                                              |
+| **Conversion Boost**         | `/docs/conversion-boost.md`          | YAGNI features for booking/scheduling lift; admin/client ideas + pitch deck outline                                    |
+| **Customer Facing Plan**     | `/docs/customer-facing-plan.md`      | YAGNI improvements for booking/scheduling on public site; steps for carousel, prefill, schema, measurement, pitch deck |
+| **Live board**               | `/SCRATCHPAD.md`                     | Remaining owner/agent work — only live checklist                                                                       |
+| **Docs index**               | `/docs/README.md`                    | Map of SoTs vs archive                                                                                                 |
+| **Ops credentials**          | `/docs/runbooks/ops-credentials.md`  | Dashboard / env / migrations / AI enablement                                                                           |
+| **Next Steps**               | `/docs/next-steps.md`                | Stub → SCRATCHPAD; hire-deferred CRM outline only                                                                      |
+| **Master Document**          | `/plans/00-master-document.md`       | This document — roadmap narrative (not the live board)                                                                 |
 
 ---
 
