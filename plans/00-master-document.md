@@ -745,6 +745,7 @@ Applies to **all phases**:
 | **PikaPods & Ops Backend**   | `/plans/05-pikapods-integrations.md` | Sidecar OSS pods (Umami/Listmonk/n8n/Kuma), cost rollup, `/admin` + secretary phases |
 | **Growth Tactics**           | `/docs/growth-tactics.md`            | Full yes/no/later triage, cadence, drips, ballpark ranges                            |
 | **Conversion Boost**         | `/docs/conversion-boost.md`          | YAGNI features for booking/scheduling lift; admin/client ideas + pitch deck outline  |
+| **Next Steps**               | `/docs/next-steps.md`                | Thorough steps for a11y pass, GSC/Bing, Lighthouse CI, CRM on hire                   |
 | **Master Document**          | `/plans/00-master-document.md`       | This document — single source of truth                                               |
 
 ---
