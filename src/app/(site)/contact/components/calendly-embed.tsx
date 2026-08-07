@@ -1,7 +1,7 @@
 "use client";
 
 import Script from "next/script";
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 
 interface CalendlyEmbedProps {
   url: string;
@@ -10,7 +10,11 @@ interface CalendlyEmbedProps {
 declare global {
   interface Window {
     Calendly?: {
-      initInlineWidgets: () => void;
+      initInlineWidget: (options: {
+        url: string;
+        parentElement: HTMLElement;
+        resize?: boolean;
+      }) => void;
     };
   }
 }
@@ -23,28 +27,38 @@ function buildEmbedUrl(url: string): string {
   return parsed.toString();
 }
 
-// ponytail: official widget + data-resize grows with content; plain iframes stay fixed-height and double-scroll.
+// ponytail: initInlineWidget({ resize: true }) grows with content; plain iframes stay fixed and double-scroll.
 export function CalendlyEmbed({ url }: CalendlyEmbedProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
   const embedUrl = useMemo(() => buildEmbedUrl(url), [url]);
 
-  useEffect(() => {
-    window.Calendly?.initInlineWidgets();
+  const mountWidget = useCallback(() => {
+    const parent = containerRef.current;
+    if (!parent || !window.Calendly) return;
+
+    parent.innerHTML = "";
+    window.Calendly.initInlineWidget({
+      url: embedUrl,
+      parentElement: parent,
+      resize: true,
+    });
   }, [embedUrl]);
 
+  useEffect(() => {
+    mountWidget();
+  }, [mountWidget]);
+
   return (
-    <div className="w-full min-w-[320px] overflow-hidden rounded-xl border-2 border-border bg-card shadow-md">
+    <div className="w-full min-w-[320px] rounded-xl border-2 border-border bg-card shadow-md">
       <div
-        className="calendly-inline-widget w-full"
-        data-url={embedUrl}
-        data-resize="true"
+        ref={containerRef}
+        className="w-full"
         style={{ minWidth: 320, height: 700 }}
       />
       <Script
         src="https://assets.calendly.com/assets/external/widget.js"
         strategy="lazyOnload"
-        onLoad={() => {
-          window.Calendly?.initInlineWidgets();
-        }}
+        onLoad={mountWidget}
       />
     </div>
   );
