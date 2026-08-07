@@ -28,7 +28,17 @@ Outputs land in `data/lead-finder/out/`:
 | `northport-leads-YYYY-MM-DD.csv`  | Full human review                    |
 | `instantly-import-YYYY-MM-DD.csv` | Import **after** review + enrichment |
 
-## Human review sheet
+## Human review (admin)
+
+Prefer `/admin/outbound`:
+
+1. Upload `northport-leads-*.csv` (full lead-finder export).
+2. Approve / reject / suppress rows; edit missing emails inline.
+3. Download Instantly CSV from the Send section (approved + email only).
+4. Import into Instantly; sync `do-not-contact.csv` / admin Suppress into Instantly’s global block list.
+5. On Home Today, expand the weekly outbound loop → **Log handoff** with the import count.
+
+### Manual spreadsheet fallback
 
 Sort `northport-leads-*.csv` by `score` descending. For each high-intent row (suggest score ≥30):
 

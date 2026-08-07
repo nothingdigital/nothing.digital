@@ -2,8 +2,10 @@
 
 Admin-only CRM for Nothing.Digital clients, billing, managed assets, and work queue.
 
-**Routes:** `/admin/clients` · `/admin/billing` · `/admin/work`  
+**Routes:** `/admin` · `/admin/clients` · `/admin/billing` · `/admin/work` · `/admin/outbound`  
 **Auth:** Supabase password, Google OAuth, or magic link + `ADMIN_EMAILS` allowlist (same gate as Pack F).
+
+Apply migration `005_admin_loops.sql` once for Today loops, checklists, and outbound review tables.
 
 ### Admin sign-in setup (one-time)
 
@@ -18,13 +20,16 @@ Empty Billing/Work lists are expected until you create clients and items — the
 
 ## Day-to-day
 
-1. **New client** → `/admin/clients/new` → set status (`lead`/`active`/…) and billing model.
-2. **Invoice** → `/admin/billing` → New invoice (pick client) **or** client detail → Billing → New invoice → set status `draft`/`sent`; mark `paid` when money lands; set `void` to cancel (no delete).
-3. **Asset** → client detail → Assets → add website/app/domain you manage (URL optional; optional **Monitor URL** for an UptimeRobot/Kuma status page). Edit via **Edit** on the list. Retire via status (no hard delete). Apply migration `003_asset_monitor_url.sql` once for `monitor_url`.
-4. **Work** → `/admin/work` Add work (pick client) **or** client detail → Work; use global `/admin/work` for open items across clients (Open excludes `done`).
+1. **Today** → `/admin` — open loops (inbox, overdue invoices, blocked/due work, weekly outbound, Listmonk setup). Cap of three visible; mark done / snooze / undo. Glance counts stay below.
+2. **New client** → `/admin/clients/new` → set status (`lead`/`active`/…) and billing model.
+3. **Invoice** → `/admin/billing` → New invoice (pick client) **or** client detail → Billing → New invoice → set status `draft`/`sent`; mark `paid` when money lands; set `void` to cancel (no delete).
+4. **Asset** → client detail → Assets → add website/app/domain you manage (URL optional; optional **Monitor URL** for an UptimeRobot/Kuma status page). Edit via **Edit** on the list. Retire via status (no hard delete). Apply migration `003_asset_monitor_url.sql` once for `monitor_url`.
+5. **Work** → `/admin/work` Add work (pick client) **or** client detail → Work; use global `/admin/work` for open items across clients (Open excludes `done`).
    - **Sort chips** (`?sort=`): `due` (default — earliest due first, nulls last), `priority` (high → med → low), `created` (newest first). Status chips preserve the current sort; Open preserves non-default sort.
    - **Emphasis:** `blocked` rows get a destructive tint + `· blocked` meta; otherwise items due within 7 days (or overdue) get an amber tint + `· due soon`.
    - No assignees or kanban in v1 — status chips + sort only.
+6. **Outbound** → `/admin/outbound` — after `pnpm lead-finder`, upload CSV, approve/reject/suppress, download Instantly CSV. See [`outbound-pilot.md`](./outbound-pilot.md).
+7. **Listmonk drip checklist** → `/admin/health#listmonk-drip` when Listmonk env is configured.
 
 ## First invoice checklist
 
@@ -58,4 +63,4 @@ Empty Billing/Work lists are expected until you create clients and items — the
 
 ## Ops gate
 
-If Supabase is not configured or migration is missing, admin lists show an error string — fix env / run `002_client_ops.sql` (and `003_asset_monitor_url.sql` for Monitor URL).
+If Supabase is not configured or migration is missing, admin lists show an error string — fix env / run `002_client_ops.sql` (and `003_asset_monitor_url.sql` for Monitor URL; `005_admin_loops.sql` for Today / Outbound / checklists).

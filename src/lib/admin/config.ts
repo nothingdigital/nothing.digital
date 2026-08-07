@@ -34,6 +34,7 @@ export function getAdminToolLinks() {
     n8n: env.private.N8N_DASHBOARD_URL,
     kuma: env.private.KUMA_DASHBOARD_URL,
     uptimerobot: env.private.UPTIMEROBOT_DASHBOARD_URL,
+    instantly: "https://app.instantly.ai",
     vercel: "https://vercel.com/dashboard",
     sentry: "https://sentry.io",
   };

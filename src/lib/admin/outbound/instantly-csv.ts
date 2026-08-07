@@ -1,0 +1,46 @@
+export type InstantlyExportLead = {
+  email: string | null;
+  name: string;
+  website: string | null;
+  phone: string | null;
+  city: string;
+  score: number;
+  reasons: string[];
+  status: string;
+};
+
+function escapeCsv(value: string): string {
+  if (/[",\n\r]/.test(value)) return `"${value.replace(/"/g, '""')}"`;
+  return value;
+}
+
+function cell(value: string | number | null | undefined): string {
+  if (value === null || value === undefined) return "";
+  return escapeCsv(String(value));
+}
+
+/** Instantly-friendly subset — mirrors scripts/lead-finder/csv.ts */
+export function buildInstantlyCsv(leads: InstantlyExportLead[]): string {
+  const lines = ["email,companyName,website,phone,city,score,reasons"];
+  for (const lead of leads) {
+    if (lead.status !== "approved" || !lead.email) continue;
+    lines.push(
+      [
+        cell(lead.email),
+        cell(lead.name),
+        cell(lead.website),
+        cell(lead.phone),
+        cell(lead.city),
+        cell(lead.score),
+        cell(lead.reasons.join("|")),
+      ].join(","),
+    );
+  }
+  return `${lines.join("\n")}\n`;
+}
+
+export function countApprovedReady(leads: InstantlyExportLead[]): number {
+  return leads.filter(
+    (lead) => lead.status === "approved" && Boolean(lead.email),
+  ).length;
+}

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { AdminChecklist } from "@/components/admin/admin-checklist";
 import { Badge } from "@/components/ui/badge";
 import { getAdminToolLinks } from "@/lib/admin/config";
 import {
@@ -8,6 +9,8 @@ import {
   labelForIntegration,
   parseHealthPayload,
 } from "@/lib/admin/health";
+import { listCheckedChecklistKeys } from "@/lib/admin/loops/queries";
+import { LISTMONK_DRIP_ITEMS } from "@/lib/admin/loops/rules/runbook-setup";
 import { siteConfig } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -34,6 +37,9 @@ export default async function AdminHealthPage() {
     healthLabel = "unreachable";
   }
 
+  const checklist = await listCheckedChecklistKeys("listmonk-drip");
+  const listmonkConfigured = health.integrations.listmonk;
+
   const links = [
     { label: "API health", href: healthUrl, note: healthLabel },
     {
@@ -45,6 +51,11 @@ export default async function AdminHealthPage() {
       label: "Listmonk",
       href: tools.listmonk,
       note: tools.listmonk ? "configured" : "env missing",
+    },
+    {
+      label: "Instantly",
+      href: tools.instantly,
+      note: "cold outbound",
     },
     {
       label: "n8n",
@@ -102,6 +113,43 @@ export default async function AdminHealthPage() {
           })}
         </div>
       </section>
+
+      {listmonkConfigured ? (
+        <section
+          id="listmonk-drip"
+          className="space-y-3 rounded-lg border border-border bg-card px-4 py-5"
+        >
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h3 className="font-medium">Listmonk drip setup</h3>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Persistent checklist — Listmonk stays the source of truth.
+              </p>
+            </div>
+            {tools.listmonk ? (
+              <a
+                href={tools.listmonk}
+                target="_blank"
+                rel="noreferrer"
+                className="text-sm text-primary underline-offset-4 hover:underline"
+              >
+                Open Listmonk ↗
+              </a>
+            ) : null}
+          </div>
+          {checklist.error ? (
+            <p className="text-sm text-destructive" role="alert">
+              {checklist.error}
+            </p>
+          ) : (
+            <AdminChecklist
+              checklistKey="listmonk-drip"
+              items={LISTMONK_DRIP_ITEMS}
+              checkedKeys={checklist.keys}
+            />
+          )}
+        </section>
+      ) : null}
 
       <section className="space-y-3">
         <h3 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">

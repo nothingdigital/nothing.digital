@@ -52,4 +52,8 @@ describe("admin config", () => {
     env.private.UPTIMEROBOT_DASHBOARD_URL = undefined;
     expect(getAdminToolLinks().uptimerobot).toBeUndefined();
   });
+
+  it("always includes Instantly dashboard link", () => {
+    expect(getAdminToolLinks().instantly).toBe("https://app.instantly.ai");
+  });
 });
