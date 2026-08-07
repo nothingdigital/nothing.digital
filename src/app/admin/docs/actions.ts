@@ -33,15 +33,35 @@ function revalidateDocs(pageId?: string) {
   if (pageId) revalidatePath(`/admin/docs/${pageId}`);
 }
 
+async function resolveSpaceId(
+  spaceId: string,
+  parentId: string | null,
+): Promise<string> {
+  if (!parentId) return spaceId;
+  const supabase = getServiceRoleClient();
+  if (!supabase) return spaceId;
+  const { data } = await supabase
+    .from("kb_nodes")
+    .select("space_id")
+    .eq("id", parentId)
+    .eq("type", "folder")
+    .maybeSingle();
+  return data?.space_id ?? spaceId;
+}
+
 export async function createFolderAction(formData: FormData): Promise<void> {
   await requireAdmin();
   const title = formString(formData, "title");
-  const space_id = formString(formData, "space_id");
+  const parent_id = formOptional(formData, "parent_id");
+  const space_id = await resolveSpaceId(
+    formString(formData, "space_id"),
+    parent_id,
+  );
   if (!title || !space_id) throw new Error("Title and space are required.");
 
   const result = await createFolder({
     space_id,
-    parent_id: formOptional(formData, "parent_id"),
+    parent_id,
     title,
   });
   if (result.error) throw new Error(result.error);
@@ -51,12 +71,16 @@ export async function createFolderAction(formData: FormData): Promise<void> {
 export async function createPageAction(formData: FormData): Promise<void> {
   const user = await requireAdmin();
   const title = formString(formData, "title");
-  const space_id = formString(formData, "space_id");
+  const parent_id = formOptional(formData, "parent_id");
+  const space_id = await resolveSpaceId(
+    formString(formData, "space_id"),
+    parent_id,
+  );
   if (!title || !space_id) throw new Error("Title and space are required.");
 
   const result = await createPage({
     space_id,
-    parent_id: formOptional(formData, "parent_id"),
+    parent_id,
     title,
     author_id: user.id,
     requires_ack: formData.get("requires_ack") === "on",
@@ -68,7 +92,11 @@ export async function createPageAction(formData: FormData): Promise<void> {
 
 export async function importPageAction(formData: FormData): Promise<void> {
   const user = await requireAdmin();
-  const space_id = formString(formData, "space_id");
+  const parent_id = formOptional(formData, "parent_id");
+  const space_id = await resolveSpaceId(
+    formString(formData, "space_id"),
+    parent_id,
+  );
   const file = formData.get("file");
   if (!space_id || !(file instanceof File) || file.size === 0) {
     throw new Error("Space and file are required.");
@@ -82,7 +110,7 @@ export async function importPageAction(formData: FormData): Promise<void> {
 
   const result = await importPageFromFile({
     space_id,
-    parent_id: formOptional(formData, "parent_id"),
+    parent_id,
     title,
     filename: file.name,
     mime: file.type || null,
@@ -163,20 +191,20 @@ export async function renameNodeAction(formData: FormData): Promise<void> {
   await requireAdmin();
   const nodeId = formString(formData, "node_id");
   const title = formString(formData, "title");
+  const pageId = formOptional(formData, "page_id") ?? undefined;
   if (!nodeId || !title) throw new Error("Node and title required.");
 
   const result = await renameNode(nodeId, title);
   if (result.error) throw new Error(result.error);
-  revalidateDocs();
+  revalidateDocs(pageId);
 }
 
 export async function deleteNodeAction(formData: FormData): Promise<void> {
   await requireAdmin();
   const nodeId = formString(formData, "node_id");
   if (!nodeId) throw new Error("Missing node.");
-  const cascade = formData.get("cascade") === "on";
 
-  const result = await deleteNode(nodeId, { cascade });
+  const result = await deleteNode(nodeId);
   if (result.error) throw new Error(result.error);
   revalidateDocs();
   redirect("/admin/docs");

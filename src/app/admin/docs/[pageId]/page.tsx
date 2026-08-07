@@ -6,6 +6,7 @@ import remarkGfm from "remark-gfm";
 import { AdminField, adminTextareaClass } from "@/components/admin/admin-form";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { requireAdmin } from "@/lib/admin/auth";
 import { needsAck } from "@/lib/kb/ack";
 import {
@@ -20,6 +21,7 @@ import {
   acknowledgePageAction,
   addAttachmentAction,
   deleteNodeAction,
+  renameNodeAction,
   restoreVersionAction,
   savePageAction,
   setRequiresAckAction,
@@ -117,6 +119,19 @@ export default async function AdminDocPage({
           <h2 className="font-display text-3xl tracking-tight">
             {page.node.title}
           </h2>
+          <form action={renameNodeAction} className="mt-2 flex gap-2">
+            <input type="hidden" name="node_id" value={page.node_id} />
+            <input type="hidden" name="page_id" value={pageId} />
+            <Input
+              name="title"
+              defaultValue={page.node.title}
+              className="max-w-sm"
+              aria-label="Rename"
+            />
+            <Button type="submit" variant="ghost" size="sm">
+              Rename
+            </Button>
+          </form>
           <div className="mt-2 flex flex-wrap items-center gap-2">
             <Badge variant="secondary">{page.status}</Badge>
             <span className="text-xs text-muted-foreground">

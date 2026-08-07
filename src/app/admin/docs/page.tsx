@@ -5,7 +5,11 @@ import { AdminField, adminControlClass } from "@/components/admin/admin-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { requireAdmin } from "@/lib/admin/auth";
-import { listPagesNeedingAckForUser, listSpaces } from "@/lib/kb/queries";
+import {
+  listNodesForSpace,
+  listPagesNeedingAckForUser,
+  listSpaces,
+} from "@/lib/kb/queries";
 
 import {
   createFolderAction,
@@ -27,6 +31,38 @@ export default async function AdminDocsHomePage() {
 
   const spaces = spacesRes.rows;
   const defaultSpace = spaces[0]?.id ?? "";
+
+  // ponytail: flat folder list with space prefix; no live space→folder filter
+  const folders: { id: string; space_id: string; label: string }[] = [];
+  for (const space of spaces) {
+    const nodesRes = await listNodesForSpace(space.id);
+    for (const node of nodesRes.rows) {
+      if (node.type !== "folder") continue;
+      folders.push({
+        id: node.id,
+        space_id: space.id,
+        label: `${space.title} / ${node.title}`,
+      });
+    }
+  }
+
+  const parentSelect = (id: string) => (
+    <AdminField label="Parent folder (optional)" htmlFor={id}>
+      <select
+        id={id}
+        name="parent_id"
+        defaultValue=""
+        className={adminControlClass}
+      >
+        <option value="">Space root</option>
+        {folders.map((f) => (
+          <option key={f.id} value={f.id}>
+            {f.label}
+          </option>
+        ))}
+      </select>
+    </AdminField>
+  );
 
   return (
     <div className="space-y-8">
@@ -82,6 +118,7 @@ export default async function AdminDocsHomePage() {
               ))}
             </select>
           </AdminField>
+          {parentSelect("page-parent")}
           <label className="flex items-center gap-2 text-sm">
             <input type="checkbox" name="requires_ack" />
             Requires acknowledgment when approved
@@ -109,6 +146,7 @@ export default async function AdminDocsHomePage() {
               ))}
             </select>
           </AdminField>
+          {parentSelect("folder-parent")}
           <Button type="submit" variant="secondary">
             Create folder
           </Button>
@@ -139,6 +177,7 @@ export default async function AdminDocsHomePage() {
               ))}
             </select>
           </AdminField>
+          {parentSelect("import-parent")}
           <AdminField label="File" htmlFor="import-file">
             <Input
               id="import-file"

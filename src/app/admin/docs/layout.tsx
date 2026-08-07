@@ -6,24 +6,6 @@ import { getServiceRoleClient } from "@/lib/supabase/server";
 
 type TreeNode = KbNode & { pageId?: string };
 
-async function pageIdByNodeId(nodeIds: string[]): Promise<Map<string, string>> {
-  const map = new Map<string, string>();
-  if (nodeIds.length === 0) return map;
-
-  const supabase = getServiceRoleClient();
-  if (!supabase) return map;
-
-  const { data } = await supabase
-    .from("kb_pages")
-    .select("id, node_id")
-    .in("node_id", nodeIds);
-
-  for (const row of data ?? []) {
-    map.set(row.node_id, row.id);
-  }
-  return map;
-}
-
 async function buildTree(): Promise<{
   spaces: KbSpace[];
   bySpace: Map<string, TreeNode[]>;
@@ -35,18 +17,33 @@ async function buildTree(): Promise<{
   }
 
   const bySpace = new Map<string, TreeNode[]>();
+  const supabase = getServiceRoleClient();
+
   for (const space of spacesRes.rows) {
     const nodesRes = await listNodesForSpace(space.id);
     if (nodesRes.error) {
       return { spaces: [], bySpace: new Map(), error: nodesRes.error };
     }
 
-    const pageNodes = nodesRes.rows.filter((n) => n.type === "page");
-    const ids = await pageIdByNodeId(pageNodes.map((n) => n.id));
+    const pageIds = new Map<string, string>();
+    if (supabase) {
+      const pageNodes = nodesRes.rows.filter((n) => n.type === "page");
+      if (pageNodes.length > 0) {
+        const { data } = await supabase
+          .from("kb_pages")
+          .select("id, node_id")
+          .in(
+            "node_id",
+            pageNodes.map((n) => n.id),
+          );
+        for (const row of data ?? []) pageIds.set(row.node_id, row.id);
+      }
+    }
+
     bySpace.set(
       space.id,
       nodesRes.rows.map((n) =>
-        n.type === "page" ? { ...n, pageId: ids.get(n.id) } : n,
+        n.type === "page" ? { ...n, pageId: pageIds.get(n.id) } : n,
       ),
     );
   }

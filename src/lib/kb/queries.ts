@@ -61,25 +61,17 @@ export async function getPageById(pageId: string): Promise<{
   const supabase = getServiceRoleClient();
   if (!supabase) return notConfigured({ row: null });
 
-  const { data: page, error } = await supabase
+  const { data, error } = await supabase
     .from("kb_pages")
-    .select("*")
+    .select("*, node:kb_nodes(*)")
     .eq("id", pageId)
     .maybeSingle();
 
   if (error) return { row: null, error: error.message };
-  if (!page) return { row: null, error: "Page not found." };
+  if (!data) return { row: null, error: "Page not found." };
 
-  const { data: node, error: nodeError } = await supabase
-    .from("kb_nodes")
-    .select("*")
-    .eq("id", page.node_id)
-    .maybeSingle();
-
-  if (nodeError || !node) {
-    return { row: null, error: nodeError?.message ?? "Node not found." };
-  }
-
+  const { node, ...page } = data as KbPage & { node: KbNode | null };
+  if (!node) return { row: null, error: "Node not found." };
   return { row: { ...page, node }, error: null };
 }
 
@@ -182,90 +174,28 @@ export async function renameNode(
   return { row: data, error: null };
 }
 
-export async function moveNode(input: {
-  nodeId: string;
-  parent_id: string | null;
-  space_id?: string;
-}): Promise<{ row: KbNode | null; error: string | null }> {
-  const supabase = getServiceRoleClient();
-  if (!supabase) return notConfigured({ row: null });
-
-  const patch: Database["public"]["Tables"]["kb_nodes"]["Update"] = {
-    parent_id: input.parent_id,
-    updated_at: new Date().toISOString(),
-  };
-  if (input.space_id) patch.space_id = input.space_id;
-
-  const { data, error } = await supabase
-    .from("kb_nodes")
-    .update(patch)
-    .eq("id", input.nodeId)
-    .select("*")
-    .single();
-
-  if (error) return { row: null, error: error.message };
-  return { row: data, error: null };
-}
-
-async function deleteNodeTree(
-  supabase: NonNullable<ReturnType<typeof getServiceRoleClient>>,
-  nodeId: string,
-): Promise<string | null> {
-  const { data: children, error } = await supabase
-    .from("kb_nodes")
-    .select("id")
-    .eq("parent_id", nodeId);
-
-  if (error) return error.message;
-
-  for (const child of children ?? []) {
-    const childErr = await deleteNodeTree(supabase, child.id);
-    if (childErr) return childErr;
-  }
-
-  const { error: delError } = await supabase
-    .from("kb_nodes")
-    .delete()
-    .eq("id", nodeId);
-
-  return delError?.message ?? null;
-}
-
+// ponytail: page delete only; folders stay until emptied manually later
 export async function deleteNode(
   nodeId: string,
-  opts?: { cascade?: boolean },
 ): Promise<{ ok: boolean; error: string | null }> {
   const supabase = getServiceRoleClient();
   if (!supabase) return { ok: false, error: "Supabase is not configured." };
 
   const { data: node, error: fetchError } = await supabase
     .from("kb_nodes")
-    .select("*")
+    .select("type")
     .eq("id", nodeId)
     .maybeSingle();
 
   if (fetchError || !node) {
     return { ok: false, error: fetchError?.message ?? "Node not found." };
   }
-
-  if (node.type === "folder") {
-    const { data: children, error: childError } = await supabase
-      .from("kb_nodes")
-      .select("id")
-      .eq("parent_id", nodeId)
-      .limit(1);
-
-    if (childError) return { ok: false, error: childError.message };
-    if ((children?.length ?? 0) > 0 && !opts?.cascade) {
-      return {
-        ok: false,
-        error: "Folder is not empty. Pass cascade=true to delete.",
-      };
-    }
+  if (node.type !== "page") {
+    return { ok: false, error: "Only pages can be deleted from admin v1." };
   }
 
-  const err = await deleteNodeTree(supabase, nodeId);
-  if (err) return { ok: false, error: err };
+  const { error } = await supabase.from("kb_nodes").delete().eq("id", nodeId);
+  if (error) return { ok: false, error: error.message };
   return { ok: true, error: null };
 }
 
