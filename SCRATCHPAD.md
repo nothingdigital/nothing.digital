@@ -1,43 +1,34 @@
 # Current state
 
-**Goal**: Post-launch ops close-out (merge → migration → credentials → Listmonk drip → founding outreach).
-**Status**: Code shipped to `main`; dashboard steps remain.
-**Current step**: Apply Supabase `003` (+ `004` if needed), then Bing/GSC/drip/outreach.
-**Updated**: 2026-08-07
+Goal: implement homepage availability widget per conversion-boost (next 3 slots, click to book). Min, reuse, ponytail.
+Status: pricing calculator done.
+Current step: component + home integration.
+Next action: build, review, lint/typecheck, commit push.
+Updated: 2026-08-06
 
 ## Plan
 
-- [x] Merge site polish PRs #7–#9
-- [x] Merge `feat/admin-followups-wave` → `main` (#10)
-- [ ] Apply `003_asset_monitor_url.sql` (+ `004_profiles.sql` if not applied)
-- [x] Listmonk Vercel env (`listmonk: true`)
-- [ ] Remove duplicate SPF TXT (keep Resend-inclusive record)
-- [ ] GSC sitemap confirm + Bing TXT + sitemap
-- [ ] Listmonk welcome drip checklist
-- [ ] Live newsletter subscribe E2E
-- [ ] GitHub branch protection / secret scanning review
-- [ ] Founding outreach: name 2 prospects + first sends
-- [x] Commit runbook / master / scratchpad updates
+- [x] conversion-boost.md + pricing
+- [ ] availability widget component (mock slots, useState, Card/Button reuse)
+- [ ] add to home page after differentiators
+- [ ] update docs/conversion-boost.md to mark done
+- [ ] lint/typecheck/test
+- [ ] commit + push
 
 ## Decisions
 
-- Payments manual; dashboards = deep-links only
-- n8n / Kuma / Calendly webhook deferred
-- Admin follow-ups 1–6 not to be re-implemented
-- Pricing-calculator local WIP stashed (`wip: pricing calculator`) — out of this wave
+- YAGNI: mock slots, no real fetch. Reuse existing patterns from newsletter-form (useState) and home (SectionContainer).
+- SOLID: widget single responsibility for slots display.
+- Never-nest: guard in useEffect. ponytail: static for measurable lift test; fetch Calendly later if CTR high.
+- No new files if possible but component needed for client state.
 
-## Blocked on human
+## Dead ends
 
-| Step                             | Where                        |
-| -------------------------------- | ---------------------------- |
-| SQL `003` / `004`                | Supabase SQL editor          |
-| SPF dedupe                       | Cloudflare / Sav DNS         |
-| Bing TXT + sitemap               | Bing Webmaster + DNS         |
-| GSC sitemap                      | Search Console               |
-| Listmonk drip templates/sequence | `newsletter.nothing.digital` |
-| Branch protection                | GitHub repo settings         |
-| Outreach sends                   | User owns email              |
+- Full real-time availability (Calendly embed already in contact). Over-engineering with backend scheduler.
 
 ## Progress log
 
-- 2026-08-07: Merged #7, #8, #9, #10. Health `listmonk: true`. Wave conflicts resolved (privacy checkbox from #9; master pending text). Next: migration + dashboard checklist.
+- conversion-boost.md with 7 features + pitch deck.
+- pricing calculator implemented (lib + component + page).
+- Lighthouse + secretary + docs updates complete.
+- ponytail + caveman active. Agents spun for brainstorm. All waves marked done. Next widget for scheduling lift.

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ServiceCard } from "@/components/molecules/service-card";
 import { ClientLogoStrip } from "@/components/molecules/client-logo-strip";
 import { HeroClock } from "@/components/atoms/hero-clock";
+import { AvailabilityWidget } from "@/components/molecules/availability-widget";
 import { routes } from "@/lib/routes";
 import { serviceSummaries } from "@/lib/services";
 
@@ -172,6 +173,8 @@ export default function HomePage() {
           ))}
         </div>
       </SectionContainer>
+
+      <AvailabilityWidget />
 
       <SectionContainer variant="primary" id="newsletter">
         <Reveal>

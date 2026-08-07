@@ -39,11 +39,11 @@ export default function PricingPage() {
             <Link
               key={item.slug}
               href={item.href}
-              className="rounded-xl border-2 border-border bg-card p-6 shadow-md transition hover:-translate-y-0.5 hover:border-primary hover:shadow-xl"
+              className="min-w-0 rounded-xl border-2 border-border bg-card p-6 shadow-md transition hover:-translate-y-0.5 hover:border-primary hover:shadow-xl"
             >
-              <div className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
+              <div className="flex flex-col gap-2 lg:flex-row lg:items-baseline lg:justify-between lg:gap-4">
                 <h2 className="font-display text-2xl">{item.title}</h2>
-                <p className="shrink-0 font-mono text-sm text-primary sm:text-right">
+                <p className="min-w-0 font-mono text-sm text-primary lg:shrink-0 lg:text-right">
                   {item.fit}
                 </p>
               </div>
