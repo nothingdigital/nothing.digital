@@ -56,6 +56,10 @@ const raw = {
   N8N_DASHBOARD_URL: process.env.N8N_DASHBOARD_URL,
   KUMA_DASHBOARD_URL: process.env.KUMA_DASHBOARD_URL,
   UPTIMEROBOT_DASHBOARD_URL: process.env.UPTIMEROBOT_DASHBOARD_URL,
+  AI_GATEWAY_API_KEY: process.env.AI_GATEWAY_API_KEY,
+  AI_MODEL: process.env.AI_MODEL,
+  AI_INBOX_DRAFTS_ENABLED: process.env.AI_INBOX_DRAFTS_ENABLED,
+  AI_BRIEF_ASSISTANT_ENABLED: process.env.AI_BRIEF_ASSISTANT_ENABLED,
 };
 
 export const env = {
@@ -145,6 +149,22 @@ export const env = {
       "UPTIMEROBOT_DASHBOARD_URL",
       optionalUrl,
       raw.UPTIMEROBOT_DASHBOARD_URL,
+    ),
+    AI_GATEWAY_API_KEY: parseField(
+      "AI_GATEWAY_API_KEY",
+      optionalNonEmpty,
+      raw.AI_GATEWAY_API_KEY,
+    ),
+    AI_MODEL: parseField("AI_MODEL", optionalNonEmpty, raw.AI_MODEL),
+    AI_INBOX_DRAFTS_ENABLED: parseField(
+      "AI_INBOX_DRAFTS_ENABLED",
+      optionalNonEmpty,
+      raw.AI_INBOX_DRAFTS_ENABLED,
+    ),
+    AI_BRIEF_ASSISTANT_ENABLED: parseField(
+      "AI_BRIEF_ASSISTANT_ENABLED",
+      optionalNonEmpty,
+      raw.AI_BRIEF_ASSISTANT_ENABLED,
     ),
   },
 };

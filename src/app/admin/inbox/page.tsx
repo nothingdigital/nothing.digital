@@ -3,10 +3,12 @@ import Link from "next/link";
 
 import { createClientFromInboxAction } from "@/app/admin/inbox/actions";
 import { adminControlClass } from "@/components/admin/admin-form";
+import { InboxReplyDraftPanel } from "@/components/admin/inbox-reply-draft-panel";
 import { StatusSelect } from "@/components/admin/status-select";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { INBOX_STATUSES, isInboxStatus } from "@/lib/admin/config";
+import { isInboxDraftsEnabled } from "@/lib/ai";
 import { listContactSubmissions } from "@/lib/admin/queries";
 
 export const metadata: Metadata = {
@@ -24,6 +26,7 @@ export default async function AdminInboxPage({
     params.status && isInboxStatus(params.status) ? params.status : undefined;
 
   const { rows, error } = await listContactSubmissions(statusFilter);
+  const draftsEnabled = isInboxDraftsEnabled();
 
   return (
     <div className="space-y-6">
@@ -99,6 +102,9 @@ export default async function AdminInboxPage({
               </div>
             </dl>
             <p className="mt-3 whitespace-pre-wrap text-sm">{row.message}</p>
+            {draftsEnabled ? (
+              <InboxReplyDraftPanel submissionId={row.id} />
+            ) : null}
             <form
               action={createClientFromInboxAction}
               className="mt-4 flex flex-wrap items-end gap-2 border-t border-border pt-3"

@@ -7,6 +7,16 @@ import {
   parseHealthPayload,
 } from "@/lib/admin/health";
 
+const emptyIntegrations = {
+  supabase: false,
+  resend: false,
+  sentry: false,
+  umami: false,
+  calendly: false,
+  listmonk: false,
+  ai: false,
+};
+
 describe("parseHealthPayload", () => {
   it("returns integrations from a valid body", () => {
     const result = parseHealthPayload({
@@ -19,6 +29,7 @@ describe("parseHealthPayload", () => {
         umami: true,
         calendly: false,
         listmonk: true,
+        ai: true,
       },
     });
 
@@ -31,6 +42,7 @@ describe("parseHealthPayload", () => {
         umami: true,
         calendly: false,
         listmonk: true,
+        ai: true,
       },
     });
   });
@@ -38,47 +50,19 @@ describe("parseHealthPayload", () => {
   it("returns ok: false for null or malformed payloads", () => {
     expect(parseHealthPayload(null)).toEqual({
       ok: false,
-      integrations: {
-        supabase: false,
-        resend: false,
-        sentry: false,
-        umami: false,
-        calendly: false,
-        listmonk: false,
-      },
+      integrations: emptyIntegrations,
     });
     expect(parseHealthPayload(undefined)).toEqual({
       ok: false,
-      integrations: {
-        supabase: false,
-        resend: false,
-        sentry: false,
-        umami: false,
-        calendly: false,
-        listmonk: false,
-      },
+      integrations: emptyIntegrations,
     });
     expect(parseHealthPayload({ status: "ok" })).toEqual({
       ok: false,
-      integrations: {
-        supabase: false,
-        resend: false,
-        sentry: false,
-        umami: false,
-        calendly: false,
-        listmonk: false,
-      },
+      integrations: emptyIntegrations,
     });
     expect(parseHealthPayload({ integrations: "nope" })).toEqual({
       ok: false,
-      integrations: {
-        supabase: false,
-        resend: false,
-        sentry: false,
-        umami: false,
-        calendly: false,
-        listmonk: false,
-      },
+      integrations: emptyIntegrations,
     });
   });
 });

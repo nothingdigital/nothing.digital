@@ -13,6 +13,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ContactForm } from "./components/contact-form";
+import { isBriefAssistantEnabled } from "@/lib/ai";
 import { env } from "@/lib/env";
 import { routes } from "@/lib/routes";
 import { siteConfig } from "@/lib/site";
@@ -96,6 +97,7 @@ const faqJsonLd = {
 
 export default function ContactPage() {
   const calendlyUrl = env.private.CALENDLY_URL;
+  const briefAssistantEnabled = isBriefAssistantEnabled();
 
   return (
     <>
@@ -167,7 +169,7 @@ export default function ContactPage() {
           </div>
 
           <div className="rounded-xl border-2 border-border bg-background p-6 shadow-md md:p-8">
-            <ContactForm />
+            <ContactForm briefAssistantEnabled={briefAssistantEnabled} />
           </div>
         </div>
 

@@ -5,6 +5,7 @@ export const HEALTH_INTEGRATION_KEYS = [
   "umami",
   "calendly",
   "listmonk",
+  "ai",
 ] as const;
 
 export type HealthIntegrationKey = (typeof HEALTH_INTEGRATION_KEYS)[number];
@@ -23,6 +24,7 @@ const LABELS: Record<HealthIntegrationKey, string> = {
   umami: "Umami",
   calendly: "Calendly",
   listmonk: "Listmonk",
+  ai: "AI Gateway",
 };
 
 const EMPTY_INTEGRATIONS: HealthIntegrations = {
@@ -32,6 +34,7 @@ const EMPTY_INTEGRATIONS: HealthIntegrations = {
   umami: false,
   calendly: false,
   listmonk: false,
+  ai: false,
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {

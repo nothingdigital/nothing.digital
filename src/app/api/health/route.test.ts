@@ -11,6 +11,7 @@ vi.mock("@/lib/env", () => ({
       RESEND_API_KEY: "re_test",
       SENTRY_DSN: undefined as string | undefined,
       CALENDLY_URL: undefined as string | undefined,
+      AI_GATEWAY_API_KEY: undefined as string | undefined,
     },
   },
   isListmonkConfigured: vi.fn(() => false),
@@ -25,6 +26,7 @@ describe("GET /api/health", () => {
     env.public.NEXT_PUBLIC_UMAMI_SCRIPT_URL = undefined;
     env.private.SENTRY_DSN = undefined;
     env.private.CALENDLY_URL = undefined;
+    env.private.AI_GATEWAY_API_KEY = undefined;
     vi.mocked(isListmonkConfigured).mockReturnValue(false);
   });
 
@@ -41,6 +43,7 @@ describe("GET /api/health", () => {
       umami: false,
       calendly: false,
       listmonk: false,
+      ai: false,
     });
   });
 
@@ -50,6 +53,7 @@ describe("GET /api/health", () => {
       "https://analytics.nothing.digital/script.js";
     env.private.SENTRY_DSN = "https://key@sentry.io/1";
     env.private.CALENDLY_URL = "https://calendly.com/nothing";
+    env.private.AI_GATEWAY_API_KEY = "gateway-key";
     vi.mocked(isListmonkConfigured).mockReturnValue(true);
 
     const response = await GET();
@@ -62,6 +66,7 @@ describe("GET /api/health", () => {
       umami: true,
       calendly: true,
       listmonk: true,
+      ai: true,
     });
   });
 });

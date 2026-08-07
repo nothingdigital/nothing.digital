@@ -19,6 +19,7 @@ export async function GET(): Promise<NextResponse> {
       ),
       calendly: Boolean(env.private.CALENDLY_URL),
       listmonk: isListmonkConfigured(),
+      ai: Boolean(env.private.AI_GATEWAY_API_KEY),
     },
   });
 }

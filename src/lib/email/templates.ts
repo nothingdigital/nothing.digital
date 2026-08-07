@@ -64,6 +64,23 @@ export function newsletterWelcomeEmailTemplate(): string {
   return baseTemplate("Welcome to Nothing.Digital", body);
 }
 
+function escapeHtml(value: string): string {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
+
+/** Approved freeform inbox reply — body is escaped plain text. */
+export function inboxReplyEmailTemplate(body: string): string {
+  const safe = escapeHtml(body).replaceAll("\n", "<br />");
+  return baseTemplate(
+    "Message from Nothing.Digital",
+    `<div style="font-size: 15px; line-height: 1.5;">${safe}</div>`,
+  );
+}
+
 export function invoiceSentEmailTemplate(data: {
   clientName: string;
   number: string;
