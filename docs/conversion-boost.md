@@ -38,15 +38,15 @@
    - Tradeoff: less personal but data shows +180% conversion for self-serve.
    - Plan: embed existing CalendarComponent. `getAvailableSlots(date)` flat query + filter. Early return booked. Reuse booking create.
 
-6. **Pricing Calculator + Instant Quote** (given+)
+6. **Pricing Calculator + Instant Quote** (implemented)
    - Inputs (scope, timeline) -> price + quote PDF/email + book CTA.
    - Tradeoff: ballpark only. Add "custom quote" button. Qualifies leads 40%.
-   - Plan: `calcPrice(inputs)` = map lookup + simple math (stdlib). One form extend. `sendQuote(email, price)`. Never nest calc.
+   - Plan: `calcPrice(inputs)` = map lookup + simple math (stdlib). One form extend. `sendQuote(email, price)`. Never nest calc. (added to lib + /pricing page)
 
-7. **Homepage Availability Widget**
+7. **Homepage Availability Widget** (implemented)
    - Next 3 open slots shown, click jumps to scheduler.
    - Tradeoff: clutter vs impulse book. Lazy load. Measure widget CTR to booking start.
-   - Plan: new small Widget.js reuse Card + Button. Fetch slots once on mount. Guard clauses only.
+   - Plan: new small Widget.js reuse Card + Button. Fetch slots once on mount. Guard clauses only. (added to home after differentiators)
 
 ## Tradeoffs Summary
 
