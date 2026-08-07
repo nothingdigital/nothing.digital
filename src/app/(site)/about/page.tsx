@@ -50,7 +50,7 @@ const organizationJsonLd = {
   "@type": "Organization",
   name: siteConfig.name,
   url: siteConfig.url,
-  logo: `${siteConfig.url}/og/default.png`,
+  logo: `${siteConfig.url}/images/brand/wordmark-light.png`,
   sameAs,
   contactPoint: {
     "@type": "ContactPoint",

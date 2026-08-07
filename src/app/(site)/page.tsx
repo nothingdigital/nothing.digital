@@ -6,7 +6,6 @@ import { SectionContainer } from "@/components/atoms/section-container";
 import { Reveal } from "@/components/atoms/reveal";
 import { Button } from "@/components/ui/button";
 import { ServiceCard } from "@/components/molecules/service-card";
-import { ClientLogoStrip } from "@/components/molecules/client-logo-strip";
 import { HeroClock } from "@/components/atoms/hero-clock";
 import { AvailabilityWidget } from "@/components/molecules/availability-widget";
 import { routes } from "@/lib/routes";
@@ -80,14 +79,12 @@ export default function HomePage() {
             <p className="relative font-mono text-xs uppercase tracking-[0.35em] text-primary">
               Est. on time, every time
             </p>
-            <h1 className="relative mt-6 font-display text-5xl leading-[0.95] tracking-tight md:text-7xl lg:text-8xl">
-              Built on time.{" "}
-              <span className="italic text-primary">Built to last.</span>
+            <h1 className="relative mt-6 font-display text-5xl leading-[0.95] tracking-tight md:text-6xl lg:text-7xl">
+              Ship premium digital products on time—every time.
             </h1>
             <p className="relative mx-auto mt-8 max-w-xl text-lg leading-relaxed text-muted-foreground md:mx-0 md:text-xl">
-              Nothing.Digital ships premium websites, custom software,
-              applications, email marketing, and AI — plus hands-on teaching for
-              tech literacy and coding — delivered precisely when you need it.
+              Senior developers, fixed timelines, and measurable outcomes for
+              teams who need it done right.
             </p>
             <div className="relative mt-10 flex w-full flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center md:justify-start">
               <Button
@@ -105,7 +102,7 @@ export default function HomePage() {
                 asChild
                 className="w-full sm:w-auto"
               >
-                <Link href={routes.services.index}>Explore services</Link>
+                <Link href={routes.about}>See how we work</Link>
               </Button>
             </div>
           </div>
@@ -139,15 +136,6 @@ export default function HomePage() {
             </Reveal>
           ))}
         </div>
-      </SectionContainer>
-
-      <SectionContainer className="py-10">
-        <Reveal>
-          <p className="mb-6 text-center font-mono text-xs uppercase tracking-[0.35em] text-muted-foreground">
-            Trusted by teams like
-          </p>
-          <ClientLogoStrip />
-        </Reveal>
       </SectionContainer>
 
       <SectionContainer id="why-us">
@@ -186,7 +174,7 @@ export default function HomePage() {
               Stay in the loop
             </h2>
             <p className="mt-4 text-primary-foreground">
-              One email a month. No spam, just insights.
+              Monthly tips on shipping digital products faster. No spam.
             </p>
             <div className="mt-8 inline-block w-full max-w-md text-left">
               <NewsletterForm />

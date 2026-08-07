@@ -1,6 +1,6 @@
 export const siteConfig = {
   name: "Nothing.Digital",
-  tagline: "Built on time. Built to last.",
+  tagline: "Ship premium digital products on time—every time.",
   description:
     "Senior web, software, and AI development studio. Custom websites, software, apps, email marketing, AI solutions, tech literacy, and coding & SQL — delivered on fixed timelines.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://nothing.digital",
