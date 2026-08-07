@@ -242,7 +242,7 @@ Nothing.Digital is a digital services company specializing in website developmen
 >
 > **Verified live:** Vercel project + custom domain + `www` redirect; Cloudflare authoritative DNS + Vercel edge SSL; Supabase project with migrations `001`/`002` applied; Resend DKIM present and domain verified in prior run; core production env vars set (site + contact form work).
 >
-> **Pending (requires dashboard/credentials):** GitHub branch-protection/secret-scanning review, Resend SPF `include:_spf.resend.com`, Listmonk env vars in Vercel (`/api/health` currently reports `listmonk: false`), Cloudflare DNSSEC/WAF only if proxy is enabled.
+> **Pending (requires dashboard/credentials):** GitHub branch-protection/secret-scanning review, Resend SPF `include:_spf.resend.com`, Cloudflare DNSSEC/WAF only if proxy is enabled. List mock environments done; listmonk: true.
 
 > **Duration:** 1 week  
 > **Goal:** Repository, CI/CD, infrastructure, and design system are ready for development.  
