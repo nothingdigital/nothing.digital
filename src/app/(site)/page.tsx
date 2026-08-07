@@ -108,7 +108,7 @@ export default function HomePage() {
               </Button>
             </div>
           </div>
-          <div className="flex justify-center">
+          <div className="flex w-full min-w-0 items-center justify-center self-center">
             <HeroClock />
           </div>
         </div>
