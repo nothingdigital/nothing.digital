@@ -200,13 +200,13 @@ PikaPods pricing v4 baseline: **~$1.80/mo** = 0.25 CPU + 0.25 GB RAM + default s
 
 **Shipped routes (`/admin`):**
 
-| Screen     | Route               | Status | Notes                                                    |
-| ---------- | ------------------- | ------ | -------------------------------------------------------- |
-| Inbox      | `/admin/inbox`      | ✅     | Triage `new`→`read`→`replied`→`archived`                 |
+| Screen     | Route               | Status | Notes                                                                     |
+| ---------- | ------------------- | ------ | ------------------------------------------------------------------------- |
+| Inbox      | `/admin/inbox`      | ✅     | Triage `new`→`read`→`replied`→`archived`                                  |
 | Newsletter | `/admin/newsletter` | ✅     | List + CSV export + Supabase unsubscribe (dual-SoT; no Listmonk API sync) |
-| Health     | `/admin/health`     | ✅     | `/api/health` + Umami / Calendly / Vercel / Sentry links |
-| Settings   | `/admin/settings`   | ✅     | Env tool registry (read-only)                            |
-| Login      | `/admin/login`      | ✅     | Magic link → `/auth/callback`                            |
+| Health     | `/admin/health`     | ✅     | `/api/health` + Umami / Calendly / Vercel / Sentry links                  |
+| Settings   | `/admin/settings`   | ✅     | Env tool registry (read-only)                                             |
+| Login      | `/admin/login`      | ✅     | Magic link → `/auth/callback`                                             |
 
 **Calendly:** Public CTA on `/contact` when `CALENDLY_URL` set. Admin link lives on Health/Settings. **`/admin/bookings` removed** — Calendly remains source of truth until webhook/`bookings` table is justified.
 
@@ -311,10 +311,10 @@ Admin-only: no client portal, no Stripe. Routes: `/admin/clients`, `/admin/billi
 - [ ] Phase C: n8n pod + `automation.nothing.digital` + set `N8N_WEBHOOK_*` / dashboard URL (~+$5) — only if Slack/Listmonk fan-out needed
 - [ ] Webhook → `bookings` table — defer until >50 bookings/mo or secretary needs list
 - [x] Admin newsletter CSV export + Supabase unsubscribe action (dual-SoT; no Listmonk API sync)
-- [ ] UptimeRobot free → Kuma only if sub-minute checks or branded status page needed
-- [ ] Lighthouse CI — unblock when CI runner arch matches build arch
-- [ ] Phase Secretary B only on hire day
-- [ ] Secondary pods: default **no**
+- [x] UptimeRobot free → Kuma only if sub-minute checks or branded status page needed (ponytail: free sufficient)
+- [x] Lighthouse CI — rc updated to 0.95 performance; CI runner arch matches in GitHub
+- [x] Phase Secretary B only on hire day (migration 004_profiles.sql + RLS/is_staff(); ready)
+- [x] Secondary pods: default **no**
 
 ---
 
