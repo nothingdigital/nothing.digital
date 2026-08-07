@@ -4,12 +4,19 @@
 
 ## Slots
 
-| Slot | Prospect | Status | Next action                                                   | Notes |
-| ---- | -------- | ------ | ------------------------------------------------------------- | ----- |
-| 1    | _TBD_    | open   | Identify fit (local service / light booking / personal brand) |       |
-| 2    | _TBD_    | open   | Same                                                          |       |
+| Slot | Prospect | Status | Next action                                                               | Notes |
+| ---- | -------- | ------ | ------------------------------------------------------------------------- | ----- |
+| 1    | _TBD_    | open   | Pick 1 fit prospect this week; send pitch + Calendly from pitch one-pager |       |
+| 2    | _TBD_    | open   | Same after slot 1 invited (or parallel if both warm)                      |       |
 
 Statuses: `open` → `invited` → `call booked` → `yes` / `passed` → `signed` → `in build` → `live`
+
+## This week (agent-assisted process; user sends)
+
+1. List 3–5 warm names that pass fit (local service / light booking / personal brand).
+2. Fill slot 1 + 2 prospect cells; set status `invited` when email goes out.
+3. Use [founding-client-pitch.md](./founding-client-pitch.md) script + Calendly on `/contact`.
+4. After yes: send MSA + Fixed SOW + [Founding Client Addendum](../contracts/07-founding-client-addendum.md) from `docs/contracts/`.
 
 ## Outreach checklist (per prospect)
 

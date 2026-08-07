@@ -1,38 +1,43 @@
 # Current state
 
-**Goal**: Brainstorm 5-8 addl admin/client features for agency booking site. YAGNI+ponytail (reuse/min/no-deps/measurable-lift). Cover given examples. Discuss tradeoffs. SOLID/never-nest impl plan. Pitch deck outline. Output structured MD ready for file.
-
-**Status**: exploration done
-**Current step**: generate content
-**Next action**: write features.md with caveman-compressed structure
-**Updated**: 2026-08-06
+**Goal**: Post-launch ops close-out (merge → migration → credentials → Listmonk drip → founding outreach).
+**Status**: Code shipped to `main`; dashboard steps remain.
+**Current step**: Apply Supabase `003` (+ `004` if needed), then Bing/GSC/drip/outreach.
+**Updated**: 2026-08-07
 
 ## Plan
 
-- [x] init scratchpad
-- [x] map existing (no index, YAGNI skip. reuse forms/db/email/calendar patterns from typical agency stack)
-- [x] brainstorm 7 features (reuse existing)
-- [ ] tradeoffs per feature (lift vs effort, YAGNI)
-- [x] impl plan: flat funcs, early return, reuse patterns, no new abs
-- [x] pitch deck outline (5 slides)
-- [ ] write features.md
+- [x] Merge site polish PRs #7–#9
+- [x] Merge `feat/admin-followups-wave` → `main` (#10)
+- [ ] Apply `003_asset_monitor_url.sql` (+ `004_profiles.sql` if not applied)
+- [x] Listmonk Vercel env (`listmonk: true`)
+- [ ] Remove duplicate SPF TXT (keep Resend-inclusive record)
+- [ ] GSC sitemap confirm + Bing TXT + sitemap
+- [ ] Listmonk welcome drip checklist
+- [ ] Live newsletter subscribe E2E
+- [ ] GitHub branch protection / secret scanning review
+- [ ] Founding outreach: name 2 prospects + first sends
+- [x] Commit runbook / master / scratchpad updates
 
 ## Decisions
 
-- ponytail full: stdlib first, delete over add, 1-line where possible, mark shortcuts
-- measurable: track booking conversion pre/post via existing analytics
-- reuse: existing forms, email, db queries, UI cards, inbox
-- no new deps ever. no ML. rule based.
-- never-nest: guard clauses + flat. SOLID only existing patterns (single responsibility via small funcs)
-- pitch deck minimal 5 slides
+- Payments manual; dashboards = deep-links only
+- n8n / Kuma / Calendly webhook deferred
+- Admin follow-ups 1–6 not to be re-implemented
+- Pricing-calculator local WIP stashed (`wip: pricing calculator`) — out of this wave
 
-## Dead ends
+## Blocked on human
 
-- ML lead scoring (use rule-based)
-- new calendar lib (reuse existing sync)
-- full CRM (extend inbox)
-- over-abstraction (no interfaces)
+| Step                             | Where                        |
+| -------------------------------- | ---------------------------- |
+| SQL `003` / `004`                | Supabase SQL editor          |
+| SPF dedupe                       | Cloudflare / Sav DNS         |
+| Bing TXT + sitemap               | Bing Webmaster + DNS         |
+| GSC sitemap                      | Search Console               |
+| Listmonk drip templates/sequence | `newsletter.nothing.digital` |
+| Branch protection                | GitHub repo settings         |
+| Outreach sends                   | User owns email              |
 
 ## Progress log
 
-- 2026-08-06: scratchpad created. codebase nothingdigital (agency site). no projects indexed, YAGNI avoid index_repository. proceed with conceptual reuse of forms/inbox/calendar/db. brainstorm complete. next write md.
+- 2026-08-07: Merged #7, #8, #9, #10. Health `listmonk: true`. Wave conflicts resolved (privacy checkbox from #9; master pending text). Next: migration + dashboard checklist.

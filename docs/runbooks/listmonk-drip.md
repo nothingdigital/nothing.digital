@@ -31,7 +31,7 @@
 
 ## Checklist
 
-- [ ] `listmonk: true` on `/api/health`
+- [x] `listmonk: true` on `/api/health` (2026-08-07)
 - [ ] Templates imported and previewed
 - [ ] Sequence scheduled (0 / 3 / 7)
 - [ ] Live form → Listmonk subscribe verified

@@ -702,11 +702,11 @@ Applies to **all phases**:
 
 ### Done vs next vs later
 
-|           | Work                                                                                                                                                                                                                                                                                               |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Done**  | `/admin`; Umami + Calendly + Listmonk live; n8n/Kuma code ready; **Pack H** clients/billing/assets/work (admin-only); admin follow-ups 1–6 (ops glance, inbox→client, newsletter CSV, work sort, health chips, asset `monitor_url`)                                                                |
-| **Next**  | Merge site polish PRs (#7–#9) + `feat/admin-followups-wave` to `main`; apply `003_asset_monitor_url.sql`; Listmonk Vercel env if `/api/health` still `listmonk: false`; Bing + GSC sitemap; activate drip — see `docs/superpowers/HANDOFF-post-launch-ops.md` + `docs/runbooks/ops-credentials.md` |
-| **Later** | Calendly webhook/`bookings`; Kuma; secretary roles; n8n Slack fan-out; IT monitoring                                                                                                                                                                                                               |
+|           | Work                                                                                                                                                                                                                                                 |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Done**  | `/admin`; Umami + Calendly + Listmonk live; n8n/Kuma code ready; **Pack H** clients/billing/assets/work (admin-only); admin follow-ups 1–6 (ops glance, inbox→client, newsletter CSV, work sort, health chips, asset `monitor_url`)                  |
+| **Next**  | Apply `003_asset_monitor_url.sql` (+ `004_profiles.sql` if needed); Bing TXT + GSC/Bing sitemaps; SPF duplicate cleanup; activate Listmonk drip; founding outreach (2 slots) — `docs/runbooks/ops-credentials.md` + `docs/runbooks/listmonk-drip.md` |
+| **Later** | Calendly webhook/`bookings`; Kuma; secretary roles; n8n Slack fan-out; IT monitoring                                                                                                                                                                 |
 
 ### Scope (ponytail order)
 
