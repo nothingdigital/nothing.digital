@@ -746,6 +746,7 @@ Applies to **all phases**:
 | **Growth Tactics**           | `/docs/growth-tactics.md`            | Full yes/no/later triage, cadence, drips, ballpark ranges                                                              |
 | **Conversion Boost**         | `/docs/conversion-boost.md`          | YAGNI features for booking/scheduling lift; admin/client ideas + pitch deck outline                                    |
 | **Customer Facing Plan**     | `/docs/customer-facing-plan.md`      | YAGNI improvements for booking/scheduling on public site; steps for carousel, prefill, schema, measurement, pitch deck |
+| **n8n Next**                 | `/docs/n8n-next.md`                  | Pod, workflow, runbook, measurement for fan-out (deferred until volume)                                                |
 | **Live board**               | `/SCRATCHPAD.md`                     | Remaining owner/agent work — only live checklist                                                                       |
 | **Docs index**               | `/docs/README.md`                    | Map of SoTs vs archive                                                                                                 |
 | **Ops credentials**          | `/docs/runbooks/ops-credentials.md`  | Dashboard / env / migrations / AI enablement                                                                           |
