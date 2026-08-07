@@ -1,26 +1,64 @@
 "use client";
 
-import { useMemo } from "react";
+import Script from "next/script";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 
 interface CalendlyEmbedProps {
   url: string;
 }
 
-// ponytail: simple iframe embed; no react-calendly dependency needed.
+declare global {
+  interface Window {
+    Calendly?: {
+      initInlineWidget: (options: {
+        url: string;
+        parentElement: HTMLElement;
+        resize?: boolean;
+      }) => void;
+    };
+  }
+}
+
+function buildEmbedUrl(url: string): string {
+  const parsed = new URL(url);
+  // Shorter chrome → less nested scroll before the calendar.
+  parsed.searchParams.set("hide_event_type_details", "1");
+  parsed.searchParams.set("hide_gdpr_banner", "1");
+  return parsed.toString();
+}
+
+// ponytail: initInlineWidget({ resize: true }) grows with content; plain iframes stay fixed and double-scroll.
 export function CalendlyEmbed({ url }: CalendlyEmbedProps) {
-  const src = useMemo(() => {
-    const separator = url.includes("?") ? "&" : "?";
-    return `${url}${separator}embed=true`;
-  }, [url]);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const embedUrl = useMemo(() => buildEmbedUrl(url), [url]);
+
+  const mountWidget = useCallback(() => {
+    const parent = containerRef.current;
+    if (!parent || !window.Calendly) return;
+
+    parent.innerHTML = "";
+    window.Calendly.initInlineWidget({
+      url: embedUrl,
+      parentElement: parent,
+      resize: true,
+    });
+  }, [embedUrl]);
+
+  useEffect(() => {
+    mountWidget();
+  }, [mountWidget]);
 
   return (
-    <div className="overflow-hidden rounded-xl border-2 border-border bg-card shadow-md">
-      <iframe
-        src={src}
-        title="Calendly scheduling"
-        className="min-h-[650px] w-full"
-        frameBorder="0"
-        loading="lazy"
+    <div className="w-full min-w-[320px] rounded-xl border-2 border-border bg-card shadow-md">
+      <div
+        ref={containerRef}
+        className="w-full"
+        style={{ minWidth: 320, height: 700 }}
+      />
+      <Script
+        src="https://assets.calendly.com/assets/external/widget.js"
+        strategy="lazyOnload"
+        onLoad={mountWidget}
       />
     </div>
   );
