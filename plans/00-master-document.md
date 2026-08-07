@@ -8,7 +8,7 @@
 > **Domain:** `nothing.digital`
 
 > **Last Updated:** 2026-08-06 — documentation updated (ops-credentials + master); ponytail: min changes only.  
-> **Next:** Listmonk Vercel env + newsletter E2E; admin-ops-glance-home per superpowers/plans/README.
+> **Next:** Listmonk Vercel env + newsletter E2E; admin-ops-glance-home per superpowers/plans/README. Documentation next: complete listmonk-drip.md runbook.
 
 ---
 
