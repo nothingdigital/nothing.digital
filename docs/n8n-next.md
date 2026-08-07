@@ -1,65 +1,66 @@
-# n8n Setup and Fan-Out Implementation
+# n8n Next Steps (Pod is up)
 
-**Date:** 2026-08-06  
-**Status:** Code ready (notifyN8n in lib/n8n.ts, env-gated, never blocks). Pod + workflow pending.
-**Goal:** n8n for fan-out from contact/newsletter to Slack, optional bookings table, without blocking the critical path (201 always).
+**Pod up:** Use the dashboard URL to create workflows. Env in Vercel for the webhook.
 
-**YAGNI:** only if Slack/Listmonk fan-out volume >10/day or secretary needs automation. Otherwise, Resend + manual is sufficient. Pod ~$4-5/mo.
+**What to do:**
 
-## Steps for Pod (PikaPods)
+1. In n8n dashboard, create workflow for contact:
+   - Webhook trigger (POST, path `/webhook/contact`)
+   - Function or Set node to format message: `New lead from ${payload.name} (${payload.email}): ${payload.message} (service: ${payload.service})`
+   - Slack node to #ops channel with the formatted text + link to /admin/inbox
+   - Optional: Supabase node to insert into bookings with status 'lead', client from name/email.
+   - Respond with 200 to the webhook.
+2. Similar for newsletter: webhook /webhook/newsletter, add to Listmonk, Slack for new subscriber.
+3. Activate both workflows.
+4. Copy the production webhook URLs (the ones with the execution id or the production one) to Vercel project env:
+   - N8N_WEBHOOK_URL = the contact one or a single with event type.
+   - N8N_WEBHOOK_SECRET = the secret from n8n webhook auth if enabled.
+   - N8N_DASHBOARD_URL = the n8n dashboard url.
+5. Redeploy the site.
+6. Test: submit the contact form on the site, check n8n executions for success, see the Slack message, check if booking row created.
+7. Check /api/health for n8n: true.
+8. Check /admin/settings for the n8n Open link.
+9. Update this md with the workflow JSON export (copy from n8n), the test results, any errors.
+10. Update `docs/runbooks/monitoring.md` with n8n monitoring steps (executions, kill switch unset url).
+11. Update `plans/05-pikapods-integrations.md` with [x] for n8n pod + workflow.
+12. Run `pnpm lint && pnpm type-check && pnpm test` .
+13. Commit the docs and .env.example if updated.
+14. Push and create PR.
+15. Monitor for 30d: if executions >10/day and saves time, keep; else delete pod and use manual.
 
-1. Login to PikaPods, create n8n pod (0.5 CPU/0.5GB RAM sufficient for low volume).
-2. Set custom domain `automation.nothing.digital` (CNAME to the pod IP or the PikaPods domain).
-3. Set env in pod: WEBHOOK_SECRET (random 32 char), other for Supabase if used for bookings.
-4. Open the n8n dashboard, set the webhook URL in Vercel as `https://automation.nothing.digital/webhook/contact` or the workflow URL.
-5. Set `N8N_WEBHOOK_SECRET` in Vercel for the X-N8N-Secret header.
-6. Set `N8N_DASHBOARD_URL` in Vercel for the admin link in /admin/settings and health.
-7. Update `.env.example` and ops-credentials.md with the vars.
-8. Test: submit contact form, see the webhook in n8n executions.
+**Kill switch:** unset N8N_WEBHOOK_URL in Vercel, redeploy. The notifyN8n logs error but always returns 201.
 
-## Workflow Examples in n8n
+**Cost:** pod $4-5/mo. Delete if not used.
 
-- **Contact Fan-Out:** Webhook trigger → parse payload (name, email, message, service) → Slack node to #ops with formatted message + link to /admin/inbox → optional Supabase node to insert in bookings with status 'lead' → email confirmation if needed.
-- **Newsletter Fan-Out:** Webhook from /api/newsletter → add to Listmonk list if not, Slack notification for new subscriber.
-- Guard: if n8n down, the notifyN8n catches error, logs, continues (ponytail: never blocks 201).
-- Use n8n nodes for Supabase, Slack, Resend. No custom code in n8n if possible.
+**Measurement:** Umami event 'n8n_trigger', track Slack messages vs manual, time saved in ops.
 
-## Code Changes (already ready or min)
+**Risks:** n8n down = log only. Spam in Slack = filter in workflow. Data in n8n = same as DB (PII in contact).
 
-- lib/n8n.ts: the notifyN8n with fetch, secret, error only (done).
-- api/contact/route.ts and newsletter/route.ts: the void notifyN8n call after success (done).
-- admin/settings/page.tsx and health/page.tsx: add the n8n dashboard link if env set (add to getAdminToolLinks in config.ts).
-- env.ts: isN8nConfigured = !!env.private.N8N_WEBHOOK_URL
-- Health: add n8n to the integrations if key present.
-- Test: extend api/contact/route.test.ts and newsletter with n8n mock.
+**Pitch Deck Slide:** "n8n for ops fan-out: code ready, pod on demand when volume hurts ($4/mo). Zero impact on critical path. Measure executions vs manual effort."
 
-## Runbook Updates
+**Next after this:** Kuma if UptimeRobot insufficient, full secretary CRM with profiles test on hire, Lighthouse CI verification with the new rc.
 
-- Update `docs/runbooks/monitoring.md` with n8n dashboard link, execution monitoring, kill switch (unset webhook url).
-- Update `docs/runbooks/client-ops.md` with n8n fan-out for leads to Slack.
-- Update `plans/05-pikapods-integrations.md` with [x] for n8n code, pod pending volume.
-- Update master with n8n in phase 6 status.
+ponytail: pod only on volume. Workflow with existing nodes, no custom. Delete if no time save after 30d. This doc is the plan.
 
-## Measurement
+## Test the Test URL
 
-- Umami event on n8n trigger.
-- Monitor n8n executions for success rate >95%.
-- If >10/day, keep pod; else delete and use manual.
+1. In n8n, click "Listen for test event" on the webhook node.
+2. In terminal or Postman, POST to the Test URL with JSON:
+   ```json
+   {
+     "event": "contact",
+     "name": "Test User",
+     "email": "test@example.com",
+     "message": "Test message for n8n webhook.",
+     "service": "website-development"
+   }
+   ```
+3. See the test event in n8n output with the payload.
+4. Add nodes, test with real form after setting production URL in Vercel env + redeploy.
+5. If no event, check URL exact match, workflow active, no auth mismatch.
 
-## Risks
+Updated: 2026-08-06.
 
-- n8n down: logs error, no blocking.
-- Spam in Slack: filter in workflow.
-- Cost: $4-5/mo, delete pod if not used.
+Link in master. Commit after test.
 
-**Pitch Deck Slide:** "Automation without bloat: n8n for fan-out only when volume justifies ($4/mo). Code ready, pod on demand. Zero blocking on critical path."
-
-**Next after n8n:** Kuma if UptimeRobot insufficient, full secretary CRM on hire, Lighthouse CI verification in PR.
-
-**Execute:** 1. Pod in PikaPods. 2. Workflow for contact to Slack. 3. Env in Vercel. 4. Test form. 5. Update docs + health link. 6. Commit. Run `pnpm lint && pnpm type-check && pnpm test` before push.
-
-ponytail: code is no-op if no env. Pod only on volume. Min workflow with existing nodes. Delete if no lift after 30d. This doc is the plan - no diagrams.
-
-Updated: 2026-08-06. Link in master + growth-tactics. Commit after pod/test.
-
-#ponytail: n8n only if fan-out pain. Otherwise Resend + manual. Measure executions vs manual effort.
+#ponytail: n8n is glue only. Resend primary. Measure before scaling. 1 workflow per event. No RAG or agents.
