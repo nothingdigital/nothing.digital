@@ -26,29 +26,11 @@ Deep how-tos stay in runbooks. This map answers _what / why / where / when_.
 
 ## 1. Spin up an agent
 
-Paste this into a new agent chat (or use the fuller prompt in [`superpowers/HANDOFF-post-launch-ops.md`](./superpowers/HANDOFF-post-launch-ops.md)):
+**Canonical short entry:** [`/AGENTS.md`](../AGENTS.md) (read order, rules, brand pointer).  
+Longer paste prompt: [`superpowers/HANDOFF-post-launch-ops.md`](./superpowers/HANDOFF-post-launch-ops.md).
 
-```text
-You are continuing Nothing.Digital at /Users/DeSchroyer/workspace/nothingdigital.
-
-Read first (in order):
-1. SCRATCHPAD.md — live remaining work (only board)
-2. docs/SYSTEM-MAP.md — how the system works
-3. docs/README.md — doc map
-4. docs/runbooks/ops-credentials.md — owner dashboard steps
-5. Topic runbooks only as needed
-
-Rules:
-- Do not invent a new product roadmap.
-- Do not start n8n / Kuma / Shlink / secretary Phase B / Stripe unless the user expands scope.
-- Owner boxes on SCRATCHPAD = human credentials/dashboards; help with steps, don’t claim done.
-- Commit only when asked. Prefer small PRs.
-- Archives under docs/archive/, docs/runbooks/archive/, plans/archive/ are historical — do not execute open boxes there.
-- When finishing, update only SCRATCHPAD.md (+ the relevant topic runbook).
-```
-
-**What agents should treat as shipped:** site + `/admin` CRM, Pack F/H, Umami, Calendly, Listmonk env, Resend transactional, Instantly CSV hybrid outbound, AI code (env flags may be off).  
-**What needs the owner:** Instantly account/DNS/warmup, Listmonk drip UI, Bing sitemap, AI Gateway keys, some migrations confirmations — see SCRATCHPAD.
+**Shipped:** site + `/admin` CRM, Pack F/H, Umami, Calendly, Listmonk env, Resend transactional, Instantly CSV hybrid outbound, AI code (flags may be off).  
+**Owner-only:** Instantly account/DNS/warmup, Listmonk drip UI, Bing sitemap, AI Gateway keys, some migration confirmations — see SCRATCHPAD.
 
 ---
 
@@ -107,6 +89,16 @@ Cold leads → Admin review → Instantly sequences (not Listmonk)
 | Booking       | Calendly                                | Scoping calls (SoT; no in-app bookings table) |
 
 Health chips: `https://nothing.digital/api/health` (env presence, not live uptime).
+
+### Brand & modules
+
+|          |                                                            |
+| -------- | ---------------------------------------------------------- |
+| Contract | `src/brand/` (`config.ts`, `modules.ts`)                   |
+| Guide    | [`client-kit.md`](./client-kit.md)                         |
+| Model    | Per-client deploy later (Approach 1); not multi-tenant yet |
+
+Admin nav/routes respect module flags. Public site always on (`core`).
 
 ---
 
@@ -307,6 +299,8 @@ Apply via Supabase SQL editor when SCRATCHPAD / ops-credentials say so. Empty Bi
 | **This map**             | [`SYSTEM-MAP.md`](./SYSTEM-MAP.md)                                                                                         |
 | Live remaining work      | [`../SCRATCHPAD.md`](../SCRATCHPAD.md)                                                                                     |
 | Docs hub                 | [`README.md`](./README.md)                                                                                                 |
+| Agent entry              | [`../AGENTS.md`](../AGENTS.md)                                                                                             |
+| Client kit / brand       | [`client-kit.md`](./client-kit.md) · [`runbooks/create-client-checklist.md`](./runbooks/create-client-checklist.md)        |
 | Credentials / dashboards | [`runbooks/ops-credentials.md`](./runbooks/ops-credentials.md)                                                             |
 | Admin CRM how-to         | [`runbooks/client-ops.md`](./runbooks/client-ops.md)                                                                       |
 | Listmonk drip            | [`runbooks/listmonk-drip.md`](./runbooks/listmonk-drip.md)                                                                 |

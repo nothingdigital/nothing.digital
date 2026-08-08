@@ -1,5 +1,6 @@
 import Image from "next/image";
 
+import { brandConfig } from "@/brand";
 import { cn } from "@/lib/utils";
 
 interface BrandWordmarkProps {
@@ -12,10 +13,10 @@ export function BrandWordmark({ className, priority }: BrandWordmarkProps) {
   return (
     <span
       className={cn("relative inline-flex h-10 items-center", className)}
-      aria-label="Nothing.Digital"
+      aria-label={brandConfig.name}
     >
       <Image
-        src="/images/brand/wordmark-light.png"
+        src={brandConfig.assets.wordmarkLight}
         alt=""
         width={140}
         height={48}
@@ -23,7 +24,7 @@ export function BrandWordmark({ className, priority }: BrandWordmarkProps) {
         priority={priority}
       />
       <Image
-        src="/images/brand/wordmark-dark.png"
+        src={brandConfig.assets.wordmarkDark}
         alt=""
         width={140}
         height={48}

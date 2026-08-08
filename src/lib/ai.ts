@@ -20,6 +20,7 @@ import {
   type InvoiceCoverFacts,
   type OutboundLineFacts,
 } from "@/lib/ai/format-prompt-input";
+import { isModuleEnabled } from "@/brand";
 import type { LoopCollection } from "@/lib/admin/loops/types";
 import { env } from "@/lib/env";
 
@@ -31,8 +32,13 @@ function flagOn(value: string | undefined): boolean {
   return normalized === "1" || normalized === "true" || normalized === "yes";
 }
 
+function aiModuleOn(): boolean {
+  return isModuleEnabled("ai");
+}
+
 export function isInboxDraftsEnabled(): boolean {
   return (
+    aiModuleOn() &&
     Boolean(env.private.AI_GATEWAY_API_KEY) &&
     flagOn(env.private.AI_INBOX_DRAFTS_ENABLED)
   );
@@ -40,6 +46,7 @@ export function isInboxDraftsEnabled(): boolean {
 
 export function isBriefAssistantEnabled(): boolean {
   return (
+    aiModuleOn() &&
     Boolean(env.private.AI_GATEWAY_API_KEY) &&
     flagOn(env.private.AI_BRIEF_ASSISTANT_ENABLED)
   );
@@ -47,6 +54,7 @@ export function isBriefAssistantEnabled(): boolean {
 
 export function isOpsBriefEnabled(): boolean {
   return (
+    aiModuleOn() &&
     Boolean(env.private.AI_GATEWAY_API_KEY) &&
     flagOn(env.private.AI_OPS_BRIEF_ENABLED)
   );
@@ -54,6 +62,7 @@ export function isOpsBriefEnabled(): boolean {
 
 export function isInvoiceCoverEnabled(): boolean {
   return (
+    aiModuleOn() &&
     Boolean(env.private.AI_GATEWAY_API_KEY) &&
     flagOn(env.private.AI_INVOICE_COVER_ENABLED)
   );
@@ -61,6 +70,7 @@ export function isInvoiceCoverEnabled(): boolean {
 
 export function isOutboundPersonalizationEnabled(): boolean {
   return (
+    aiModuleOn() &&
     Boolean(env.private.AI_GATEWAY_API_KEY) &&
     flagOn(env.private.AI_OUTBOUND_PERSONALIZATION_ENABLED)
   );

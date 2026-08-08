@@ -1,5 +1,7 @@
 # Handoff — Post-launch ops
 
+> **Canonical short entry:** [`/AGENTS.md`](../../AGENTS.md)
+
 Copy below the line into a new agent chat.
 
 **Do not** invent a new product roadmap. **Do not** start n8n / Kuma / Shlink / secretary / Stripe unless the user expands scope.
@@ -13,10 +15,11 @@ You are continuing **Nothing.Digital** at `/Users/DeSchroyer/workspace/nothingdi
 ### Read first (in order)
 
 1. [`SCRATCHPAD.md`](../../SCRATCHPAD.md) — live remaining work (only board)
-2. [`docs/SYSTEM-MAP.md`](../SYSTEM-MAP.md) — how the system works (client, admin, integrations)
-3. [`docs/README.md`](../README.md) — doc map
-4. [`docs/runbooks/ops-credentials.md`](../runbooks/ops-credentials.md) — owner dashboard steps
-5. Topic runbooks only as needed: `listmonk-drip.md`, `post-launch-monitoring.md`, `client-ops.md`
+2. [`AGENTS.md`](../../AGENTS.md) — short agent entry
+3. [`docs/SYSTEM-MAP.md`](../SYSTEM-MAP.md) — how the system works (client, admin, integrations)
+4. [`docs/README.md`](../README.md) — doc map
+5. [`docs/runbooks/ops-credentials.md`](../runbooks/ops-credentials.md) — owner dashboard steps
+6. Topic runbooks only as needed: `listmonk-drip.md`, `post-launch-monitoring.md`, `client-ops.md`
 
 ### Rules
 

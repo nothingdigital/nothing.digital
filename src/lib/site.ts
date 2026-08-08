@@ -1,12 +1,13 @@
+import { brandConfig } from "@/brand";
+
 export const siteConfig = {
-  name: "Nothing.Digital",
-  tagline: "Ship premium digital products on time—every time.",
-  description:
-    "Senior web, software, and AI development studio. Custom websites, software, apps, email marketing, AI solutions, tech literacy, and coding & SQL — delivered on fixed timelines.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://nothing.digital",
-  email: "hello@nothing.digital",
-  contactEmail: "alexander@nothing.digital",
-  phone: "205-561-7049",
+  name: brandConfig.name,
+  tagline: brandConfig.tagline,
+  description: brandConfig.description,
+  url: brandConfig.url,
+  email: brandConfig.email,
+  contactEmail: brandConfig.contactEmail,
+  phone: brandConfig.phone,
 } as const;
 
 export interface SocialLink {

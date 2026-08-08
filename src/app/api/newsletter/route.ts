@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { getFromEmail } from "@/brand";
 import { newsletterWelcomeEmailTemplate } from "@/lib/email/templates";
 import { isListmonkConfigured } from "@/lib/env";
 import { subscribeToListmonk } from "@/lib/listmonk";
@@ -10,14 +11,12 @@ import { getResendClient } from "@/lib/resend";
 import { getServiceRoleClient } from "@/lib/supabase/server";
 import { newsletterSchema } from "@/lib/validations/newsletter";
 
-const FROM_EMAIL = "Nothing.Digital <hello@nothing.digital>";
-
 async function sendWelcomeEmail(email: string) {
   const resend = getResendClient();
   if (!resend) return;
 
   await resend.emails.send({
-    from: FROM_EMAIL,
+    from: getFromEmail(),
     to: email,
     subject: "Welcome to Nothing.Digital newsletter",
     html: newsletterWelcomeEmailTemplate(),

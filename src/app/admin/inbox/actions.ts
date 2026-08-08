@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+import { getFromEmail } from "@/brand";
 import { requireAdmin } from "@/lib/admin/auth";
 import { createClient } from "@/lib/admin/client-ops-queries";
 import { isInboxStatus, type InboxStatus } from "@/lib/admin/config";
@@ -13,8 +14,6 @@ import { inboxDraftSchema } from "@/lib/ai/types";
 import { inboxReplyEmailTemplate } from "@/lib/email/templates";
 import { env } from "@/lib/env";
 import { getResendClient } from "@/lib/resend";
-
-const FROM_EMAIL = "Nothing.Digital <hello@nothing.digital>";
 
 export async function updateInboxStatusAction(id: string, status: InboxStatus) {
   await requireAdmin();
@@ -91,7 +90,7 @@ export async function sendInboxReplyAction(input: {
   const bcc = env.private.CONTACT_NOTIFY_EMAIL;
   try {
     await resend.emails.send({
-      from: FROM_EMAIL,
+      from: getFromEmail(),
       to: row.email,
       ...(bcc ? { bcc } : {}),
       subject: parsed.data.subject,
