@@ -1,4 +1,4 @@
-import { requireAdmin } from "@/lib/admin/auth";
+import { requireAdminApi } from "@/lib/admin/auth";
 import { getAttachment } from "@/lib/kb/queries";
 import { downloadKbFile } from "@/lib/kb/storage";
 
@@ -6,7 +6,9 @@ export async function GET(
   _request: Request,
   context: { params: Promise<{ attachmentId: string }> },
 ) {
-  await requireAdmin();
+  const { error: authError } = await requireAdminApi();
+  if (authError) return authError;
+
   const { attachmentId } = await context.params;
 
   const { row, error } = await getAttachment(attachmentId);

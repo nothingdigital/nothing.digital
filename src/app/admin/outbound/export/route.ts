@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 
-import { requireAdmin } from "@/lib/admin/auth";
+import { requireAdminApi } from "@/lib/admin/auth";
 import { buildInstantlyCsv } from "@/lib/admin/outbound/instantly-csv";
 import { listLeadCandidates } from "@/lib/admin/outbound/queries";
 
 export async function GET() {
-  await requireAdmin();
+  const { error: authError } = await requireAdminApi();
+  if (authError) return authError;
 
   const { rows, error } = await listLeadCandidates({ status: "approved" });
   if (error) {

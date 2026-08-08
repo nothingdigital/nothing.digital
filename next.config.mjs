@@ -15,7 +15,6 @@ const nextConfig = {
     remotePatterns: [
       { protocol: "https", hostname: "images.nothing.digital" },
       { protocol: "https", hostname: "*.supabase.co" },
-      { protocol: "https", hostname: "placehold.co" },
     ],
   },
   async headers() {
@@ -39,7 +38,7 @@ const nextConfig = {
             key: "Content-Security-Policy",
             value:
               "default-src 'self'; " +
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://analytics.nothing.digital https://*.vercel-scripts.com https://vercel.live https://assets.calendly.com; " +
+              "script-src 'self' 'unsafe-inline' https://analytics.nothing.digital https://*.vercel-scripts.com https://vercel.live https://assets.calendly.com; " +
               "style-src 'self' 'unsafe-inline'; " +
               "img-src 'self' data: https:; " +
               "font-src 'self'; " +
