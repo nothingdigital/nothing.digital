@@ -77,6 +77,24 @@ Link in master. Commit after test.
 
 #ponytail: n8n is glue only. Resend primary. Measure before scaling. 1 workflow per event. No RAG or agents.
 
+## Troubleshooting "env missing" in /api/health
+
+1. The health checks `Boolean(env.private.N8N_WEBHOOK_URL)` — if the variable is not set or empty in the runtime env, it shows missing.
+2. In Vercel, the preview deployments (your branch) use **Preview** env variables. Production uses Production. Add the variable for **both**.
+3. Key must be exactly `N8N_WEBHOOK_URL` (copy paste, no extra space or capital wrong).
+4. Value = the full Production URL from the n8n webhook node (copy the Production tab URL exactly).
+5. Save, then Redeploy the specific deployment for your branch (Deployments tab > your branch deployment > ... > Redeploy).
+6. Open the new preview URL (the one with your-branch--nothing-digital.vercel.app) + `/api/health`. Hard refresh (Ctrl+Shift+R).
+7. If still missing, delete the variable and re-add it for Preview specifically, redeploy again.
+8. Check the deployment build log for "N8N_WEBHOOK_URL" to confirm it's loaded.
+9. Once true, the notifyN8n will send to the URL.
+
+**this fixes 90% of "env missing".** The pod is up, the webhook node is set, the env in Vercel is the missing link for the runtime.
+
+Updated: 2026-08-06.
+
+Link in master. Commit after test.
+
 ## No Slack Alternative (Email Node)
 
 1. After Code node (format with to/subject/message), add Email > Send Email node.
