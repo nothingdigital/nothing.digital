@@ -7,6 +7,7 @@ describe("brandConfig", () => {
     expect(brandConfig.email).toContain("@");
     expect(brandConfig.fromEmail).toContain(brandConfig.name);
     expect(brandConfig.assets.wordmarkLight).toMatch(/^\/images\//);
+    expect(brandConfig.assets.mascot).toBe("/images/brand/pixel-terminal.png");
     expect(brandConfig.assets.mascotQuiet).toBe(
       "/images/brand/anonymouse-quiet.png",
     );

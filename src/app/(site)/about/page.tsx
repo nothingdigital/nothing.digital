@@ -75,7 +75,6 @@ export default function AboutPage() {
       <SectionContainer variant="muted">
         <div className="mx-auto flex max-w-3xl flex-col items-center gap-8 sm:flex-row sm:items-start">
           <BrandMascot
-            expression="quiet"
             size={140}
             className="h-28 w-28 shrink-0 sm:h-32 sm:w-32"
           />
