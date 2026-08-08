@@ -273,7 +273,7 @@ Runbook: [`listmonk-drip.md`](./runbooks/listmonk-drip.md).
 | `004_profiles.sql`             | `profiles` / `app_role` / `is_staff` (confirm applied) |
 | `005_admin_loops.sql`          | Today loops, checklists, lead candidates, DNC          |
 | `006_pdf_documents.sql`        | Invoice PDFs, documents, Storage                       |
-| `007_lead_personalization.sql` | Lead `personalization` column                          |
+| `007_lead_personalization.sql` | Lead `personalization` column (applied)                |
 
 Apply via Supabase SQL editor when SCRATCHPAD / ops-credentials say so. Empty Billing/Work until you create clients — no seed data.
 

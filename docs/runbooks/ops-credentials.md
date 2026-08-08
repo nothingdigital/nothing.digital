@@ -11,13 +11,14 @@
 | `/api/health`                                           | `status: ok`                                                                                                  |
 | `supabase` / `resend` / `sentry` / `umami` / `calendly` | `true`                                                                                                        |
 | `listmonk`                                              | **`true`**                                                                                                    |
-| `ai` (AI Gateway key)                                   | **pending** — set `AI_GATEWAY_API_KEY` on Vercel when enabling AI                                             |
+| `ai` (AI Gateway key)                                   | **`true`** (verified 2026-08-08)                                                                              |
 | Sitemap                                                 | `https://nothing.digital/sitemap.xml` → 200                                                                   |
 | Google Search Console                                   | **Done** — property verified + sitemap submitted (owner 2026-08-07)                                           |
 | SPF TXT                                                 | Prefer single record with `include:_spf.resend.com` — **remove duplicate** Fastmail-only SPF if still present |
 | Bing Webmaster Tools                                    | Site accessible; **sitemap submit remaining**                                                                 |
 | Migration `003_asset_monitor_url.sql`                   | **Applied** (owner 2026-08-07)                                                                                |
 | Migration `004_profiles.sql`                            | **Check** — may already be applied; confirm with SQL below                                                    |
+| Migration `007_lead_personalization.sql`                | **Applied** (owner confirmed)                                                                                 |
 | Site polish + admin wave                                | PRs **#7–#10** merged to `main` (2026-08-07)                                                                  |
 
 ## Remaining dashboard steps
@@ -79,10 +80,11 @@ Repo `nothingdigital/nothing.digital` → Settings → Branches + Code security.
 
 ### 7. Supabase migrations
 
-| Migration                   | Status                            |
-| --------------------------- | --------------------------------- |
-| `003_asset_monitor_url.sql` | **Applied** (owner 2026-08-07)    |
-| `004_profiles.sql`          | **Confirm** — run check SQL below |
+| Migration                      | Status                            |
+| ------------------------------ | --------------------------------- |
+| `003_asset_monitor_url.sql`    | **Applied** (owner 2026-08-07)    |
+| `004_profiles.sql`             | **Confirm** — run check SQL below |
+| `007_lead_personalization.sql` | **Applied** (owner confirmed)     |
 
 **Check whether `004` already ran** (SQL editor → production):
 
@@ -110,9 +112,11 @@ Dashboard-only: Instantly account, sending domain DNS, warmup, suppression sync.
 Runbooks: [outbound-instantly.md](./outbound-instantly.md) · [outbound-pilot.md](./outbound-pilot.md).  
 CLI: `pnpm lead-finder` (needs `GOOGLE_PLACES_API_KEY`). Never import cold CSVs into Listmonk.
 
-### 9. AI Gateway enablement (optional — code already on `main`)
+### 9. AI Gateway enablement — DONE
 
-AI admin drafts (inbox, ops brief, invoice cover, outbound) are **shipped**. Enablement is env-only on Vercel (Production). There is no public contact AI.
+AI admin drafts (inbox, ops brief, invoice cover, outbound) are **shipped** and **enabled** in Production (`integrations.ai: true`, verified 2026-08-08). Gateway + BYOK Mistral via `AI_MODEL` (e.g. `mistral/mistral-small`). There is no public contact AI.
+
+Reference (already applied — keep for kill-switch / re-enable):
 
 1. Vercel → team/project → **AI Gateway** (or [vercel.com/docs/ai-gateway](https://vercel.com/docs/ai-gateway)) → create an API key (set a monthly budget if offered).
 2. Project → **Settings** → **Environment Variables** → Production:
@@ -132,7 +136,7 @@ AI admin drafts (inbox, ops brief, invoice cover, outbound) are **shipped**. Ena
    - `/admin/settings` → AI rows show gateway + effective flag state (on only when key + flag are set)
    - `/admin/inbox` → open a submission → **Draft reply** appears → generate → edit → do **not** send a real client until you trust the draft.
    - `/admin` → **Draft today brief** (ops)
-   - Invoice cover + outbound personalization when those flags are on (outbound needs migration `007`)
+   - Invoice cover + outbound personalization when those flags are on (migration `007` applied)
 6. Kill switch: set any flag to `false` (or remove `AI_GATEWAY_API_KEY`) and redeploy — CTAs hide; Settings rows flip to `off`.
 
 Local: mirror the same keys in `.env.local` (see `.env.local.example`).
@@ -151,7 +155,8 @@ You can remove unused `AI_BRIEF_ASSISTANT_ENABLED` from Vercel if it is still se
 - [ ] Live newsletter E2E confirmed
 - [x] Migration `003_asset_monitor_url.sql` applied on Supabase
 - [ ] Migration `004_profiles.sql` confirmed applied (check SQL above)
-- [ ] AI enabled (optional): `integrations.ai: true` + inbox/ops draft smoke
+- [x] AI enabled: `integrations.ai: true` (2026-08-08) + admin draft smoke
+- [x] Migration `007_lead_personalization.sql` applied
 - [x] Site polish PRs #7–#9 + admin follow-ups wave on `main` (#10)
 
 ## Related
