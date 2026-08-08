@@ -162,8 +162,6 @@ export default function HomePage() {
         </div>
       </SectionContainer>
 
-      <AvailabilityWidget />
-
       <SectionContainer variant="primary" id="newsletter">
         <Reveal>
           <div className="mx-auto max-w-2xl text-center">

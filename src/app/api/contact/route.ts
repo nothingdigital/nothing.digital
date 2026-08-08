@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import type { Resend } from "resend";
 
-import { env } from "@/lib/env";
+import { env, isN8nConfigured } from "@/lib/env";
 
 import {
   contactConfirmationEmailTemplate,
@@ -122,7 +122,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   try {
     await sendConfirmationEmail(resend, validated);
-    await sendTeamNotification(resend, validated, submissionId);
+    if (!isN8nConfigured()) {
+      await sendTeamNotification(resend, validated, submissionId);
+    }
   } catch (error) {
     console.error("[contact] Email delivery failed:", error);
     return NextResponse.json(
