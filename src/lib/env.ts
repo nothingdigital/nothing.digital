@@ -6,20 +6,8 @@ function emptyToUndefined(value: unknown): unknown {
   return value;
 }
 
-const optionalUrl = z.preprocess(emptyToUndefined, z.string().url().optional());
-const optionalEmail = z.preprocess(
-  emptyToUndefined,
-  z.string().email().optional(),
-);
-const optionalUuid = z.preprocess(
-  emptyToUndefined,
-  z.string().uuid().optional(),
-);
-const optionalNonEmpty = z.preprocess(
-  emptyToUndefined,
-  z.string().min(1).optional(),
-);
-const optionalString = z.preprocess(emptyToUndefined, z.string().optional());
+const opt = <T extends z.ZodTypeAny>(schema: T) =>
+  z.preprocess(emptyToUndefined, schema.optional());
 
 type FieldSchema = z.ZodType<string | undefined>;
 
@@ -35,136 +23,124 @@ function parseField(
   return undefined;
 }
 
-const raw = {
-  NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
-  NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-  NEXT_PUBLIC_UMAMI_WEBSITE_ID: process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID,
-  NEXT_PUBLIC_UMAMI_SCRIPT_URL: process.env.NEXT_PUBLIC_UMAMI_SCRIPT_URL,
-  SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
-  RESEND_API_KEY: process.env.RESEND_API_KEY,
-  CONTACT_NOTIFY_EMAIL: process.env.CONTACT_NOTIFY_EMAIL,
-  ADMIN_EMAILS: process.env.ADMIN_EMAILS,
-  SENTRY_DSN: process.env.SENTRY_DSN,
-  CALENDLY_URL: process.env.CALENDLY_URL,
-  UMAMI_DASHBOARD_URL: process.env.UMAMI_DASHBOARD_URL,
-  LISTMONK_URL: process.env.LISTMONK_URL,
-  LISTMONK_LIST_UUID: process.env.LISTMONK_LIST_UUID,
-  LISTMONK_DASHBOARD_URL: process.env.LISTMONK_DASHBOARD_URL,
-  N8N_WEBHOOK_URL: process.env.N8N_WEBHOOK_URL,
-  N8N_WEBHOOK_SECRET: process.env.N8N_WEBHOOK_SECRET,
-  N8N_DASHBOARD_URL: process.env.N8N_DASHBOARD_URL,
-  KUMA_DASHBOARD_URL: process.env.KUMA_DASHBOARD_URL,
-  UPTIMEROBOT_DASHBOARD_URL: process.env.UPTIMEROBOT_DASHBOARD_URL,
-  AI_GATEWAY_API_KEY: process.env.AI_GATEWAY_API_KEY,
-  AI_MODEL: process.env.AI_MODEL,
-  AI_INBOX_DRAFTS_ENABLED: process.env.AI_INBOX_DRAFTS_ENABLED,
-  AI_BRIEF_ASSISTANT_ENABLED: process.env.AI_BRIEF_ASSISTANT_ENABLED,
-};
-
 export const env = {
   public: {
     NEXT_PUBLIC_SITE_URL: parseField(
       "NEXT_PUBLIC_SITE_URL",
-      optionalUrl,
-      raw.NEXT_PUBLIC_SITE_URL,
+      opt(z.string().url()),
+      process.env.NEXT_PUBLIC_SITE_URL,
     ),
     NEXT_PUBLIC_SUPABASE_URL: parseField(
       "NEXT_PUBLIC_SUPABASE_URL",
-      optionalUrl,
-      raw.NEXT_PUBLIC_SUPABASE_URL,
+      opt(z.string().url()),
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
     ),
     NEXT_PUBLIC_SUPABASE_ANON_KEY: parseField(
       "NEXT_PUBLIC_SUPABASE_ANON_KEY",
-      optionalNonEmpty,
-      raw.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      opt(z.string().min(1)),
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     ),
     NEXT_PUBLIC_UMAMI_WEBSITE_ID: parseField(
       "NEXT_PUBLIC_UMAMI_WEBSITE_ID",
-      optionalNonEmpty,
-      raw.NEXT_PUBLIC_UMAMI_WEBSITE_ID,
+      opt(z.string().min(1)),
+      process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID,
     ),
     NEXT_PUBLIC_UMAMI_SCRIPT_URL: parseField(
       "NEXT_PUBLIC_UMAMI_SCRIPT_URL",
-      optionalUrl,
-      raw.NEXT_PUBLIC_UMAMI_SCRIPT_URL,
+      opt(z.string().url()),
+      process.env.NEXT_PUBLIC_UMAMI_SCRIPT_URL,
     ),
   },
   private: {
     SUPABASE_SERVICE_ROLE_KEY: parseField(
       "SUPABASE_SERVICE_ROLE_KEY",
-      optionalNonEmpty,
-      raw.SUPABASE_SERVICE_ROLE_KEY,
+      opt(z.string().min(1)),
+      process.env.SUPABASE_SERVICE_ROLE_KEY,
     ),
     RESEND_API_KEY: parseField(
       "RESEND_API_KEY",
-      optionalNonEmpty,
-      raw.RESEND_API_KEY,
+      opt(z.string().min(1)),
+      process.env.RESEND_API_KEY,
     ),
     CONTACT_NOTIFY_EMAIL: parseField(
       "CONTACT_NOTIFY_EMAIL",
-      optionalEmail,
-      raw.CONTACT_NOTIFY_EMAIL,
+      opt(z.string().email()),
+      process.env.CONTACT_NOTIFY_EMAIL,
     ),
-    ADMIN_EMAILS: parseField("ADMIN_EMAILS", optionalString, raw.ADMIN_EMAILS),
-    SENTRY_DSN: parseField("SENTRY_DSN", optionalUrl, raw.SENTRY_DSN),
-    CALENDLY_URL: parseField("CALENDLY_URL", optionalUrl, raw.CALENDLY_URL),
+    ADMIN_EMAILS: parseField(
+      "ADMIN_EMAILS",
+      opt(z.string()),
+      process.env.ADMIN_EMAILS,
+    ),
+    SENTRY_DSN: parseField(
+      "SENTRY_DSN",
+      opt(z.string().url()),
+      process.env.SENTRY_DSN,
+    ),
+    CALENDLY_URL: parseField(
+      "CALENDLY_URL",
+      opt(z.string().url()),
+      process.env.CALENDLY_URL,
+    ),
     UMAMI_DASHBOARD_URL: parseField(
       "UMAMI_DASHBOARD_URL",
-      optionalUrl,
-      raw.UMAMI_DASHBOARD_URL,
+      opt(z.string().url()),
+      process.env.UMAMI_DASHBOARD_URL,
     ),
-    LISTMONK_URL: parseField("LISTMONK_URL", optionalUrl, raw.LISTMONK_URL),
+    LISTMONK_URL: parseField(
+      "LISTMONK_URL",
+      opt(z.string().url()),
+      process.env.LISTMONK_URL,
+    ),
     LISTMONK_LIST_UUID: parseField(
       "LISTMONK_LIST_UUID",
-      optionalUuid,
-      raw.LISTMONK_LIST_UUID,
+      opt(z.string().uuid()),
+      process.env.LISTMONK_LIST_UUID,
     ),
     LISTMONK_DASHBOARD_URL: parseField(
       "LISTMONK_DASHBOARD_URL",
-      optionalUrl,
-      raw.LISTMONK_DASHBOARD_URL,
+      opt(z.string().url()),
+      process.env.LISTMONK_DASHBOARD_URL,
     ),
     N8N_WEBHOOK_URL: parseField(
       "N8N_WEBHOOK_URL",
-      optionalUrl,
-      raw.N8N_WEBHOOK_URL,
+      opt(z.string().url()),
+      process.env.N8N_WEBHOOK_URL,
     ),
     N8N_WEBHOOK_SECRET: parseField(
       "N8N_WEBHOOK_SECRET",
-      optionalNonEmpty,
-      raw.N8N_WEBHOOK_SECRET,
+      opt(z.string().min(1)),
+      process.env.N8N_WEBHOOK_SECRET,
     ),
     N8N_DASHBOARD_URL: parseField(
       "N8N_DASHBOARD_URL",
-      optionalUrl,
-      raw.N8N_DASHBOARD_URL,
+      opt(z.string().url()),
+      process.env.N8N_DASHBOARD_URL,
     ),
     KUMA_DASHBOARD_URL: parseField(
       "KUMA_DASHBOARD_URL",
-      optionalUrl,
-      raw.KUMA_DASHBOARD_URL,
+      opt(z.string().url()),
+      process.env.KUMA_DASHBOARD_URL,
     ),
     UPTIMEROBOT_DASHBOARD_URL: parseField(
       "UPTIMEROBOT_DASHBOARD_URL",
-      optionalUrl,
-      raw.UPTIMEROBOT_DASHBOARD_URL,
+      opt(z.string().url()),
+      process.env.UPTIMEROBOT_DASHBOARD_URL,
     ),
     AI_GATEWAY_API_KEY: parseField(
       "AI_GATEWAY_API_KEY",
-      optionalNonEmpty,
-      raw.AI_GATEWAY_API_KEY,
+      opt(z.string().min(1)),
+      process.env.AI_GATEWAY_API_KEY,
     ),
-    AI_MODEL: parseField("AI_MODEL", optionalNonEmpty, raw.AI_MODEL),
-    AI_INBOX_DRAFTS_ENABLED: parseField(
-      "AI_INBOX_DRAFTS_ENABLED",
-      optionalNonEmpty,
-      raw.AI_INBOX_DRAFTS_ENABLED,
+    AI_MODEL: parseField(
+      "AI_MODEL",
+      opt(z.string().min(1)),
+      process.env.AI_MODEL,
     ),
-    AI_BRIEF_ASSISTANT_ENABLED: parseField(
-      "AI_BRIEF_ASSISTANT_ENABLED",
-      optionalNonEmpty,
-      raw.AI_BRIEF_ASSISTANT_ENABLED,
+    AI_ENABLED: parseField(
+      "AI_ENABLED",
+      opt(z.string().min(1)),
+      process.env.AI_ENABLED,
     ),
   },
 };

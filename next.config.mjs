@@ -3,6 +3,10 @@ const nextConfig = {
   reactStrictMode: true,
   // ponytail: lock Next.js workspace root to this project; parent dir has stray package-lock.json.
   outputFileTracingRoot: process.cwd(),
+  // Include ops markdown so /admin/system-map can read it at runtime on Vercel.
+  outputFileTracingIncludes: {
+    "/admin/system-map": ["./docs/SYSTEM-MAP.md"],
+  },
   serverExternalPackages: ["@react-pdf/renderer"],
   images: {
     formats: ["image/avif", "image/webp"],

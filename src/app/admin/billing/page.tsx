@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { AdminFilterChip } from "@/components/admin/admin-form";
 import { InvoiceStatusSelect } from "@/components/admin/client-ops-selects";
+import { InvoiceCoverDraftPanel } from "@/components/admin/invoice-cover-draft-panel";
 import { InvoicePdfLinks } from "@/components/admin/invoice-pdf-links";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,7 @@ import {
   isInvoiceStatus,
 } from "@/lib/admin/client-ops";
 import { listInvoices } from "@/lib/admin/client-ops-queries";
+import { isAiEnabled } from "@/lib/ai";
 
 export const metadata: Metadata = {
   title: "Billing",
@@ -31,6 +33,7 @@ export default async function AdminBillingPage({
 
   const { rows, error } = await listInvoices({ status: statusFilter });
   const now = new Date();
+  const coverEnabled = isAiEnabled();
   const visible = overdueOnly
     ? rows.filter((row) => effectiveInvoiceStatus(row, now) === "overdue")
     : rows;
@@ -111,52 +114,63 @@ export default async function AdminBillingPage({
       <ul className="space-y-3">
         {visible.map((invoice) => {
           const display = effectiveInvoiceStatus(invoice, now);
+          const needsCover =
+            invoice.status === "sent" && !invoice.sent_emailed_at;
           return (
             <li
               key={invoice.id}
-              className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-card px-4 py-3"
+              className="rounded-lg border border-border bg-card px-4 py-3"
             >
-              <div>
-                <p className="font-medium">
-                  {invoice.number} · {invoice.title}
-                </p>
-                <p className="text-sm text-muted-foreground">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <p className="font-medium">
+                    {invoice.number} · {invoice.title}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    <Link
+                      href={`/admin/clients/${invoice.client_id}?tab=billing`}
+                      className="text-primary underline-offset-4 hover:underline"
+                    >
+                      {invoice.clients?.name ?? "Client"}
+                    </Link>
+                    {" · "}
+                    {formatCents(invoice.amount_cents, invoice.currency)}
+                    {invoice.due_at
+                      ? ` · due ${new Date(invoice.due_at).toLocaleDateString()}`
+                      : ""}
+                    <InvoicePdfLinks
+                      externalUrl={invoice.external_url}
+                      viewToken={invoice.view_token}
+                      storagePath={invoice.storage_path}
+                    />
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
                   <Link
-                    href={`/admin/clients/${invoice.client_id}?tab=billing`}
-                    className="text-primary underline-offset-4 hover:underline"
+                    href={`/admin/clients/${invoice.client_id}/invoices/${invoice.id}/edit`}
+                    className="text-sm text-primary underline-offset-4 hover:underline"
                   >
-                    {invoice.clients?.name ?? "Client"}
+                    Edit
                   </Link>
-                  {" · "}
-                  {formatCents(invoice.amount_cents, invoice.currency)}
-                  {invoice.due_at
-                    ? ` · due ${new Date(invoice.due_at).toLocaleDateString()}`
-                    : ""}
-                  <InvoicePdfLinks
-                    externalUrl={invoice.external_url}
-                    viewToken={invoice.view_token}
-                    storagePath={invoice.storage_path}
+                  <Badge
+                    variant={
+                      display === "overdue" ? "destructive" : "secondary"
+                    }
+                  >
+                    {display}
+                  </Badge>
+                  <InvoiceStatusSelect
+                    id={invoice.id}
+                    status={invoice.status}
+                    clientId={invoice.client_id}
                   />
-                </p>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <Link
-                  href={`/admin/clients/${invoice.client_id}/invoices/${invoice.id}/edit`}
-                  className="text-sm text-primary underline-offset-4 hover:underline"
-                >
-                  Edit
-                </Link>
-                <Badge
-                  variant={display === "overdue" ? "destructive" : "secondary"}
-                >
-                  {display}
-                </Badge>
-                <InvoiceStatusSelect
-                  id={invoice.id}
-                  status={invoice.status}
-                  clientId={invoice.client_id}
-                />
-              </div>
+              <InvoiceCoverDraftPanel
+                invoiceId={invoice.id}
+                enabled={coverEnabled}
+                needsCover={needsCover}
+              />
             </li>
           );
         })}

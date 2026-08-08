@@ -89,6 +89,15 @@ function formatDate(value: string | null): string {
   });
 }
 
+function Row({ label, value }: { label: string; value: string }) {
+  return (
+    <View style={styles.row}>
+      <Text style={styles.label}>{label}</Text>
+      <Text style={styles.value}>{value}</Text>
+    </View>
+  );
+}
+
 function InvoicePdfDocument({ invoice }: { invoice: InvoicePdfInput }) {
   return (
     <Document>
@@ -97,30 +106,14 @@ function InvoicePdfDocument({ invoice }: { invoice: InvoicePdfInput }) {
         <Text style={styles.muted}>Premium digital services</Text>
         <Text style={styles.heading}>Invoice {invoice.number}</Text>
 
-        <View style={styles.row}>
-          <Text style={styles.label}>Bill to</Text>
-          <Text style={styles.value}>
-            {invoice.clientName}
-            {invoice.clientCompany ? `\n${invoice.clientCompany}` : ""}
-            {`\n${invoice.clientEmail}`}
-          </Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.label}>Title</Text>
-          <Text style={styles.value}>{invoice.title}</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.label}>Status</Text>
-          <Text style={styles.value}>{invoice.status}</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.label}>Issued</Text>
-          <Text style={styles.value}>{formatDate(invoice.issued_at)}</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.label}>Due</Text>
-          <Text style={styles.value}>{formatDate(invoice.due_at)}</Text>
-        </View>
+        <Row
+          label="Bill to"
+          value={`${invoice.clientName}${invoice.clientCompany ? `\n${invoice.clientCompany}` : ""}\n${invoice.clientEmail}`}
+        />
+        <Row label="Title" value={invoice.title} />
+        <Row label="Status" value={invoice.status} />
+        <Row label="Issued" value={formatDate(invoice.issued_at)} />
+        <Row label="Due" value={formatDate(invoice.due_at)} />
 
         <Text style={styles.amount}>
           {formatCents(invoice.amount_cents, invoice.currency)}

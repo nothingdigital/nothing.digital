@@ -10,6 +10,7 @@ export const contactSchema = z.object({
   company: z.string().max(100).optional(),
   service: z.enum(serviceSlugs).optional(),
   budget: z.enum(budgetValues).optional(),
+  timeline: z.enum(["1", "3", "6", "12"]).optional(),
   message: z
     .string()
     .min(10, "Message must be at least 10 characters")

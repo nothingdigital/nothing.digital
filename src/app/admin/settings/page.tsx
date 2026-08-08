@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { getAdminEmails, getAdminToolLinks } from "@/lib/admin/config";
+import { isAiEnabled } from "@/lib/ai";
 import { env } from "@/lib/env";
 
 export const metadata: Metadata = {
@@ -64,6 +65,14 @@ export default async function AdminSettingsPage() {
       key: "Service role",
       value: env.private.SUPABASE_SERVICE_ROLE_KEY ? "configured" : "missing",
     },
+    {
+      key: "AI_GATEWAY_API_KEY",
+      value: env.private.AI_GATEWAY_API_KEY ? "configured" : "not set",
+    },
+    {
+      key: "AI_ENABLED",
+      value: isAiEnabled() ? "on" : "off",
+    },
   ];
 
   return (
@@ -71,7 +80,8 @@ export default async function AdminSettingsPage() {
       <div>
         <h2 className="font-display text-3xl tracking-tight">Settings</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Tool registry from env — edit in Vercel, not here.
+          Tool registry from env — edit in Vercel, not here. AI shows effective
+          state (module + gateway key + AI_ENABLED).
         </p>
       </div>
       <dl className="space-y-3">

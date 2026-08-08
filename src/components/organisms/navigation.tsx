@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { LogoDot } from "@/components/atoms/logo-dot";
+import { BrandWordmark } from "@/components/atoms/brand-wordmark";
 import { ThemeToggle } from "@/components/atoms/theme-toggle";
 import { trapTabKey } from "@/lib/a11y";
 
@@ -14,7 +14,6 @@ const navLinks = [
   { label: "Services", href: "/services" },
   { label: "Pricing", href: "/pricing" },
   { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
 ];
 
 export function Navigation() {
@@ -52,13 +51,8 @@ export function Navigation() {
           className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6 lg:px-8"
           aria-label="Primary"
         >
-          <Link
-            href="/"
-            className="font-display text-xl tracking-tight md:text-2xl"
-          >
-            Nothing
-            <LogoDot />
-            Digital
+          <Link href="/" className="shrink-0" aria-label="Nothing.Digital home">
+            <BrandWordmark priority />
           </Link>
 
           <div className="hidden items-center gap-7 md:flex">

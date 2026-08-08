@@ -17,7 +17,7 @@ export type ParsedHealthPayload = {
   integrations: HealthIntegrations;
 };
 
-const LABELS: Record<HealthIntegrationKey, string> = {
+export const INTEGRATION_LABELS: Record<HealthIntegrationKey, string> = {
   supabase: "Supabase",
   resend: "Resend",
   sentry: "Sentry",
@@ -52,14 +52,4 @@ export function parseHealthPayload(raw: unknown): ParsedHealthPayload {
   }
 
   return { ok: true, integrations };
-}
-
-export function labelForIntegration(key: HealthIntegrationKey): string {
-  return LABELS[key];
-}
-
-export type ChipTone = "ok" | "missing";
-
-export function chipToneForConfigured(configured: boolean): ChipTone {
-  return configured ? "ok" : "missing";
 }

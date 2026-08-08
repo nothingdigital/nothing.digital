@@ -14,7 +14,6 @@ import { staleInboxLoops, type StaleInboxInput } from "./rules/stale-inbox";
 import {
   RECENTLY_CLOSED_MS,
   TODAY_VISIBLE_CAP,
-  type Loop,
   type LoopCollection,
   type LoopEvent,
 } from "./types";
@@ -30,40 +29,20 @@ export type CollectLoopsInput = {
   visibleCap?: number;
 };
 
-export function collectCandidateLoops(input: {
-  invoices: OverdueInvoiceInput[];
-  inbox: StaleInboxInput[];
-  work: AttentionWorkInput[];
-  readyLeadCount: number;
-  checkedListmonkKeys: string[];
-  now?: Date;
-}): Loop[] {
+export function collectLoops(input: CollectLoopsInput): LoopCollection {
   const now = input.now ?? new Date();
+  const cap = input.visibleCap ?? TODAY_VISIBLE_CAP;
   const unchecked = uncheckedChecklistKeys(
     LISTMONK_DRIP_ITEMS,
     input.checkedListmonkKeys,
   );
-
-  return [
+  const candidates = [
     ...overdueInvoiceLoops(input.invoices, now),
     ...staleInboxLoops(input.inbox, now),
     ...attentionWorkLoops(input.work, now),
     outboundCadenceLoop(now, input.readyLeadCount),
     ...runbookSetupLoops(unchecked),
   ].sort((a, b) => a.priority - b.priority || a.title.localeCompare(b.title));
-}
-
-export function collectLoops(input: CollectLoopsInput): LoopCollection {
-  const now = input.now ?? new Date();
-  const cap = input.visibleCap ?? TODAY_VISIBLE_CAP;
-  const candidates = collectCandidateLoops({
-    invoices: input.invoices,
-    inbox: input.inbox,
-    work: input.work,
-    readyLeadCount: input.readyLeadCount,
-    checkedListmonkKeys: input.checkedListmonkKeys,
-    now,
-  });
 
   const { open, closed } = applyEventsToLoops(
     candidates,

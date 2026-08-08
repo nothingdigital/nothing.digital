@@ -1,7 +1,7 @@
 # AI Integration — Design Spec
 
 **Date:** 2026-08-06  
-**Status:** Implemented — pending env enablement  
+**Status:** Admin HITL AI live (env-enabled). Public contact brief **removed** (admin-only AI).  
 **Owner:** Nothing.Digital (The Business of Nothing LLC)
 
 ## Purpose
@@ -9,8 +9,9 @@
 Add a shared AI runtime to the Nothing.Digital app so the studio can:
 
 1. Cut founder judgment time on warm inbound (draft → Approve → Resend)
-2. Dogfood the marketed **AI Solutions** service with a scoped, HITL public brief helper
-3. Reuse one stack (Vercel AI SDK + Gateway) that matches what we sell clients
+2. Reuse one stack (Vercel AI SDK + Gateway) for admin HITL drafts (ops brief, invoice cover, outbound)
+
+~~Dogfood public brief helper on `/contact`~~ — removed; no public site AI.
 
 This extends — and does not contradict — [admin-automation-until-hire](./2026-08-06-admin-automation-until-hire-design.md): freeform mail still requires Approve; unrestricted auto-reply stays banned.
 
@@ -34,7 +35,7 @@ This extends — and does not contradict — [admin-automation-until-hire](./202
 │  gateway · flags · draft helpers · Zod schemas           │
 └────────────┬─────────────────────────────┬───────────────┘
              │                             │
-    Admin (generateObject)         Public (generateObject)
+    Admin (generateText + Output.object)         Public (generateText + Output.object)
              │                             │
    /admin/inbox server actions    /api/ai/brief (+ contact form UX)
              │                             │
@@ -108,7 +109,7 @@ On each contact submission card:
 
 ```
 contact_submission
-  → generateObject({ triage, subject, body })
+  → generateText + Output.object({ triage, subject, body })
   → founder edits in UI
   → Approve & Send
   → Resend to submission.email (from existing transactional from-address)
@@ -171,7 +172,7 @@ No new table in v1: draft stays ephemeral in client state until send. Audit ware
 
 ### API
 
-- `POST /api/ai/brief` — `generateObject` only (same structured pattern as inbox; no streaming chat in v1)
+- `POST /api/ai/brief` — `generateText` + `Output.object` only (same structured pattern as inbox; no streaming chat in v1)
 - Auth: none (public); rate limit by IP; max tokens capped
 - Input: answers to five fixed questions + honeypot field
 - Output: `{ message, suggestedService?, suggestedBudget? }` — suggestions must be existing `serviceSlugs` / budget enum values or omitted (never free strings)

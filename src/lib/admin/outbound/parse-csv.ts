@@ -14,6 +14,7 @@ export type ParsedLeadRow = {
   rating: number | null;
   reviewCount: number | null;
   suppressed: boolean;
+  personalization: string | null;
 };
 
 function splitCsvLine(line: string): string[] {
@@ -108,9 +109,20 @@ export function parseLeadFinderCsv(csv: string): {
     if (!placeId || !name) continue;
 
     const score = parseNumber(get("score")) ?? 0;
+    const aiScore = parseNumber(get("aiScore"));
     const reasonsRaw = get("reasons");
+    const aiReason = get("aiReason");
     const email = get("email");
     const suppressedRaw = (get("suppressed") ?? "false").toLowerCase();
+    const personalization = get("personalization");
+
+    const reasons = reasonsRaw ? reasonsRaw.split("|").filter(Boolean) : [];
+    if (aiScore != null) {
+      reasons.push(`rule-score:${score}`);
+    }
+    if (aiReason) {
+      reasons.push(`ai:${aiReason}`);
+    }
 
     rows.push({
       placeId,
@@ -121,13 +133,14 @@ export function parseLeadFinderCsv(csv: string): {
       city: get("city") ?? "Northport, AL",
       vertical: get("vertical"),
       query: get("query"),
-      score,
-      reasons: reasonsRaw ? reasonsRaw.split("|").filter(Boolean) : [],
+      score: aiScore ?? score,
+      reasons,
       email,
       emailSource: parseEmailSource(get("emailSource")),
       rating: parseNumber(get("rating")),
       reviewCount: parseNumber(get("reviewCount")),
       suppressed: suppressedRaw === "true" || suppressedRaw === "1",
+      personalization,
     });
   }
 

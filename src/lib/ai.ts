@@ -1,15 +1,23 @@
-import { Output, createGateway, generateText } from "ai";
+import { Output, generateText } from "ai";
+import type { z } from "zod";
 
 import {
-  briefAssistOutputSchema,
   inboxDraftSchema,
-  type BriefAssistInput,
-  type BriefAssistOutput,
+  invoiceCoverSchema,
+  opsBriefSchema,
   type InboxDraft,
+  type InvoiceCoverDraft,
+  type OpsBrief,
 } from "@/lib/ai/types";
+import {
+  formatInvoiceCoverInput,
+  formatOpsBriefInput,
+  type InvoiceCoverFacts,
+} from "@/lib/ai/format-prompt-input";
+import { getGatewayModel } from "@/lib/ai/gateway";
+import { isModuleEnabled } from "@/brand";
+import type { LoopCollection } from "@/lib/admin/loops/types";
 import { env } from "@/lib/env";
-
-const DEFAULT_MODEL = "openai/gpt-4.1-mini";
 
 function flagOn(value: string | undefined): boolean {
   if (!value) return false;
@@ -17,28 +25,37 @@ function flagOn(value: string | undefined): boolean {
   return normalized === "1" || normalized === "true" || normalized === "yes";
 }
 
-export function isInboxDraftsEnabled(): boolean {
+/** Module + gateway + master kill switch. */
+export function isAiEnabled(): boolean {
   return (
+    isModuleEnabled("ai") &&
     Boolean(env.private.AI_GATEWAY_API_KEY) &&
-    flagOn(env.private.AI_INBOX_DRAFTS_ENABLED)
+    flagOn(env.private.AI_ENABLED)
   );
 }
 
-export function isBriefAssistantEnabled(): boolean {
-  return (
-    Boolean(env.private.AI_GATEWAY_API_KEY) &&
-    flagOn(env.private.AI_BRIEF_ASSISTANT_ENABLED)
-  );
-}
-
-function getGatewayModel() {
-  const apiKey = env.private.AI_GATEWAY_API_KEY;
-  if (!apiKey) {
-    throw new Error("AI_GATEWAY_API_KEY is not configured.");
-  }
-  return createGateway({ apiKey })(
-    env.private.AI_MODEL?.trim() || DEFAULT_MODEL,
-  );
+async function draftObject<T>({
+  system,
+  prompt,
+  schema,
+  empty,
+}: {
+  system: string;
+  prompt: string;
+  schema: z.ZodType<T>;
+  empty: string;
+}): Promise<T> {
+  const { output } = await generateText({
+    model: getGatewayModel(
+      env.private.AI_GATEWAY_API_KEY,
+      env.private.AI_MODEL,
+    ),
+    system,
+    prompt,
+    output: Output.object({ schema }),
+  });
+  if (!output) throw new Error(empty);
+  return output;
 }
 
 const inboxReplySystemPrompt = `You are the founder of Nothing.Digital, a senior digital studio (web, software, apps, email, AI solutions, tech literacy).
@@ -55,15 +72,19 @@ Also classify triage for internal use only:
 - needs-clarification: incomplete ask
 - archive-candidate: spam, off-topic, or clearly not a fit`;
 
-const briefAssistSystemPrompt = `You help a visitor draft a project brief for Nothing.Digital's contact form.
-
+const opsBriefSystemPrompt = `You are the founder's ops chief of staff for Nothing.Digital.
+Given today's open/later/recently-closed loops, write a tight briefing.
 Rules:
-- Output a clear first-person message the visitor can send (as if they wrote it).
-- Do not invent prices, timelines, guarantees, or legal claims.
-- If they ask for a quote, steer them to published /pricing ballparks and a scoping call — never invent a custom dollar amount.
-- suggestedService must be one of the studio's service slugs or null.
-- suggestedBudget must be one of <5k | 5k-15k | 15k-50k | 50k+ or null.
-- Keep message under 2000 characters.`;
+- Use only the provided loop facts. Do not invent clients, amounts, or deadlines.
+- Prefer billing/inbox urgency over setup chores.
+- Bullets are actionable and short. No emoji. No pricing guesses.`;
+
+const invoiceCoverSystemPrompt = `You write a short invoice cover note for Nothing.Digital.
+Rules:
+- Use ONLY the amount/due/title provided. Never invent or alter prices or dates.
+- Warm, direct, human. No emoji. No legal promises.
+- coverNote is plain text (2–5 short paragraphs max).
+- subject like "Invoice {number} from Nothing.Digital" unless a clearer variant fits.`;
 
 export async function draftInboxReply(submission: {
   name: string;
@@ -73,8 +94,7 @@ export async function draftInboxReply(submission: {
   budget: string | null;
   message: string;
 }): Promise<InboxDraft> {
-  const { output } = await generateText({
-    model: getGatewayModel(),
+  return draftObject({
     system: inboxReplySystemPrompt,
     prompt: [
       `Name: ${submission.name}`,
@@ -85,35 +105,29 @@ export async function draftInboxReply(submission: {
       `Message:`,
       submission.message,
     ].join("\n"),
-    output: Output.object({ schema: inboxDraftSchema }),
+    schema: inboxDraftSchema,
+    empty: "Model returned no draft.",
   });
-
-  if (!output) {
-    throw new Error("Model returned no draft.");
-  }
-
-  return output;
 }
 
-export async function draftProjectBrief(
-  input: BriefAssistInput,
-): Promise<BriefAssistOutput> {
-  const { output } = await generateText({
-    model: getGatewayModel(),
-    system: briefAssistSystemPrompt,
-    prompt: [
-      `Goal: ${input.goal}`,
-      `Current state: ${input.currentState}`,
-      `Must-haves: ${input.mustHaves}`,
-      `Timeline feel: ${input.timelineFeel}`,
-      `Constraints: ${input.constraints || "—"}`,
-    ].join("\n"),
-    output: Output.object({ schema: briefAssistOutputSchema }),
+export async function draftOpsBrief(
+  collection: LoopCollection,
+): Promise<OpsBrief> {
+  return draftObject({
+    system: opsBriefSystemPrompt,
+    prompt: formatOpsBriefInput(collection),
+    schema: opsBriefSchema,
+    empty: "Model returned no ops brief.",
   });
+}
 
-  if (!output) {
-    throw new Error("Model returned no brief.");
-  }
-
-  return output;
+export async function draftInvoiceCoverNote(
+  facts: InvoiceCoverFacts,
+): Promise<InvoiceCoverDraft> {
+  return draftObject({
+    system: invoiceCoverSystemPrompt,
+    prompt: formatInvoiceCoverInput(facts),
+    schema: invoiceCoverSchema,
+    empty: "Model returned no invoice cover.",
+  });
 }

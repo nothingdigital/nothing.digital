@@ -1,9 +1,8 @@
-"use client";
-
 import Link from "next/link";
 
 import { routes } from "@/lib/routes";
 import { siteConfig, socialLinks } from "@/lib/site";
+import { BrandWordmark } from "@/components/atoms/brand-wordmark";
 import { Seal } from "@/components/atoms/seal";
 import { NewsletterForm } from "./newsletter-form";
 
@@ -21,6 +20,7 @@ const companyLinks = [
   { label: "Services", href: routes.services.index },
   { label: "Pricing", href: routes.pricing },
   { label: "About", href: routes.about },
+  { label: "Blog", href: routes.blog.index },
   { label: "Contact", href: routes.contact },
 ];
 
@@ -29,6 +29,34 @@ const legalLinks = [
   { label: "Terms of Service", href: "/terms" },
   { label: "Accessibility", href: "/accessibility" },
 ];
+
+function FooterColumn({
+  title,
+  links,
+}: {
+  title: string;
+  links: Array<{ label: string; href: string }>;
+}) {
+  return (
+    <div>
+      <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.2em]">
+        {title}
+      </h3>
+      <ul className="mt-3 space-y-2">
+        {links.map((link) => (
+          <li key={link.href}>
+            <Link
+              href={link.href}
+              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+            >
+              {link.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -40,9 +68,10 @@ export function Footer() {
           <div>
             <Link
               href={routes.home}
-              className="font-display text-xl tracking-tight"
+              className="inline-block"
+              aria-label="Nothing.Digital home"
             >
-              Nothing<span className="italic text-primary">.</span>Digital
+              <BrandWordmark />
             </Link>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               {siteConfig.tagline}
@@ -65,48 +94,15 @@ export function Footer() {
             ) : null}
           </div>
 
-          <div>
-            <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.2em]">
-              Services
-            </h3>
-            <ul className="mt-3 space-y-2">
-              {serviceLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.2em]">
-              Company
-            </h3>
-            <ul className="mt-3 space-y-2">
-              {companyLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <FooterColumn title="Services" links={serviceLinks} />
+          <FooterColumn title="Company" links={companyLinks} />
 
           <div>
             <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.2em]">
               Newsletter
             </h3>
             <p className="mt-3 text-sm text-muted-foreground">
-              Get insights delivered to your inbox.
+              Monthly tips on shipping digital products faster. No spam.
             </p>
             <div className="mt-3">
               <NewsletterForm />

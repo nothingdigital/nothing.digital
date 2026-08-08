@@ -25,6 +25,22 @@ export function AdminLoginForm({ nextPath }: { nextPath: string }) {
     setError(null);
   }
 
+  function withSupabase(
+    run: (
+      supabase: NonNullable<ReturnType<typeof createBrowserSupabaseClient>>,
+    ) => Promise<void>,
+  ) {
+    clearFeedback();
+    startTransition(async () => {
+      const supabase = createBrowserSupabaseClient();
+      if (!supabase) {
+        setError("Supabase is not configured.");
+        return;
+      }
+      await run(supabase);
+    });
+  }
+
   function onPasswordSubmit(event: React.FormEvent) {
     event.preventDefault();
     clearFeedback();
@@ -49,15 +65,7 @@ export function AdminLoginForm({ nextPath }: { nextPath: string }) {
   }
 
   function onMagicLink() {
-    clearFeedback();
-
-    startTransition(async () => {
-      const supabase = createBrowserSupabaseClient();
-      if (!supabase) {
-        setError("Supabase is not configured.");
-        return;
-      }
-
+    withSupabase(async (supabase) => {
       const { error: otpError } = await supabase.auth.signInWithOtp({
         email: email.trim(),
         options: {
@@ -76,15 +84,7 @@ export function AdminLoginForm({ nextPath }: { nextPath: string }) {
   }
 
   function onGoogle() {
-    clearFeedback();
-
-    startTransition(async () => {
-      const supabase = createBrowserSupabaseClient();
-      if (!supabase) {
-        setError("Supabase is not configured.");
-        return;
-      }
-
+    withSupabase(async (supabase) => {
       const { error: oauthError } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {

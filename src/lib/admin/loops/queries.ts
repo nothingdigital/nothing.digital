@@ -1,21 +1,15 @@
 import { getServiceRoleClient } from "@/lib/supabase/server";
-import type { Database } from "@/lib/supabase/database";
 
 import type { LoopActionKind, LoopEvent } from "./types";
-
-export type AdminLoopEventRow =
-  Database["public"]["Tables"]["admin_loop_events"]["Row"];
-
-function notConfigured(): { rows: never[]; error: string } {
-  return { rows: [], error: "Supabase is not configured." };
-}
 
 export async function listLoopEvents(): Promise<{
   rows: LoopEvent[];
   error: string | null;
 }> {
   const supabase = getServiceRoleClient();
-  if (!supabase) return notConfigured();
+  if (!supabase) {
+    return { rows: [], error: "Supabase is not configured." };
+  }
 
   const { data, error } = await supabase
     .from("admin_loop_events")
@@ -24,16 +18,7 @@ export async function listLoopEvents(): Promise<{
     .limit(500);
 
   if (error) return { rows: [], error: error.message };
-
-  const rows: LoopEvent[] = (data ?? []).map((row) => ({
-    loop_key: row.loop_key,
-    action: row.action as LoopActionKind,
-    note: row.note,
-    snoozed_until: row.snoozed_until,
-    created_at: row.created_at,
-  }));
-
-  return { rows, error: null };
+  return { rows: (data ?? []) as LoopEvent[], error: null };
 }
 
 export async function insertLoopEvent(input: {

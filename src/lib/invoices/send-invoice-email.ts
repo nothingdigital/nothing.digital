@@ -1,8 +1,7 @@
+import { getFromEmail } from "@/brand";
 import { getResendClient } from "@/lib/resend";
 import { invoiceSentEmailTemplate } from "@/lib/email/templates";
 import { formatCents } from "@/lib/admin/client-ops";
-
-const FROM_EMAIL = "Nothing.Digital <hello@nothing.digital>";
 
 export type InvoiceEmailPayload = {
   to: string;
@@ -13,6 +12,8 @@ export type InvoiceEmailPayload = {
   currency: string;
   due_at: string | null;
   viewUrl: string;
+  subject?: string;
+  coverNote?: string | null;
 };
 
 export async function sendInvoiceSentEmail(
@@ -33,9 +34,11 @@ export async function sendInvoiceSentEmail(
     : null;
 
   const { error } = await resend.emails.send({
-    from: FROM_EMAIL,
+    from: getFromEmail(),
     to: payload.to,
-    subject: `Invoice ${payload.number} from Nothing.Digital`,
+    subject:
+      payload.subject?.trim() ||
+      `Invoice ${payload.number} from Nothing.Digital`,
     html: invoiceSentEmailTemplate({
       clientName: payload.clientName,
       number: payload.number,
@@ -43,6 +46,7 @@ export async function sendInvoiceSentEmail(
       amount,
       due,
       viewUrl: payload.viewUrl,
+      coverNote: payload.coverNote,
     }),
   });
 

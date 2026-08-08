@@ -16,20 +16,21 @@
    - Tradeoff: fast but misses nuance. Lift: cut lead-to-booking 2 days. Measurable: avg time metric.
    - Plan: `parseLeadToBooking(email)` in existing InboxService. Guard: if no match return. Reuse form submit. 1 file edit.
 
-2. **Rule-Based Lead Scoring**
+2. **Rule-Based Lead Scoring** (implemented)
    - Score from fields (budget, urgency, source). Surface top in inbox.
    - Tradeoff: crude vs perfect. No ML (YAGNI). 25% leads drive 60% bookings.
-   - Plan: add `scoreLead(lead)` to LeadUtils (new 8-line func). Early return per rule. Store in existing lead table. Reuse inbox sort.
+   - Plan: add `scoreLead(lead)` to client-ops.ts (8-line func with ifs). Early return per rule. Compute on read, sort inbox by score desc, badge in row. Reuse existing.
 
 3. **Calendar Sync**
    - (given) Bidirectional with auto-suggest slots in replies.
    - Tradeoff: sync errors vs manual accuracy. Start read-only.
    - Plan: extend existing CalendarService.sync(). Flat poll func. Webhook guard if present. Reuse event model.
 
-4. **Automated Nurture Sequence**
-   - Score-based drip emails with scheduler link.
-   - Tradeoff: spam risk. Limit 3 touches. Lift: re-engage 30% cold leads.
-   - Plan: reuse email sender + templates. `triggerNurture(score)` with ifs. No new queue.
+4. **Automated Nurture Sequence** (partial — Day-0 only)
+   - High-score contact leads (`scoreLead > 60`) get one Resend email with Calendly.
+   - Multi-touch drip stays Listmonk for **newsletter** subscribers (owner UI).
+   - Contact leads are **not** auto-subscribed to Listmonk (consent).
+   - Honest copy: no false Day 3/7 promise on contact path.
 
 ### Client
 
@@ -43,10 +44,9 @@
    - Tradeoff: ballpark only. Add "custom quote" button. Qualifies leads 40%.
    - Plan: `calcPrice(inputs)` = map lookup + simple math (stdlib). One form extend. `sendQuote(email, price)`. Never nest calc. (added to lib + /pricing page)
 
-7. **Homepage Availability Widget** (implemented)
-   - Next 3 open slots shown, click jumps to scheduler.
-   - Tradeoff: clutter vs impulse book. Lazy load. Measure widget CTR to booking start.
-   - Plan: new small Widget.js reuse Card + Button. Fetch slots once on mount. Guard clauses only. (added to home after differentiators)
+7. **Homepage Availability Widget** (removed)
+   - Mock slots were never rendered; deleted. Calendly lives on `/contact`.
+   - Measure: `calendly_click` Umami event instead.
 
 ## Tradeoffs Summary
 

@@ -11,13 +11,14 @@
 | `/api/health`                                           | `status: ok`                                                                                                  |
 | `supabase` / `resend` / `sentry` / `umami` / `calendly` | `true`                                                                                                        |
 | `listmonk`                                              | **`true`**                                                                                                    |
-| `ai` (AI Gateway key)                                   | **pending** — set `AI_GATEWAY_API_KEY` on Vercel when enabling AI                                             |
+| `ai` (AI Gateway key)                                   | **`true`** (verified 2026-08-08)                                                                              |
 | Sitemap                                                 | `https://nothing.digital/sitemap.xml` → 200                                                                   |
 | Google Search Console                                   | **Done** — property verified + sitemap submitted (owner 2026-08-07)                                           |
 | SPF TXT                                                 | Prefer single record with `include:_spf.resend.com` — **remove duplicate** Fastmail-only SPF if still present |
 | Bing Webmaster Tools                                    | Site accessible; **sitemap submit remaining**                                                                 |
 | Migration `003_asset_monitor_url.sql`                   | **Applied** (owner 2026-08-07)                                                                                |
 | Migration `004_profiles.sql`                            | **Check** — may already be applied; confirm with SQL below                                                    |
+| Migration `007_lead_personalization.sql`                | **Applied** (owner confirmed)                                                                                 |
 | Site polish + admin wave                                | PRs **#7–#10** merged to `main` (2026-08-07)                                                                  |
 
 ## Remaining dashboard steps
@@ -79,10 +80,11 @@ Repo `nothingdigital/nothing.digital` → Settings → Branches + Code security.
 
 ### 7. Supabase migrations
 
-| Migration                   | Status                            |
-| --------------------------- | --------------------------------- |
-| `003_asset_monitor_url.sql` | **Applied** (owner 2026-08-07)    |
-| `004_profiles.sql`          | **Confirm** — run check SQL below |
+| Migration                      | Status                            |
+| ------------------------------ | --------------------------------- |
+| `003_asset_monitor_url.sql`    | **Applied** (owner 2026-08-07)    |
+| `004_profiles.sql`             | **Confirm** — run check SQL below |
+| `007_lead_personalization.sql` | **Applied** (owner confirmed)     |
 
 **Check whether `004` already ran** (SQL editor → production):
 
@@ -112,26 +114,31 @@ CLI: `pnpm lead-finder` (needs `GOOGLE_PLACES_API_KEY`). Never import cold CSVs 
 
 ### 9. AI Gateway enablement (optional — code already on `main`)
 
-AI inbox drafts + contact brief assistant are **shipped**. Enablement is env-only on Vercel (Production).
+AI admin drafts (inbox, ops brief, invoice cover) are **shipped**. Enablement is env-only on Vercel (Production). There is no public contact AI. Outbound Instantly lines: lead-finder `--ai-rank` or manual edit in `/admin/outbound`.
 
 1. Vercel → team/project → **AI Gateway** (or [vercel.com/docs/ai-gateway](https://vercel.com/docs/ai-gateway)) → create an API key (set a monthly budget if offered).
 2. Project → **Settings** → **Environment Variables** → Production:
 
-   | Name                         | Value                 | Notes                         |
-   | ---------------------------- | --------------------- | ----------------------------- |
-   | `AI_GATEWAY_API_KEY`         | (secret from step 1)  | Required for both features    |
-   | `AI_MODEL`                   | `openai/gpt-4.1-mini` | Optional; this is the default |
-   | `AI_INBOX_DRAFTS_ENABLED`    | `true`                | Admin `/admin/inbox` drafts   |
-   | `AI_BRIEF_ASSISTANT_ENABLED` | `true`                | Public contact brief helper   |
+   | Name                 | Value                                              | Notes                                                   |
+   | -------------------- | -------------------------------------------------- | ------------------------------------------------------- |
+   | `AI_GATEWAY_API_KEY` | (secret from step 1)                               | Required for AI features                                |
+   | `AI_MODEL`           | `mistral/mistral-small` (or `openai/gpt-4.1-mini`) | Optional; app default is `openai/gpt-4.1-mini` if unset |
+   | `AI_ENABLED`         | `true`                                             | Master kill switch for admin HITL drafts                |
 
 3. **Redeploy** Production (env changes alone do not always hot-reload server flags).
 4. Confirm `https://nothing.digital/api/health` → `integrations.ai: true`.
 5. Smoke:
+   - `/admin/settings` → AI rows show gateway + `AI_ENABLED` effective state
    - `/admin/inbox` → open a submission → **Draft reply** appears → generate → edit → do **not** send a real client until you trust the draft.
-   - `/contact` → **Help me write a brief** → generate → fields fill → you can discard without submitting.
-6. Kill switch: set either flag to `false` (or remove `AI_GATEWAY_API_KEY`) and redeploy — CTAs hide.
+   - `/admin` → **Draft today brief** (ops)
+   - Invoice cover when AI on
+6. Kill switch: set `AI_ENABLED=false` (or remove `AI_GATEWAY_API_KEY`) and redeploy — CTAs hide; Settings row flips to `off`.
 
 Local: mirror the same keys in `.env.local` (see `.env.local.example`).
+
+Admin AI drafts are rate-limited per admin email + feature (in-memory limiter).
+
+You can remove unused per-feature flags (`AI_INBOX_DRAFTS_ENABLED`, `AI_OPS_BRIEF_ENABLED`, `AI_INVOICE_COVER_ENABLED`, `AI_OUTBOUND_PERSONALIZATION_ENABLED`, `AI_BRIEF_ASSISTANT_ENABLED`) from Vercel — they are no longer read.
 
 ## Done when
 
@@ -143,7 +150,7 @@ Local: mirror the same keys in `.env.local` (see `.env.local.example`).
 - [ ] Live newsletter E2E confirmed
 - [x] Migration `003_asset_monitor_url.sql` applied on Supabase
 - [ ] Migration `004_profiles.sql` confirmed applied (check SQL above)
-- [ ] AI enabled (optional): `integrations.ai: true` + inbox/brief smoke
+- [ ] AI enabled (optional): `integrations.ai: true` + inbox/ops draft smoke
 - [x] Site polish PRs #7–#9 + admin follow-ups wave on `main` (#10)
 
 ## Related

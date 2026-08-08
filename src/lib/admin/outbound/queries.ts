@@ -9,15 +9,22 @@ export type LeadCandidateRow =
 export type LeadCandidateStatus =
   "needs_email" | "ready" | "approved" | "rejected" | "suppressed";
 
-function notConfigured<T>(): { rows: T[]; error: string } {
-  return { rows: [], error: "Supabase is not configured." };
-}
+export const LEAD_CANDIDATE_STATUSES = [
+  "needs_email",
+  "ready",
+  "approved",
+  "rejected",
+  "suppressed",
+] as const satisfies readonly LeadCandidateStatus[];
 
 export async function listLeadCandidates(filters?: {
   status?: LeadCandidateStatus;
+  withGeo?: boolean;
 }): Promise<{ rows: LeadCandidateRow[]; error: string | null }> {
   const supabase = getServiceRoleClient();
-  if (!supabase) return notConfigured();
+  if (!supabase) {
+    return { rows: [], error: "Supabase is not configured." };
+  }
 
   let query = supabase
     .from("lead_candidates")
@@ -27,10 +34,88 @@ export async function listLeadCandidates(filters?: {
   if (filters?.status) {
     query = query.eq("status", filters.status);
   }
+  if (filters?.withGeo) {
+    query = query.not("lat", "is", null).not("lng", "is", null);
+  }
 
   const { data, error } = await query;
   if (error) return { rows: [], error: error.message };
   return { rows: data ?? [], error: null };
+}
+
+export async function findLeadByPlaceId(
+  placeId: string,
+): Promise<{ row: LeadCandidateRow | null; error: string | null }> {
+  const supabase = getServiceRoleClient();
+  if (!supabase) {
+    return { row: null, error: "Supabase is not configured." };
+  }
+
+  const { data, error } = await supabase
+    .from("lead_candidates")
+    .select("*")
+    .eq("place_id", placeId)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) return { row: null, error: error.message };
+  return { row: data, error: null };
+}
+
+export type MapLeadInput = {
+  placeId: string;
+  name: string;
+  website: string | null;
+  phone: string | null;
+  address: string | null;
+  city: string;
+  vertical: string | null;
+  query: string | null;
+  email?: string | null;
+  rating?: number | null;
+  reviewCount?: number | null;
+  lat: number;
+  lng: number;
+};
+
+export async function insertLeadFromMap(
+  input: MapLeadInput,
+): Promise<{ row: LeadCandidateRow | null; error: string | null }> {
+  const supabase = getServiceRoleClient();
+  if (!supabase) {
+    return { row: null, error: "Supabase is not configured." };
+  }
+
+  const email = input.email?.trim() || null;
+  const runId = crypto.randomUUID();
+  const { data, error } = await supabase
+    .from("lead_candidates")
+    .insert({
+      run_id: runId,
+      place_id: input.placeId,
+      name: input.name,
+      website: input.website,
+      phone: input.phone,
+      address: input.address,
+      city: input.city,
+      vertical: input.vertical,
+      query: input.query,
+      score: 50,
+      reasons: ["map-pin"],
+      email,
+      email_source: "none",
+      rating: input.rating ?? null,
+      review_count: input.reviewCount ?? null,
+      status: email ? "ready" : "needs_email",
+      lat: input.lat,
+      lng: input.lng,
+    })
+    .select("*")
+    .single();
+
+  if (error) return { row: null, error: error.message };
+  return { row: data, error: null };
 }
 
 export async function countLeadsByStatus(
@@ -78,6 +163,7 @@ export async function importLeadCandidates(
     rating: row.rating,
     review_count: row.reviewCount,
     status: leadStatusForImport(row),
+    personalization: row.personalization,
   }));
 
   if (payload.length === 0) {
@@ -92,10 +178,29 @@ export async function importLeadCandidates(
   return { runId, imported: payload.length, error: null };
 }
 
+export async function getLeadCandidate(
+  id: string,
+): Promise<{ row: LeadCandidateRow | null; error: string | null }> {
+  const supabase = getServiceRoleClient();
+  if (!supabase) {
+    return { row: null, error: "Supabase is not configured." };
+  }
+
+  const { data, error } = await supabase
+    .from("lead_candidates")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) return { row: null, error: error.message };
+  return { row: data, error: null };
+}
+
 export async function updateLeadCandidate(input: {
   id: string;
   status?: LeadCandidateStatus;
   email?: string | null;
+  personalization?: string | null;
 }): Promise<{ error: string | null }> {
   const supabase = getServiceRoleClient();
   if (!supabase) return { error: "Supabase is not configured." };
@@ -109,6 +214,9 @@ export async function updateLeadCandidate(input: {
     if (input.email && input.status === undefined) {
       patch.status = "ready";
     }
+  }
+  if (input.personalization !== undefined) {
+    patch.personalization = input.personalization;
   }
 
   const { error } = await supabase
@@ -146,7 +254,9 @@ export async function listDoNotContact(): Promise<{
   error: string | null;
 }> {
   const supabase = getServiceRoleClient();
-  if (!supabase) return notConfigured();
+  if (!supabase) {
+    return { rows: [], error: "Supabase is not configured." };
+  }
 
   const { data, error } = await supabase
     .from("do_not_contact")

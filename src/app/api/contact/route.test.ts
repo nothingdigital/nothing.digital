@@ -230,4 +230,22 @@ describe("POST /api/contact", () => {
       }),
     );
   });
+
+  it("sends nurture when score is high", async () => {
+    const response = await POST(
+      makeRequest({
+        name: "Jane",
+        email: "jane@example.com",
+        service: "ai-solutions",
+        budget: "15k-50k",
+        message: "Urgent AI project for our team.",
+      }),
+    );
+
+    expect(response.status).toBe(201);
+    const resend = vi.mocked(getResendClient).mock.results[0].value as {
+      emails: { send: ReturnType<typeof vi.fn> };
+    };
+    expect(resend.emails.send).toHaveBeenCalledTimes(3);
+  });
 });

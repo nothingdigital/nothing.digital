@@ -3,6 +3,7 @@ import {
   updateLeadEmailAction,
 } from "@/app/admin/outbound/actions";
 import { AdminFilterChip } from "@/components/admin/admin-form";
+import { OutboundPersonalizationPanel } from "@/components/admin/outbound-personalization-panel";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -138,6 +139,11 @@ export function OutboundReviewList({
                   </Button>
                 </form>
               </div>
+
+              <OutboundPersonalizationPanel
+                leadId={row.id}
+                initialLine={row.personalization}
+              />
             </li>
           ))}
         </ul>

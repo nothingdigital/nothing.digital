@@ -9,6 +9,7 @@ import { getAdminToolLinks } from "@/lib/admin/config";
 import { listCheckedChecklistKeys } from "@/lib/admin/loops/queries";
 import { INSTANTLY_PREFLIGHT_ITEMS } from "@/lib/admin/loops/rules/runbook-setup";
 import {
+  LEAD_CANDIDATE_STATUSES,
   listLeadCandidates,
   type LeadCandidateStatus,
 } from "@/lib/admin/outbound/queries";
@@ -18,14 +19,6 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const STATUS_FILTERS = new Set([
-  "needs_email",
-  "ready",
-  "approved",
-  "rejected",
-  "suppressed",
-]);
-
 export default async function AdminOutboundPage({
   searchParams,
 }: {
@@ -33,7 +26,8 @@ export default async function AdminOutboundPage({
 }) {
   const params = await searchParams;
   const filter =
-    params.filter && STATUS_FILTERS.has(params.filter)
+    params.filter &&
+    (LEAD_CANDIDATE_STATUSES as readonly string[]).includes(params.filter)
       ? (params.filter as LeadCandidateStatus)
       : "all";
 
@@ -44,18 +38,23 @@ export default async function AdminOutboundPage({
     listLeadCandidates({ status: "approved" }),
   ]);
 
-  const allApproved = (approved.error ? [] : approved.rows).filter((row) =>
-    Boolean(row.email),
+  const exportReady = (approved.error ? [] : approved.rows).filter(
+    (row) => row.email,
   ).length;
 
   return (
     <div className="space-y-8">
-      <div>
-        <h2 className="font-display text-3xl tracking-tight">Outbound</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          CLI finds leads — review here, then download Instantly CSV. Never
-          import cold lists into Listmonk.
-        </p>
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h2 className="font-display text-3xl tracking-tight">Outbound</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            CLI finds leads — review here, then download Instantly CSV. Never
+            import cold lists into Listmonk.
+          </p>
+        </div>
+        <Button asChild size="sm" variant="outline">
+          <Link href="/admin/outbound/map">Map</Link>
+        </Button>
       </div>
 
       <section className="space-y-3 rounded-lg border border-border bg-card px-4 py-5">
@@ -87,11 +86,17 @@ export default async function AdminOutboundPage({
       <section className="space-y-3 rounded-lg border border-border bg-card px-4 py-5">
         <h3 className="font-medium">3. Send</h3>
         <p className="text-sm text-muted-foreground">
-          <span className="font-medium text-foreground">{allApproved}</span>{" "}
+          <span className="font-medium text-foreground">{exportReady}</span>{" "}
           approved with email — ready to download.
         </p>
+        <p className="text-xs text-muted-foreground">
+          Optional Instantly variable{" "}
+          <code className="font-mono">{"{{personalization}}"}</code> maps to the
+          CSV <code className="font-mono">personalization</code> column (empty
+          ok).
+        </p>
         <div className="flex flex-wrap gap-2">
-          {allApproved > 0 ? (
+          {exportReady > 0 ? (
             <Button asChild size="sm">
               <Link href="/admin/outbound/export">Download Instantly CSV</Link>
             </Button>

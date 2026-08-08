@@ -12,18 +12,7 @@ export async function GET() {
     return NextResponse.json({ error }, { status: 500 });
   }
 
-  const csv = buildInstantlyCsv(
-    rows.map((row) => ({
-      email: row.email,
-      name: row.name,
-      website: row.website,
-      phone: row.phone,
-      city: row.city,
-      score: row.score,
-      reasons: row.reasons,
-      status: row.status,
-    })),
-  );
+  const csv = buildInstantlyCsv(rows);
 
   const date = new Date().toISOString().slice(0, 10);
   const filename = `instantly-import-${date}.csv`;

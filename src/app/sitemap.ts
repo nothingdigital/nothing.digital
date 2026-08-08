@@ -1,12 +1,11 @@
 import { MetadataRoute } from "next";
 
+import { brandConfig } from "@/brand";
 import { listMdxFiles } from "@/lib/mdx";
 import { routes } from "@/lib/routes";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://nothing.digital";
-
 function url(path: string): string {
-  return `${SITE_URL}${path}`;
+  return `${brandConfig.url}${path}`;
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

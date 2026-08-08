@@ -26,7 +26,7 @@ Alert contact: `alexander@nothing.digital`.
 
 ### Admin launcher
 
-Optional env `UPTIMEROBOT_DASHBOARD_URL` deep-links the UptimeRobot dashboard from `/admin/health` and Settings. No API key — Open link only.
+Env `UPTIMEROBOT_DASHBOARD_URL` (set on Vercel) deep-links the UptimeRobot dashboard from `/admin/health` and Settings. No API key — Open link only.
 
 ### Client asset monitor links
 
