@@ -166,6 +166,28 @@ export function truncateText(value: string, max = 100): string {
   return `${trimmed.slice(0, max - 1)}…`;
 }
 
+// ponytail: simple rule based. YAGNI ML. Score 0-100 for inbox sort + badge. Keywords for urgency, service for value, budget for priority.
+export function scoreLead(submission: any): number {
+  if (!submission) return 0;
+  let score = 50;
+  if (submission.budget === "50k+") score += 30;
+  if (submission.budget === "15k-50k") score += 20;
+  if (
+    submission.service === "ai-solutions" ||
+    submission.service === "software-solutions" ||
+    submission.service === "applications"
+  )
+    score += 25;
+  if (
+    submission.message &&
+    /urgent|asap|immediate|now|fast|rush|priority| ASAP/i.test(
+      submission.message,
+    )
+  )
+    score += 25;
+  return Math.min(100, score);
+}
+
 export function openBalanceCents(
   invoices: Array<{
     amount_cents: number;

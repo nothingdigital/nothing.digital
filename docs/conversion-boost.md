@@ -16,10 +16,10 @@
    - Tradeoff: fast but misses nuance. Lift: cut lead-to-booking 2 days. Measurable: avg time metric.
    - Plan: `parseLeadToBooking(email)` in existing InboxService. Guard: if no match return. Reuse form submit. 1 file edit.
 
-2. **Rule-Based Lead Scoring**
+2. **Rule-Based Lead Scoring** (implemented)
    - Score from fields (budget, urgency, source). Surface top in inbox.
    - Tradeoff: crude vs perfect. No ML (YAGNI). 25% leads drive 60% bookings.
-   - Plan: add `scoreLead(lead)` to LeadUtils (new 8-line func). Early return per rule. Store in existing lead table. Reuse inbox sort.
+   - Plan: add `scoreLead(lead)` to client-ops.ts (8-line func with ifs). Early return per rule. Compute on read, sort inbox by score desc, badge in row. Reuse existing.
 
 3. **Calendar Sync**
    - (given) Bidirectional with auto-suggest slots in replies.
