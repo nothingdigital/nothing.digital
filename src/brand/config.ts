@@ -21,12 +21,20 @@ export type BrandConfig = {
   assets: BrandAssets;
 };
 
+/** Empty CI secrets expand to "" — coalesce so metadataBase never gets Invalid URL. */
+export function resolveSiteUrl(
+  raw: string | undefined = process.env.NEXT_PUBLIC_SITE_URL,
+): string {
+  const trimmed = raw?.trim();
+  return trimmed || "https://nothing.digital";
+}
+
 export const brandConfig: BrandConfig = {
   name: "Nothing.Digital",
   tagline: "Ship premium digital products on time—every time.",
   description:
     "Senior web, software, and AI development studio. Custom websites, software, apps, email marketing, AI solutions, tech literacy, and coding & SQL — delivered on fixed timelines.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://nothing.digital",
+  url: resolveSiteUrl(),
   email: "hello@nothing.digital",
   contactEmail: "alexander@nothing.digital",
   phone: "205-561-7049",
