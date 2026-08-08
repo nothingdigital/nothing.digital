@@ -28,7 +28,7 @@ it("renders features, process steps, FAQ, and a contact CTA", () => {
   expect(screen.getByText("Step one")).toBeInTheDocument();
   expect(screen.getByText("First question?")).toBeInTheDocument();
 
-  const cta = screen.getByRole("link", { name: /discuss your project/i });
+  const cta = screen.getByRole("link", { name: /book a free scoping call/i });
   expect(cta).toHaveAttribute("href", "/contact");
 });
 
@@ -47,22 +47,40 @@ it("skips empty sections when no data is provided", () => {
   expect(screen.queryByText("First question?")).not.toBeInTheDocument();
 });
 
-it("renders related case studies when provided", () => {
+it("renders tech stack when provided", () => {
   render(
     <ServicePageTemplate
       {...defaultProps}
-      caseStudies={[
+      techStack={[
         {
-          title: "Acme Launch",
-          description: "Great results.",
-          href: "/portfolio/acme-launch",
+          name: "Next.js",
+          rationale: "Static by default.",
         },
       ]}
     />,
   );
 
-  expect(screen.getByText("Acme Launch")).toBeInTheDocument();
-  expect(screen.getByText("Great results.")).toBeInTheDocument();
+  expect(screen.getByText("Next.js")).toBeInTheDocument();
+  expect(screen.getByText("Static by default.")).toBeInTheDocument();
+});
+
+it("renders related services when provided", () => {
+  render(
+    <ServicePageTemplate
+      {...defaultProps}
+      relatedServices={[
+        {
+          title: "Email Marketing",
+          href: "/services/email-marketing",
+          description: "Campaigns that nurture leads.",
+        },
+      ]}
+    />,
+  );
+
+  expect(screen.getByText("Also consider")).toBeInTheDocument();
+  const link = screen.getByRole("link", { name: /email marketing/i });
+  expect(link).toHaveAttribute("href", "/services/email-marketing");
 });
 
 it("renders JSON-LD schema when provided", () => {

@@ -1,0 +1,53 @@
+import type { PlaceCandidate } from "./types";
+
+/** Synthetic Northport-ish rows for --fixture runs (no Places API key). */
+export const FIXTURE_CANDIDATES: PlaceCandidate[] = [
+  {
+    placeId: "fixture-no-site",
+    name: "River City HVAC",
+    phone: "(205) 555-0101",
+    address: "100 Main Ave, Northport, AL 35476",
+    website: null,
+    types: ["hvac_contractor"],
+    rating: 4.2,
+    reviewCount: 18,
+    vertical: "trades",
+    query: "HVAC in Northport, AL",
+  },
+  {
+    placeId: "fixture-facebook-only",
+    name: "Northport Family Dentistry",
+    phone: "(205) 555-0102",
+    address: "200 5th St, Northport, AL 35476",
+    website: "https://www.facebook.com/northportfamilydentistry",
+    types: ["dentist"],
+    rating: 4.8,
+    reviewCount: 92,
+    vertical: "pro",
+    query: "dentist in Northport, AL",
+  },
+  {
+    placeId: "fixture-http-site",
+    name: "Black Warrior Cafe",
+    phone: "(205) 555-0103",
+    address: "300 Bridge Ave, Northport, AL 35476",
+    website: "http://example.invalid/bw-cafe",
+    types: ["restaurant"],
+    rating: 4.0,
+    reviewCount: 40,
+    vertical: "hospitality",
+    query: "restaurant in Northport, AL",
+  },
+  {
+    placeId: "fixture-modern",
+    name: "Tuscaloosa Electric Pros",
+    phone: "(205) 555-0104",
+    address: "400 Industrial Dr, Northport, AL 35476",
+    website: "https://example.com",
+    types: ["electrician"],
+    rating: 4.6,
+    reviewCount: 55,
+    vertical: "trades",
+    query: "electrician in Northport, AL",
+  },
+];

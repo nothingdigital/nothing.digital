@@ -4,59 +4,125 @@
 
 @layer base {
   :root {
-    /* ponytail: clock-themed light palette — warm brass accent on soft parchment */
-    --background: 40 20% 97%;
-    --foreground: 220 30% 11%;
-    --card: 40 20% 99%;
-    --card-foreground: 220 30% 11%;
-    --popover: 40 20% 99%;
-    --popover-foreground: 220 30% 11%;
-    --primary: 36 65% 38%;
-    --primary-foreground: 43 60% 94%;
-    --secondary: 40 15% 91%;
-    --secondary-foreground: 220 30% 11%;
-    --muted: 40 12% 90%;
-    --muted-foreground: 220 10% 40%;
-    --accent: 36 65% 38%;
-    --accent-foreground: 43 60% 94%;
+    /* ponytail: clock-themed light palette — aged paper, deep ink, antique brass */
+    --background: 42 36% 94%;
+    --foreground: 224 42% 10%;
+    --card: 40 34% 98%;
+    --card-foreground: 224 42% 10%;
+    --popover: 40 34% 98%;
+    --popover-foreground: 224 42% 10%;
+    --primary: 36 72% 34%;
+    --primary-foreground: 43 64% 94%;
+    --secondary: 40 18% 89%;
+    --secondary-foreground: 224 42% 10%;
+    --muted: 40 16% 88%;
+    --muted-foreground: 224 14% 38%;
+    --accent: 172 48% 30%;
+    --accent-foreground: 43 64% 94%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 40 12% 84%;
-    --input: 40 12% 84%;
-    --ring: 36 65% 38%;
+    --border: 38 22% 78%;
+    --input: 38 22% 78%;
+    --ring: 36 72% 34%;
     --radius: 0.5rem;
+    --logo-dot: #fbbf24;
   }
 
   .dark {
-    /* ponytail: clock-themed dark palette — midnight dial with amber hands */
-    --background: 220 30% 8%;
-    --foreground: 43 40% 90%;
-    --card: 220 28% 11%;
-    --card-foreground: 43 40% 90%;
-    --popover: 220 28% 11%;
-    --popover-foreground: 43 40% 90%;
-    --primary: 39 80% 52%;
-    --primary-foreground: 220 30% 8%;
-    --secondary: 220 20% 16%;
-    --secondary-foreground: 43 40% 90%;
-    --muted: 220 20% 16%;
-    --muted-foreground: 43 30% 65%;
-    --accent: 39 80% 52%;
-    --accent-foreground: 220 30% 8%;
+    /* ponytail: clock-themed dark palette — midnight dial, burnished brass */
+    --background: 224 46% 6%;
+    --foreground: 43 58% 92%;
+    --card: 224 40% 10%;
+    --card-foreground: 43 58% 92%;
+    --popover: 224 40% 10%;
+    --popover-foreground: 43 58% 92%;
+    --primary: 40 88% 56%;
+    --primary-foreground: 224 46% 6%;
+    --secondary: 224 24% 15%;
+    --secondary-foreground: 43 58% 92%;
+    --muted: 224 24% 15%;
+    --muted-foreground: 43 30% 64%;
+    --accent: 168 55% 52%;
+    --accent-foreground: 224 46% 6%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-    --border: 220 18% 20%;
-    --input: 220 18% 20%;
-    --ring: 39 80% 52%;
+    --border: 224 22% 18%;
+    --input: 224 22% 18%;
+    --ring: 40 88% 56%;
   }
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
   * {
     @apply border-border;
   }
 
   body {
     @apply bg-background text-foreground;
+    /* ponytail: faint brass wash + paper grain feel, zero assets */
+    background-image:
+      radial-gradient(1200px 600px at 85% -10%, hsl(var(--primary) / 0.10), transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, hsl(var(--primary) / 0.07), transparent 55%);
+    background-attachment: fixed;
+  }
+
+  /* ponytail: film grain via inline SVG turbulence, zero assets */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    pointer-events: none;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  ::selection {
+    background: hsl(var(--accent) / 0.85);
+    color: hsl(var(--accent-foreground));
+  }
+
+  /* ponytail: kill animations/transitions for reduced-motion users */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* ponytail: teal hero glow, joins brass body wash */
+  .hero-glow {
+    background: radial-gradient(
+      closest-side,
+      hsl(var(--accent) / 0.22),
+      transparent
+    );
+  }
+}
+
+@layer components {
+  /* ponytail: gradient hairline between stacked same-variant sections */
+  .section-divider {
+    height: 1px;
+    width: 100%;
+    max-width: 64rem;
+    margin-inline: auto;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--border)),
+      transparent
+    );
   }
 }

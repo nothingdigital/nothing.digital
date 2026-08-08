@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
+import { DM_Serif_Display, Inter, JetBrains_Mono } from "next/font/google";
 
 import { JsonLd } from "@/components/atoms/json-ld";
-import { ThemeProvider } from "@/components/providers/theme-provider";
+import { logoDotColorScript } from "@/components/atoms/logo-dot";
+import { CookieConsent } from "@/components/molecules/cookie-consent";
+import { sameAs, siteConfig } from "@/lib/site";
+import { ThemeProvider } from "next-themes";
 import "./globals.css";
 
 const inter = Inter({
@@ -19,38 +20,47 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://nothing.digital";
+const dmSerifDisplay = DM_Serif_Display({
+  weight: "400",
+  style: ["normal", "italic"],
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const ogImage = `${siteConfig.url}/og/default.png`;
 
 export const metadata: Metadata = {
   title: {
-    default: "Nothing.Digital — Premium Digital Services",
-    template: "%s — Nothing.Digital",
+    default: `${siteConfig.name} — ${siteConfig.tagline}`,
+    template: `%s — ${siteConfig.name}`,
   },
-  description:
-    "Nothing.Digital builds websites, custom software, applications, and email marketing strategies.",
-  metadataBase: new URL(SITE_URL),
+  description: siteConfig.description,
+  metadataBase: new URL(siteConfig.url),
+  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: "en_US",
-    siteName: "Nothing.Digital",
-    images: [`${SITE_URL}/og/default.svg`],
+    siteName: siteConfig.name,
+    title: `${siteConfig.name} — ${siteConfig.tagline}`,
+    description: siteConfig.description,
+    images: [{ url: ogImage, width: 1200, height: 630, alt: siteConfig.name }],
   },
   twitter: {
     card: "summary_large_image",
-    images: [`${SITE_URL}/og/default.svg`],
+    title: `${siteConfig.name} — ${siteConfig.tagline}`,
+    description: siteConfig.description,
+    images: [ogImage],
   },
 };
 
 const organizationJsonLd = {
   "@type": "Organization",
-  name: "Nothing.Digital",
-  url: SITE_URL,
-  logo: `${SITE_URL}/og/default.svg`,
-  sameAs: [
-    "https://twitter.com/nothingdigital",
-    "https://linkedin.com/company/nothingdigital",
-    "https://github.com/nothingdigital",
-  ],
+  name: siteConfig.name,
+  url: siteConfig.url,
+  logo: ogImage,
+  description: siteConfig.description,
+  sameAs,
 };
 
 export default function RootLayout({
@@ -61,14 +71,16 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${jetbrainsMono.variable}`}
+      className={`${inter.variable} ${jetbrainsMono.variable} ${dmSerifDisplay.variable}`}
       suppressHydrationWarning
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: logoDotColorScript }} />
+      </head>
       <body className="min-h-screen font-sans antialiased">
-        <ThemeProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
-          <Analytics />
-          <SpeedInsights />
+          <CookieConsent />
         </ThemeProvider>
         <JsonLd data={organizationJsonLd} />
       </body>

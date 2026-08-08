@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 
+import { ErrorLayout } from "@/components/templates/error-layout";
 import { Button } from "@/components/ui/button";
 import { routes } from "@/lib/routes";
 
@@ -18,17 +19,19 @@ export default function Error({ error, reset }: ErrorProps) {
   }, [error]);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center px-4 text-center">
-      <h1 className="text-6xl font-bold tracking-tight">500</h1>
-      <p className="mt-4 text-lg text-muted-foreground">
-        Something went wrong. We&apos;re on it.
-      </p>
-      <div className="mt-8 flex flex-wrap justify-center gap-4">
-        <Button onClick={reset}>Try again</Button>
-        <Button variant="outline" asChild>
-          <Link href={routes.contact}>Contact support</Link>
-        </Button>
-      </div>
-    </div>
+    <ErrorLayout>
+      <section className="container mx-auto flex flex-1 flex-col items-center justify-center px-4 py-24 text-center md:px-6 lg:px-8">
+        <h1 className="text-6xl font-bold tracking-tight">500</h1>
+        <p className="mt-4 text-lg text-muted-foreground">
+          Something went wrong. We&apos;re on it.
+        </p>
+        <div className="mt-8 flex flex-wrap justify-center gap-4">
+          <Button onClick={reset}>Try again</Button>
+          <Button variant="outline" asChild>
+            <Link href={routes.contact}>Contact support</Link>
+          </Button>
+        </div>
+      </section>
+    </ErrorLayout>
   );
 }

@@ -1,7 +1,7 @@
 // ponytail: minimal JSON-LD wrapper; schemas injected per page.
 
 export interface JsonLdProps {
-  data: Record<string, unknown> | Record<string, unknown>[];
+  data: Record<string, unknown>;
 }
 
 export function JsonLd({ data }: JsonLdProps) {
@@ -10,14 +10,7 @@ export function JsonLd({ data }: JsonLdProps) {
       type="application/ld+json"
       // eslint-disable-next-line react/no-danger
       dangerouslySetInnerHTML={{
-        __html: JSON.stringify(
-          Array.isArray(data)
-            ? data.map((item) => ({
-                "@context": "https://schema.org",
-                ...item,
-              }))
-            : { "@context": "https://schema.org", ...data },
-        ),
+        __html: JSON.stringify({ "@context": "https://schema.org", ...data }),
       }}
     />
   );

@@ -1,12 +1,11 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
 const pages = [
   "/",
   "/services",
   "/services/website-development",
-  "/portfolio",
-  "/portfolio/acme-launch",
+  "/pricing",
   "/about",
   "/blog",
   "/blog/why-performance-matters",
@@ -16,17 +15,12 @@ const pages = [
   "/accessibility",
 ];
 
-async function scanPage(page: Page, path: string) {
-  await page.goto(path);
-  const results = await new AxeBuilder({ page })
-    .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
-    .analyze();
-  return results;
-}
-
 for (const path of pages) {
   test(`a11y scan for ${path}`, async ({ page }) => {
-    const results = await scanPage(page, path);
+    await page.goto(path);
+    const results = await new AxeBuilder({ page })
+      .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+      .analyze();
     expect(results.violations).toEqual([]);
   });
 }

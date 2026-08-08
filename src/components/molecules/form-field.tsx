@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactElement, ReactNode } from "react";
 import {
   Controller,
   Control,
@@ -8,17 +9,13 @@ import {
   FieldError,
   ControllerRenderProps,
 } from "react-hook-form";
-import * as LabelPrimitive from "@radix-ui/react-label";
-
-import { cn } from "@/lib/utils";
 
 export interface FormFieldProps<T extends FieldValues> {
   name: Path<T>;
-  label: string;
+  label: ReactNode;
   control: Control<T>;
   error?: FieldError;
-  render: (field: ControllerRenderProps<T, Path<T>>) => React.ReactElement;
-  className?: string;
+  render: (field: ControllerRenderProps<T, Path<T>>) => ReactElement;
 }
 
 export function FormField<T extends FieldValues>({
@@ -27,23 +24,33 @@ export function FormField<T extends FieldValues>({
   control,
   error,
   render,
-  className,
 }: FormFieldProps<T>) {
+  const errorId = `${name}-error`;
+
   return (
-    <div className={cn("space-y-2", className)}>
-      <LabelPrimitive.Root
+    <div className="space-y-2">
+      <label
         htmlFor={name}
         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
       >
         {label}
-      </LabelPrimitive.Root>
+      </label>
       <Controller
         name={name}
         control={control}
-        render={({ field }) => render(field)}
+        render={({ field }) =>
+          render({
+            ...field,
+            ...(error
+              ? { "aria-invalid": true, "aria-describedby": errorId }
+              : {}),
+          } as ControllerRenderProps<T, Path<T>>)
+        }
       />
       {error?.message && (
-        <p className="text-sm font-medium text-destructive">{error.message}</p>
+        <p id={errorId} className="text-sm font-medium text-destructive">
+          {error.message}
+        </p>
       )}
     </div>
   );

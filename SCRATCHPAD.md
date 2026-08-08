@@ -1,33 +1,45 @@
-# Deploy Fix — Scratchpad
+# Current state
 
-## Current state
-
-- Goal: Redeploy the latest `main` to `https://nothing.digital`.
-- Status: ✅ Site redeployed successfully via Vercel Git integration after making the repo public.
-- Current step: Remove the now-redundant and failing GitHub Actions deploy workflows.
-- Next action: Delete `.github/workflows/deploy-production.yml` and `.github/workflows/deploy-preview.yml`, keep PR validation.
-- Updated: 2026-08-05
+Goal: hybrid lead-gen activation (Approach C).
+Status: agent inbound cleanup shipped. Owner boxes open (Instantly / Listmonk / Places).
+Current step: owner starts Instantly warmup + Listmonk drip; agent done for this wave.
+Next action: owner preflight; optional commit of agent changes.
+Updated: 2026-08-07
 
 ## Plan
 
-1. ✅ Make GitHub repo public.
-2. ✅ Push empty commit to trigger redeploy.
-3. ✅ Confirm Vercel Git integration auto-deploys (`/css/ef14d8485819bf07.css`, hero shows “Built on time”).
-4. ⬜ Remove failing CLI-based `deploy-production.yml` and `deploy-preview.yml` workflows.
-5. ⬜ Commit and push cleanup.
-6. ⬜ Verify no failing workflow noise on future pushes.
+- [x] audit agents (map, outbound, inbound, growth)
+- [x] design approved (hybrid C) → spec + plan written
+- [x] Calendly on confirm email + success UI
+- [x] Honest nurture Day-0 + email footer cleanup
+- [x] Always team Resend (+ n8n fan-out)
+- [x] Umami events (contact_submit, newsletter_subscribe, calendly_click)
+- [x] Delete AvailabilityWidget mock + dead import
+- [x] Docs: conversion-boost + this board
+- [ ] Owner: Instantly DNS/warmup ≥14d
+- [ ] Owner: Listmonk 0/3/7 drip + E2E
+- [ ] Owner: GOOGLE_PLACES_API_KEY on Vercel + live lead-finder / map
+- [ ] Owner: confirm mig 005 + **009** (map lat/lng); review CSV → Instantly (admin export only)
+- [ ] Owner: founding-client slot 1
+- [ ] Keep AI outbound personalization OFF for first send
 
 ## Decisions
 
-- Use Vercel Git integration for deploys; it is already working and avoids token/org-ID issues.
-- Keep `pr-validation.yml` for type-check/lint/tests.
+- Approach C hybrid.
+- Cold ≠ warm ≠ transactional.
+- Contact nurture = Resend Day-0 only if score > 60; no Listmonk auto-subscribe.
+- Admin Instantly export only — ignore CLI `instantly-import-*.csv` until after review.
+- Spec: `docs/superpowers/specs/2026-08-07-lead-gen-design.md`
+- Plan: `docs/superpowers/plans/2026-08-07-lead-gen.md`
 
 ## Dead ends
 
-- GitHub Actions CLI deploy will keep failing because the stored Vercel token/IDs are mismatched; removing it is cleaner than debugging credentials for a path we do not need.
+- Full ML scoring; Instantly API; Calendly→CRM; self-serve scheduler; fake availability slots.
 
 ## Progress log
 
-- 2026-08-05: Repo changed to public; Vercel Git integration unblocked.
-- 2026-08-05: Site redeployed with clock theme and cream text.
-- 2026-08-05: Live `https://nothing.digital` confirmed updated.
+- Ponytail cleanup applied (6 agents): components, site/brand, admin app, lib/admin+kb, lib core, scripts/e2e. Skipped: `database.ts` gen types, editing applied migrations, `body_text` drop, cookie-consent→`<dialog>`.
+- Ponytail full-code review (278/278): findings-only report `docs/runbooks/archive/ponytail-full-review-2026-08-08.md` (~−1090 lines upper bound). Re-run: `docs/runbooks/ponytail-full-review.md`.
+- Admin outbound map: `/admin/outbound/map` (MapLibre + Places → lead pins; Berry AL). Spec `2026-08-08-admin-outbound-map-design.md`. Needs Places key on Vercel + mig 009.
+- Implemented inbound cleanup: templates, contact route dual-notify, success Calendly CTA, Umami helper, deleted AvailabilityWidget.
+- Audits: activation gap not tooling gap; dual DNC remains manual for pilot.

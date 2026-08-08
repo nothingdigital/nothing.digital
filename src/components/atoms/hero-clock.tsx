@@ -1,10 +1,26 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // ponytail: tiny self-contained analog clock; no external chart/animation deps.
 export function HeroClock() {
   const [time, setTime] = useState<Date | null>(null);
+  const tiltRef = useRef<HTMLDivElement>(null);
+
+  // ponytail: direct style mutation, no state churn per mousemove
+  const handleTilt = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const el = tiltRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    el.style.transform = `perspective(800px) rotateX(${-y * 10}deg) rotateY(${x * 10}deg)`;
+  };
+
+  const resetTilt = () => {
+    tiltRef.current?.style.removeProperty("transform");
+  };
 
   useEffect(() => {
     setTime(new Date());
@@ -12,10 +28,15 @@ export function HeroClock() {
     return () => clearInterval(id);
   }, []);
 
+  // Width + aspect-square only (no fixed height) so narrow viewports scale evenly;
+  // shrink-0 / self-center defeat grid/flex stretch that was turning the dial into an oval.
+  const frameClassName =
+    "relative mx-auto aspect-square h-auto w-full max-w-64 shrink-0 self-center sm:max-w-72 md:max-w-80 lg:max-w-96";
+
   if (!time) {
     // ponytail: render static placeholder to avoid hydration mismatch.
     return (
-      <div className="relative mx-auto aspect-square w-48 md:w-64">
+      <div className={frameClassName}>
         <div className="absolute inset-0 rounded-full border-4 border-primary/20" />
       </div>
     );
@@ -31,38 +52,79 @@ export function HeroClock() {
 
   return (
     <div
-      className="relative mx-auto aspect-square w-48 md:w-64"
+      ref={tiltRef}
+      onMouseMove={handleTilt}
+      onMouseLeave={resetTilt}
+      className={`${frameClassName} transition-transform duration-200 ease-out`}
+      role="img"
       aria-label={`Current time ${time.toLocaleTimeString()}`}
     >
+      {/* rotating seal text */}
+      <svg
+        viewBox="0 0 100 100"
+        className="animate-sweep absolute -left-6 -top-6 h-[calc(100%+3rem)] w-[calc(100%+3rem)] text-accent/70"
+        aria-hidden="true"
+      >
+        <defs>
+          <path
+            id="seal-circle"
+            d="M 50,50 m -46,0 a 46,46 0 1,1 92,0 a 46,46 0 1,1 -92,0"
+            fill="none"
+          />
+        </defs>
+        <text
+          fill="currentColor"
+          fontSize="5.2"
+          letterSpacing="2.5"
+          className="font-mono uppercase"
+        >
+          <textPath href="#seal-circle">
+            Nothing.Digital · Time Well Built · Nothing.Digital · Time Well
+            Built ·
+          </textPath>
+        </text>
+      </svg>
+
+      {/* halo */}
+      <div className="absolute -inset-3 rounded-full bg-primary/10 blur-xl" />
+
       {/* dial */}
-      <div className="absolute inset-0 rounded-full border-4 border-primary/20 bg-card shadow-xl" />
+      <div className="absolute inset-0 rounded-full border-4 border-primary/25 bg-card shadow-2xl" />
+      <div className="absolute inset-3 rounded-full border border-border" />
 
       {/* hour markers */}
       {Array.from({ length: 12 }).map((_, index) => {
         const rotation = index * 30;
+        const isQuarter = index % 3 === 0;
         return (
           <div
             key={index}
             className="absolute left-1/2 top-0 h-full w-0.5 -translate-x-1/2"
             style={{ transform: `rotate(${rotation}deg)` }}
           >
-            <div className="mx-auto mt-2 h-2 w-0.5 rounded-full bg-muted-foreground/40" />
+            <div
+              className={`mx-auto mt-3 rounded-full ${
+                isQuarter
+                  ? "h-3 w-1 bg-primary"
+                  : "h-2 w-0.5 bg-muted-foreground/40"
+              }`}
+            />
           </div>
         );
       })}
 
       {/* hands */}
-      <Hand length={28} width={3} degrees={hourDeg} color="bg-foreground" />
+      <Hand length={26} width={4} degrees={hourDeg} color="bg-foreground" />
       <Hand
-        length={40}
-        width={2}
+        length={38}
+        width={2.5}
         degrees={minuteDeg}
         color="bg-foreground/80"
       />
-      <Hand length={46} width={1} degrees={secondDeg} color="bg-primary" />
+      <Hand length={44} width={1.5} degrees={secondDeg} color="bg-primary" />
 
       {/* center cap */}
-      <div className="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary" />
+      <div className="absolute left-1/2 top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-card bg-primary" />
     </div>
   );
 }

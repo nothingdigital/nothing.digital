@@ -4,9 +4,7 @@ import { env } from "@/lib/env";
 import type { Database } from "./database";
 
 export function getServiceRoleClient(): SupabaseClient<Database> | null {
-  const url = env.private.SUPABASE_SERVICE_ROLE_KEY
-    ? env.public.NEXT_PUBLIC_SUPABASE_URL
-    : null;
+  const url = env.public.NEXT_PUBLIC_SUPABASE_URL;
   const key = env.private.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!url || !key) {

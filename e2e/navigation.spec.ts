@@ -1,16 +1,10 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 
 const navLinks = [
   { label: "Services", href: "/services" },
-  { label: "Portfolio", href: "/portfolio" },
+  { label: "Pricing", href: "/pricing" },
   { label: "About", href: "/about" },
-  { label: "Blog", href: "/blog" },
-  { label: "Contact", href: "/contact" },
 ];
-
-async function openHome(page: Page) {
-  await page.goto("/");
-}
 
 test("desktop navigation links point to the correct pages", async ({
   page,
@@ -18,7 +12,7 @@ test("desktop navigation links point to the correct pages", async ({
 }) => {
   test.skip(isMobile, "desktop nav hidden on mobile");
 
-  await openHome(page);
+  await page.goto("/");
 
   const header = page.locator("header");
   for (const link of navLinks) {
@@ -29,7 +23,7 @@ test("desktop navigation links point to the correct pages", async ({
 });
 
 test("footer legal links point to the correct pages", async ({ page }) => {
-  await openHome(page);
+  await page.goto("/");
 
   const footer = page.locator("footer");
   await expect(
