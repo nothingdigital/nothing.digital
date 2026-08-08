@@ -1,13 +1,10 @@
 import { Output, createGateway, generateText } from "ai";
 
 import {
-  briefAssistOutputSchema,
   inboxDraftSchema,
   invoiceCoverSchema,
   opsBriefSchema,
   outboundPersonalizationSchema,
-  type BriefAssistInput,
-  type BriefAssistOutput,
   type InboxDraft,
   type InvoiceCoverDraft,
   type OpsBrief,
@@ -35,13 +32,6 @@ export function isInboxDraftsEnabled(): boolean {
   return (
     Boolean(env.private.AI_GATEWAY_API_KEY) &&
     flagOn(env.private.AI_INBOX_DRAFTS_ENABLED)
-  );
-}
-
-export function isBriefAssistantEnabled(): boolean {
-  return (
-    Boolean(env.private.AI_GATEWAY_API_KEY) &&
-    flagOn(env.private.AI_BRIEF_ASSISTANT_ENABLED)
   );
 }
 
@@ -90,16 +80,6 @@ Also classify triage for internal use only:
 - needs-clarification: incomplete ask
 - archive-candidate: spam, off-topic, or clearly not a fit`;
 
-const briefAssistSystemPrompt = `You help a visitor draft a project brief for Nothing.Digital's contact form.
-
-Rules:
-- Output a clear first-person message the visitor can send (as if they wrote it).
-- Do not invent prices, timelines, guarantees, or legal claims.
-- If they ask for a quote, steer them to published /pricing ballparks and a scoping call — never invent a custom dollar amount.
-- suggestedService must be one of the studio's service slugs or null.
-- suggestedBudget must be one of <5k | 5k-15k | 15k-50k | 50k+ or null.
-- Keep message under 2000 characters.`;
-
 const opsBriefSystemPrompt = `You are the founder's ops chief of staff for Nothing.Digital.
 Given today's open/later/recently-closed loops, write a tight briefing.
 Rules:
@@ -147,29 +127,6 @@ export async function draftInboxReply(submission: {
 
   if (!output) {
     throw new Error("Model returned no draft.");
-  }
-
-  return output;
-}
-
-export async function draftProjectBrief(
-  input: BriefAssistInput,
-): Promise<BriefAssistOutput> {
-  const { output } = await generateText({
-    model: getGatewayModel(),
-    system: briefAssistSystemPrompt,
-    prompt: [
-      `Goal: ${input.goal}`,
-      `Current state: ${input.currentState}`,
-      `Must-haves: ${input.mustHaves}`,
-      `Timeline feel: ${input.timelineFeel}`,
-      `Constraints: ${input.constraints || "—"}`,
-    ].join("\n"),
-    output: Output.object({ schema: briefAssistOutputSchema }),
-  });
-
-  if (!output) {
-    throw new Error("Model returned no brief.");
   }
 
   return output;

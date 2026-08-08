@@ -1,7 +1,7 @@
 # AI Integration — Design Spec
 
 **Date:** 2026-08-06  
-**Status:** Implemented — pending env enablement  
+**Status:** Admin HITL AI live (env-enabled). Public contact brief **removed** (admin-only AI).  
 **Owner:** Nothing.Digital (The Business of Nothing LLC)
 
 ## Purpose
@@ -9,8 +9,9 @@
 Add a shared AI runtime to the Nothing.Digital app so the studio can:
 
 1. Cut founder judgment time on warm inbound (draft → Approve → Resend)
-2. Dogfood the marketed **AI Solutions** service with a scoped, HITL public brief helper
-3. Reuse one stack (Vercel AI SDK + Gateway) that matches what we sell clients
+2. Reuse one stack (Vercel AI SDK + Gateway) for admin HITL drafts (ops brief, invoice cover, outbound)
+
+~~Dogfood public brief helper on `/contact`~~ — removed; no public site AI.
 
 This extends — and does not contradict — [admin-automation-until-hire](./2026-08-06-admin-automation-until-hire-design.md): freeform mail still requires Approve; unrestricted auto-reply stays banned.
 

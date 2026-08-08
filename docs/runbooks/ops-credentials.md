@@ -112,17 +112,16 @@ CLI: `pnpm lead-finder` (needs `GOOGLE_PLACES_API_KEY`). Never import cold CSVs 
 
 ### 9. AI Gateway enablement (optional — code already on `main`)
 
-AI inbox drafts + contact brief assistant are **shipped**. Enablement is env-only on Vercel (Production).
+AI admin drafts (inbox, ops brief, invoice cover, outbound) are **shipped**. Enablement is env-only on Vercel (Production). There is no public contact AI.
 
 1. Vercel → team/project → **AI Gateway** (or [vercel.com/docs/ai-gateway](https://vercel.com/docs/ai-gateway)) → create an API key (set a monthly budget if offered).
 2. Project → **Settings** → **Environment Variables** → Production:
 
    | Name                                  | Value                 | Notes                            |
    | ------------------------------------- | --------------------- | -------------------------------- |
-   | `AI_GATEWAY_API_KEY`                  | (secret from step 1)  | Required for both features       |
+   | `AI_GATEWAY_API_KEY`                  | (secret from step 1)  | Required for AI features         |
    | `AI_MODEL`                            | `openai/gpt-4.1-mini` | Optional; this is the default    |
    | `AI_INBOX_DRAFTS_ENABLED`             | `true`                | Admin `/admin/inbox` drafts      |
-   | `AI_BRIEF_ASSISTANT_ENABLED`          | `true`                | Public contact brief helper      |
    | `AI_OPS_BRIEF_ENABLED`                | `true`                | Admin `/admin` today brief       |
    | `AI_INVOICE_COVER_ENABLED`            | `true`                | Invoice cover HITL before Resend |
    | `AI_OUTBOUND_PERSONALIZATION_ENABLED` | `true`                | Instantly one-line before CSV    |
@@ -132,14 +131,15 @@ AI inbox drafts + contact brief assistant are **shipped**. Enablement is env-onl
 5. Smoke:
    - `/admin/settings` → AI rows show gateway + effective flag state (on only when key + flag are set)
    - `/admin/inbox` → open a submission → **Draft reply** appears → generate → edit → do **not** send a real client until you trust the draft.
-   - `/contact` → **Help me write a brief** → generate → fields fill → you can discard without submitting.
    - `/admin` → **Draft today brief** (ops)
    - Invoice cover + outbound personalization when those flags are on (outbound needs migration `007`)
 6. Kill switch: set any flag to `false` (or remove `AI_GATEWAY_API_KEY`) and redeploy — CTAs hide; Settings rows flip to `off`.
 
 Local: mirror the same keys in `.env.local` (see `.env.local.example`).
 
-Admin AI drafts are rate-limited per admin email + feature (same in-memory limiter as public brief).
+Admin AI drafts are rate-limited per admin email + feature (in-memory limiter).
+
+You can remove unused `AI_BRIEF_ASSISTANT_ENABLED` from Vercel if it is still set — it is no longer read.
 
 ## Done when
 
@@ -151,7 +151,7 @@ Admin AI drafts are rate-limited per admin email + feature (same in-memory limit
 - [ ] Live newsletter E2E confirmed
 - [x] Migration `003_asset_monitor_url.sql` applied on Supabase
 - [ ] Migration `004_profiles.sql` confirmed applied (check SQL above)
-- [ ] AI enabled (optional): `integrations.ai: true` + inbox/brief smoke
+- [ ] AI enabled (optional): `integrations.ai: true` + inbox/ops draft smoke
 - [x] Site polish PRs #7–#9 + admin follow-ups wave on `main` (#10)
 
 ## Related
