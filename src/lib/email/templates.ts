@@ -147,3 +147,19 @@ export function invoiceSentEmailTemplate(data: {
 
   return baseTemplate(`Invoice ${data.number} — Nothing.Digital`, body);
 }
+
+// ponytail: score-based day 0 nurture to re-engage with scheduler link. Reuse base + calendly url. No full sequence (Listmonk for that).
+export function nurtureDay0EmailTemplate(
+  data: ContactInput,
+  calendlyUrl: string,
+): string {
+  const body = `
+    <h1 style="font-size: 20px; margin: 0 0 16px;">Let's schedule a call</h1>
+    <p>Hi ${data.name}, thanks for your message. To move forward with your ${data.service || "project"}, book a scoping call here:</p>
+    <a href="${calendlyUrl}" style="display: inline-block; background: #111; color: #fff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600;">Book a scoping call</a>
+    <p style="margin-top: 24px;">We'll follow up with a case study in 3 days and a soft CTA in 7 days via our nurture sequence.</p>
+    <p style="margin-top: 16px; font-size: 13px; color: #555;">This is automated to showcase our email marketing services.</p>
+  `;
+
+  return baseTemplate("Let's schedule a call — Nothing.Digital", body);
+}
