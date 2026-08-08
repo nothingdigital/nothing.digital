@@ -23,6 +23,11 @@ export type ScoredLead = PlaceCandidate &
     email: string | null;
     emailSource: "hunter" | "mailto" | "none";
     suppressed: boolean;
+    /** Optional LLM fit score when `--ai-rank` ran. */
+    aiScore?: number | null;
+    aiReason?: string | null;
+    /** Optional Instantly one-liner; HITL only — never auto-sent. */
+    personalization?: string | null;
   };
 
 export type CategoryQuery = {

@@ -78,6 +78,7 @@ export async function importLeadCandidates(
     rating: row.rating,
     review_count: row.reviewCount,
     status: leadStatusForImport(row),
+    personalization: row.personalization,
   }));
 
   if (payload.length === 0) {

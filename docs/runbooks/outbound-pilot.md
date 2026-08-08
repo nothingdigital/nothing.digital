@@ -19,8 +19,13 @@ pnpm lead-finder --fixture
 
 # Live — all verticals (trades, pro, hospitality)
 pnpm lead-finder --min-score=0
+
+# Optional: AI re-rank top N (fit score + reason + Instantly one-liner)
+# Needs AI_GATEWAY_API_KEY. Does not send mail — CSV only.
+AI_GATEWAY_API_KEY=... pnpm lead-finder --ai-rank --ai-limit=40
 ```
 
+`--ai-rank` adds `aiScore`, `aiReason`, `personalization` columns. Admin import prefers `aiScore` for sort and stores personalization for HITL Instantly export.
 Outputs land in `data/lead-finder/out/`:
 
 | File                              | Use                                  |
