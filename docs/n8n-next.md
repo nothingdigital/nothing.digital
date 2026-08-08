@@ -2,6 +2,15 @@
 
 **Pod up:** Use the dashboard URL to create workflows. Env in Vercel for the webhook.
 
+**How the contact form triggers the webhook with the path /webhook/contact:**
+
+- Contact form submits to `/api/contact` (POST with JSON name, email, message, service, budget, timeline).
+- The route validates, inserts to Supabase, sends emails, then calls `notifyN8n("contact", payload)` (the void means fire-and-forget, never blocks the 201 success response to the user).
+- notifyN8n checks if N8N_WEBHOOK_URL set, then fetch POST to that URL (the full production URL ending with /webhook/contact) with body { "event": "contact", "name": ..., "email": ..., "message": ..., "service": ... } + optional X-N8N-Secret header.
+- n8n webhook node with path `/webhook/contact` receives the POST, triggers the workflow with $json.event = "contact" and the payload in $json.
+- The workflow runs the nodes (Code to format, Email to send to team, optional Supabase for booking).
+- If the URL in Vercel env matches the n8n production webhook URL exactly, and the workflow is active, it triggers.
+
 **What to do:**
 
 1. In n8n dashboard, create workflow for contact:
