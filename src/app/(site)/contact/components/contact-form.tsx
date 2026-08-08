@@ -10,12 +10,10 @@ import * as LabelPrimitive from "@radix-ui/react-label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FormField } from "@/components/molecules/form-field";
-import { BriefAssistant } from "@/components/contact/brief-assistant";
 import { contactSchema, type ContactInput } from "@/lib/validations/contact";
 import { routes, serviceSlugs } from "@/lib/routes";
 import { serviceSummaries } from "@/lib/services";
 import { mapServiceToScope, calcPrice } from "@/lib/pricing";
-import type { BriefAssistOutput } from "@/lib/ai/types";
 
 // ponytail: extend server schema client-side for phone/privacy; strip before POST.
 const contactFormSchema = contactSchema.extend({
@@ -57,11 +55,7 @@ function toApiPayload(data: FormValues): ContactInput {
   };
 }
 
-export function ContactForm({
-  briefAssistantEnabled = false,
-}: {
-  briefAssistantEnabled?: boolean;
-}) {
+export function ContactForm() {
   const [status, setStatus] = React.useState<
     "idle" | "loading" | "success" | "error"
   >("idle");
@@ -76,7 +70,6 @@ export function ContactForm({
     register,
     reset,
     setFocus,
-    setValue,
     watch,
     formState: { errors },
   } = useForm<FormValues>({
@@ -101,16 +94,6 @@ export function ContactForm({
     watchedService && watchedTimeline
       ? calcPrice(mapServiceToScope(watchedService), parseInt(watchedTimeline))
       : null;
-
-  function applyBrief(result: BriefAssistOutput) {
-    setValue("message", result.message, { shouldValidate: true });
-    if (result.suggestedService) {
-      setValue("service", result.suggestedService, { shouldValidate: true });
-    }
-    if (result.suggestedBudget) {
-      setValue("budget", result.suggestedBudget, { shouldValidate: true });
-    }
-  }
 
   const onSubmit = React.useCallback(
     async (data: FormValues) => {
@@ -373,8 +356,6 @@ export function ContactForm({
           </p>
         </div>
       )}
-
-      {briefAssistantEnabled ? <BriefAssistant onApply={applyBrief} /> : null}
 
       <FormField
         name="message"

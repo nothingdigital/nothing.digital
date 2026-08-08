@@ -99,6 +99,15 @@ export default function AdminNewClientPage() {
         <AdminField label="Notes" htmlFor="notes">
           <textarea id="notes" name="notes" className={adminTextareaClass} />
         </AdminField>
+        <label className="flex items-center gap-2 text-sm cursor-pointer">
+          <input
+            type="checkbox"
+            name="is_founding"
+            className="accent-primary"
+          />
+          Founding Client ($2,500 build + 12mo included care, invite-only, max
+          2, portfolio rights + testimonial)
+        </label>
         <Button type="submit">Create client</Button>
       </form>
     </div>

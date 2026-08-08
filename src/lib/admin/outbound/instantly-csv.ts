@@ -20,35 +20,26 @@ function cell(value: string | number | null | undefined): string {
   return escapeCsv(String(value));
 }
 
-const LEGACY_HEADER = "email,companyName,website,phone,city,score,reasons";
-const PERSONALIZATION_HEADER = `${LEGACY_HEADER},personalization`;
+const HEADER =
+  "email,companyName,website,phone,city,score,reasons,personalization";
 
 /** Instantly-friendly subset — mirrors scripts/lead-finder/csv.ts */
-export function buildInstantlyCsv(
-  leads: InstantlyExportLead[],
-  requirePersonalization = false,
-): string {
-  const lines = [
-    requirePersonalization ? PERSONALIZATION_HEADER : LEGACY_HEADER,
-  ];
+export function buildInstantlyCsv(leads: InstantlyExportLead[]): string {
+  const lines = [HEADER];
   for (const lead of leads) {
     if (lead.status !== "approved" || !lead.email) continue;
-    if (requirePersonalization && !lead.personalization?.trim()) {
-      continue;
-    }
-    const cells = [
-      cell(lead.email),
-      cell(lead.name),
-      cell(lead.website),
-      cell(lead.phone),
-      cell(lead.city),
-      cell(lead.score),
-      cell(lead.reasons.join("|")),
-    ];
-    if (requirePersonalization) {
-      cells.push(cell(lead.personalization));
-    }
-    lines.push(cells.join(","));
+    lines.push(
+      [
+        cell(lead.email),
+        cell(lead.name),
+        cell(lead.website),
+        cell(lead.phone),
+        cell(lead.city),
+        cell(lead.score),
+        cell(lead.reasons.join("|")),
+        cell(lead.personalization),
+      ].join(","),
+    );
   }
   return `${lines.join("\n")}\n`;
 }
@@ -63,9 +54,6 @@ export function countMissingPersonalization(
   leads: InstantlyExportLead[],
 ): number {
   return leads.filter(
-    (lead) =>
-      lead.status === "approved" &&
-      Boolean(lead.email) &&
-      !lead.personalization?.trim(),
+    (lead) => lead.status === "approved" && !lead.personalization,
   ).length;
 }

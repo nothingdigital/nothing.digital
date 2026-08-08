@@ -10,6 +10,7 @@ import { isInboxStatus, type InboxStatus } from "@/lib/admin/config";
 import { buildClientNotesFromSubmission } from "@/lib/admin/inbox-lead";
 import { getContactSubmission, updateContactStatus } from "@/lib/admin/queries";
 import { draftInboxReply, isInboxDraftsEnabled } from "@/lib/ai";
+import { aiDraftError, guardAdminAiDraft } from "@/lib/ai/admin-guard";
 import { inboxDraftSchema } from "@/lib/ai/types";
 import { inboxReplyEmailTemplate } from "@/lib/email/templates";
 import { env } from "@/lib/env";
@@ -30,11 +31,14 @@ export async function updateInboxStatusAction(id: string, status: InboxStatus) {
 }
 
 export async function draftInboxReplyAction(submissionId: string) {
-  await requireAdmin();
+  const user = await requireAdmin();
 
   if (!isInboxDraftsEnabled()) {
     return { ok: false as const, error: "Inbox AI drafts are disabled." };
   }
+
+  const gated = await guardAdminAiDraft("inbox", user);
+  if (!gated.ok) return gated;
 
   const { row, error } = await getContactSubmission(submissionId);
   if (error) {
@@ -55,8 +59,7 @@ export async function draftInboxReplyAction(submissionId: string) {
     });
     return { ok: true as const, draft };
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Draft failed.";
-    return { ok: false as const, error: message };
+    return { ok: false as const, error: aiDraftError(err) };
   }
 }
 

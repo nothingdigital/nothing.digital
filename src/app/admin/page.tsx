@@ -3,15 +3,7 @@ import Link from "next/link";
 
 import { LoopList, RecentlyClosedLoops } from "@/components/admin/loop-list";
 import { OpsBriefPanel } from "@/components/admin/ops-brief-panel";
-import { listInvoices, listWorkItems } from "@/lib/admin/client-ops-queries";
-import { collectLoops } from "@/lib/admin/loops/collect";
-import {
-  listCheckedChecklistKeys,
-  listLoopEvents,
-} from "@/lib/admin/loops/queries";
-import { countLeadsByStatus } from "@/lib/admin/outbound/queries";
-import { countOverdueInvoices } from "@/lib/admin/ops-glance";
-import { listContactSubmissions } from "@/lib/admin/queries";
+import { loadTodayLoopCollection } from "@/lib/admin/loops/load-today";
 import { isOpsBriefEnabled } from "@/lib/ai";
 
 export const metadata: Metadata = {
@@ -41,53 +33,7 @@ const glanceCards = [
 ] as const;
 
 export default async function AdminIndexPage() {
-  const now = new Date();
-  const [
-    inbox,
-    invoices,
-    work,
-    events,
-    listmonkChecked,
-    readyLeads,
-    approvedLeads,
-  ] = await Promise.all([
-    listContactSubmissions("new"),
-    listInvoices(),
-    listWorkItems(),
-    listLoopEvents(),
-    listCheckedChecklistKeys("listmonk-drip"),
-    countLeadsByStatus("ready"),
-    countLeadsByStatus("approved"),
-  ]);
-
-  const readyLeadCount =
-    (readyLeads.error ? 0 : readyLeads.count) +
-    (approvedLeads.error ? 0 : approvedLeads.count);
-
-  const collection = collectLoops({
-    invoices: invoices.error ? [] : invoices.rows,
-    inbox: inbox.error ? [] : inbox.rows,
-    work: work.error ? [] : work.rows,
-    readyLeadCount,
-    checkedListmonkKeys: listmonkChecked.error ? [] : listmonkChecked.keys,
-    events: events.error ? [] : events.rows,
-    now,
-  });
-
-  const counts: Record<(typeof glanceCards)[number]["key"], number | null> = {
-    inbox: inbox.error ? null : inbox.rows.length,
-    overdue: invoices.error ? null : countOverdueInvoices(invoices.rows, now),
-    work: work.error ? null : work.rows.length,
-  };
-
-  const dataError =
-    inbox.error ||
-    invoices.error ||
-    work.error ||
-    events.error ||
-    listmonkChecked.error ||
-    readyLeads.error ||
-    approvedLeads.error;
+  const { collection, dataError, glance } = await loadTodayLoopCollection();
 
   return (
     <div className="space-y-8">
@@ -104,7 +50,7 @@ export default async function AdminIndexPage() {
         </p>
       ) : null}
 
-      {isOpsBriefEnabled() ? <OpsBriefPanel collection={collection} /> : null}
+      {isOpsBriefEnabled() ? <OpsBriefPanel /> : null}
 
       <section className="space-y-3">
         <LoopList
@@ -140,7 +86,7 @@ export default async function AdminIndexPage() {
                   {card.label}
                 </p>
                 <p className="mt-2 font-display text-4xl tracking-tight tabular-nums">
-                  {counts[card.key] === null ? "—" : counts[card.key]}
+                  {glance[card.key] === null ? "—" : glance[card.key]}
                 </p>
                 <p className="mt-2 text-sm text-muted-foreground">
                   {card.hint}

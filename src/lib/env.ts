@@ -58,12 +58,7 @@ const raw = {
   UPTIMEROBOT_DASHBOARD_URL: process.env.UPTIMEROBOT_DASHBOARD_URL,
   AI_GATEWAY_API_KEY: process.env.AI_GATEWAY_API_KEY,
   AI_MODEL: process.env.AI_MODEL,
-  AI_INBOX_DRAFTS_ENABLED: process.env.AI_INBOX_DRAFTS_ENABLED,
-  AI_BRIEF_ASSISTANT_ENABLED: process.env.AI_BRIEF_ASSISTANT_ENABLED,
-  AI_OPS_BRIEF_ENABLED: process.env.AI_OPS_BRIEF_ENABLED,
-  AI_INVOICE_COVER_ENABLED: process.env.AI_INVOICE_COVER_ENABLED,
-  AI_OUTBOUND_PERSONALIZATION_ENABLED:
-    process.env.AI_OUTBOUND_PERSONALIZATION_ENABLED,
+  AI_ENABLED: process.env.AI_ENABLED,
 };
 
 export const env = {
@@ -160,31 +155,7 @@ export const env = {
       raw.AI_GATEWAY_API_KEY,
     ),
     AI_MODEL: parseField("AI_MODEL", optionalNonEmpty, raw.AI_MODEL),
-    AI_INBOX_DRAFTS_ENABLED: parseField(
-      "AI_INBOX_DRAFTS_ENABLED",
-      optionalNonEmpty,
-      raw.AI_INBOX_DRAFTS_ENABLED,
-    ),
-    AI_BRIEF_ASSISTANT_ENABLED: parseField(
-      "AI_BRIEF_ASSISTANT_ENABLED",
-      optionalNonEmpty,
-      raw.AI_BRIEF_ASSISTANT_ENABLED,
-    ),
-    AI_OPS_BRIEF_ENABLED: parseField(
-      "AI_OPS_BRIEF_ENABLED",
-      optionalNonEmpty,
-      raw.AI_OPS_BRIEF_ENABLED,
-    ),
-    AI_INVOICE_COVER_ENABLED: parseField(
-      "AI_INVOICE_COVER_ENABLED",
-      optionalNonEmpty,
-      raw.AI_INVOICE_COVER_ENABLED,
-    ),
-    AI_OUTBOUND_PERSONALIZATION_ENABLED: parseField(
-      "AI_OUTBOUND_PERSONALIZATION_ENABLED",
-      optionalNonEmpty,
-      raw.AI_OUTBOUND_PERSONALIZATION_ENABLED,
-    ),
+    AI_ENABLED: parseField("AI_ENABLED", optionalNonEmpty, raw.AI_ENABLED),
   },
 };
 

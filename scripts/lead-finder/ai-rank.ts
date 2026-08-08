@@ -1,9 +1,8 @@
-import { createGateway, generateText, Output } from "ai";
+import { generateText, Output } from "ai";
 import { z } from "zod";
 
+import { getGatewayModel } from "../../src/lib/ai/gateway";
 import type { ScoredLead } from "./types";
-
-const DEFAULT_MODEL = "openai/gpt-4.1-mini";
 
 export const leadRankSchema = z.object({
   aiScore: z.number().min(0).max(100),
@@ -75,9 +74,7 @@ export async function createGatewayRankLead(options: {
   apiKey: string;
   model?: string;
 }): Promise<RankLeadFn> {
-  const model = createGateway({ apiKey: options.apiKey })(
-    options.model?.trim() || DEFAULT_MODEL,
-  );
+  const model = getGatewayModel(options.apiKey, options.model);
 
   return async (input: LeadRankInput) => {
     const { output } = await generateText({

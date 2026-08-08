@@ -124,22 +124,22 @@ Home, settings, system-map, login stay available whenever admin is reachable. Di
 
 ### Public marketing site
 
-| Route                                  | Purpose                                                                                                                   |
-| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| `/`                                    | Home + newsletter block                                                                                                   |
-| `/services`, `/services/[slug]`        | Offerings                                                                                                                 |
-| `/portfolio`, `/portfolio/[slug]`      | Case studies                                                                                                              |
-| `/pricing`                             | Packages / ballparks                                                                                                      |
-| `/blog`, `/blog/[slug]`                | Content                                                                                                                   |
-| `/about`                               | Studio story                                                                                                              |
-| `/contact`                             | Lead form → `/api/contact` → Supabase inbox + Resend confirm/notify; score > 60 → day-0 nurture; optional AI brief helper |
-| `/privacy`, `/terms`, `/accessibility` | Legal / a11y                                                                                                              |
+| Route                                  | Purpose                                                                          |
+| -------------------------------------- | -------------------------------------------------------------------------------- |
+| `/`                                    | Home + newsletter block                                                          |
+| `/services`, `/services/[slug]`        | Offerings                                                                        |
+| `/portfolio`, `/portfolio/[slug]`      | Case studies                                                                     |
+| `/pricing`                             | Packages / ballparks                                                             |
+| `/blog`, `/blog/[slug]`                | Content                                                                          |
+| `/about`                               | Studio story                                                                     |
+| `/contact`                             | Lead form → `/api/contact` → Supabase inbox + Resend; score > 60 → day-0 nurture |
+| `/privacy`, `/terms`, `/accessibility` | Legal / a11y                                                                     |
 
 **CTAs:** Contact form and Calendly (`CALENDLY_URL`) — not a self-serve checkout.
 
 **Newsletter:** Site form → `/api/newsletter` → Listmonk (double opt-in). Never cold lists.
 
-**AI (optional flags):** On `/contact`, “Help me write a brief” fills fields; visitor edits before submit. Needs `AI_GATEWAY_API_KEY` + `AI_BRIEF_ASSISTANT_ENABLED=true`.
+**AI (optional):** Admin-only HITL drafts (inbox, ops brief, invoice cover). Needs `AI_GATEWAY_API_KEY` + `AI_ENABLED=true`. No public site AI. Outbound Instantly lines from lead-finder `--ai-rank` or manual edit.
 
 ### Client portal & public views
 
@@ -171,14 +171,7 @@ No Stripe Checkout in v1 — payment links/PDFs via invoice `external_url` or em
 | `/admin/system-map` | This document (rendered)                              | Operator + agent orientation — how the system works                                                                              |
 | `/admin/settings`   | Tool links / config surface                           | Same external dashboards; kill switches are env vars on Vercel                                                                   |
 
-**AI admin features (flagged):**
-
-| Flag                                  | Where             | Behavior                                                   |
-| ------------------------------------- | ----------------- | ---------------------------------------------------------- |
-| `AI_INBOX_DRAFTS_ENABLED`             | Inbox             | Draft reply → edit → you send (no auto-send)               |
-| `AI_OPS_BRIEF_ENABLED`                | Home              | Summarize today’s loops                                    |
-| `AI_INVOICE_COVER_ENABLED`            | Invoice send path | Cover email draft before Resend                            |
-| `AI_OUTBOUND_PERSONALIZATION_ENABLED` | Outbound          | One-line Instantly `{{personalization}}` before CSV export |
+**AI admin features:** Needs `AI_GATEWAY_API_KEY` + `AI_ENABLED=true` (+ brand module `ai`). Inbox draft, ops brief, invoice cover HITL. Outbound Instantly lines come from lead-finder `--ai-rank` or manual edit — not a separate admin AI draft.
 
 Enablement steps: [`runbooks/ops-credentials.md`](./runbooks/ops-credentials.md) §9.
 
@@ -229,7 +222,7 @@ Credentials & remaining dashboard steps: [`runbooks/ops-credentials.md`](./runbo
 2. Team notify via Resend **unless** `N8N_WEBHOOK_URL` is set (then n8n fan-out only — dual-notify still open debt).
 3. If `scoreLead(submission) > 60` → Resend **day-0 nurture** (Calendly soft CTA). Day 3/7 live in **Listmonk**, not app code — nurture copy must not promise them until drip UI is live.
 4. `/admin/inbox` → triage by score + status.
-5. Optional: **Draft reply** (AI) → edit → send yourself via your mail (or future safe Resend template).
+5. Optional: **Draft reply** (AI) → edit → **Approve & Send** via Resend (HITL; no auto-send).
 6. Book via Calendly if they want a call.
 7. Optional: **Create client from lead** when they become a client.
 

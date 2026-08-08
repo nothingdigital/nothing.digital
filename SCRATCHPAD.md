@@ -13,7 +13,7 @@ Updated: 2026-08-07
 - [x] agent: explore — inbound + nurture audit
 - [x] agent: general — growth opportunities → recommend hybrid C
 - [x] clarify primary goal with owner → **C hybrid**
-- [ ] propose approaches + design (in progress)
+- [ ] propose approaches + design (§1–2 approved; presenting §3)
 - [ ] write spec + implementation plan
 - [ ] cleanup PRs (agent-doable)
 - [ ] owner boxes called out separately
@@ -23,8 +23,10 @@ Updated: 2026-08-07
 - Cold ≠ warm ≠ transactional — Instantly / Listmonk / Resend stay separated.
 - YAGNI: no new queue; reuse lead-finder → admin outbound → Instantly CSV; Listmonk warm drip; Resend transactional.
 - Agents recommend **Approach C hybrid**: Instantly warmup Day 1 + Listmonk drip + founding-client + Umami + inbound Calendly CTAs in parallel.
-- Keep AI outbound personalization OFF for first cold send.
+- Keep AI outbound personalization OFF for first cold send (lines from lead-finder `--ai-rank` / manual edit only; no admin AI redraft).
 - Do not invent product roadmap beyond lead gen.
+- [x] AI follow-ons + polish on `main` (ops brief · invoice cover HITL · rate limits · Settings rows). Public brief removed.
+- [x] Ponytail AI shrink: `AI_ENABLED` master flag, shared gateway, `draftObject`, HITL shell, drop admin outbound AI draft.
 
 ## Dead ends
 

@@ -85,6 +85,9 @@ export type CreateClientInput = {
   default_rate_cents?: number | null;
   payment_terms?: string | null;
   notes?: string | null;
+  is_founding?: boolean;
+  care_start?: string | null;
+  care_end?: string | null;
 };
 
 export async function createClient(
@@ -106,6 +109,9 @@ export async function createClient(
       default_rate_cents: input.default_rate_cents ?? null,
       payment_terms: input.payment_terms ?? "net_15",
       notes: input.notes ?? null,
+      is_founding: input.is_founding ?? false,
+      care_start: input.care_start,
+      care_end: input.care_end,
     })
     .select("*")
     .single();

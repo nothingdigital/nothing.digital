@@ -1,8 +1,6 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  briefAssistInputSchema,
-  briefAssistOutputSchema,
   inboxDraftSchema,
   invoiceCoverSchema,
   opsBriefSchema,
@@ -28,45 +26,6 @@ describe("inboxDraftSchema", () => {
       body: "Hello",
     });
     expect(result.success).toBe(false);
-  });
-});
-
-describe("briefAssistOutputSchema", () => {
-  it("accepts enum suggestions or null", () => {
-    const result = briefAssistOutputSchema.safeParse({
-      message: "We need a new marketing site with booking.",
-      suggestedService: "website-development",
-      suggestedBudget: "5k-15k",
-    });
-    expect(result.success).toBe(true);
-  });
-
-  it("rejects invented budget strings", () => {
-    const result = briefAssistOutputSchema.safeParse({
-      message: "We need a new marketing site with booking.",
-      suggestedService: "website-development",
-      suggestedBudget: "$12,000",
-    });
-    expect(result.success).toBe(false);
-  });
-});
-
-describe("briefAssistInputSchema", () => {
-  it("requires the four core answers", () => {
-    expect(
-      briefAssistInputSchema.safeParse({
-        goal: "Launch site",
-        currentState: "Squarespace",
-        mustHaves: "CMS",
-        timelineFeel: "this quarter",
-      }).success,
-    ).toBe(true);
-
-    expect(
-      briefAssistInputSchema.safeParse({
-        goal: "Launch site",
-      }).success,
-    ).toBe(false);
   });
 });
 

@@ -82,6 +82,9 @@ type Tables = {
       default_rate_cents: number | null;
       payment_terms: string | null;
       notes: string | null;
+      is_founding: boolean;
+      care_start: string | null;
+      care_end: string | null;
       created_at: string;
       updated_at: string;
     };
@@ -95,6 +98,9 @@ type Tables = {
       default_rate_cents?: number | null;
       payment_terms?: string | null;
       notes?: string | null;
+      is_founding?: boolean;
+      care_start?: string | null;
+      care_end?: string | null;
       created_at?: string;
       updated_at?: string;
     };
@@ -108,6 +114,9 @@ type Tables = {
       default_rate_cents?: number | null;
       payment_terms?: string | null;
       notes?: string | null;
+      is_founding?: boolean;
+      care_start?: string | null;
+      care_end?: string | null;
       created_at?: string;
       updated_at?: string;
     };

@@ -35,10 +35,12 @@ import {
   isDocumentKind,
 } from "@/lib/documents/queries";
 import { draftInvoiceCoverNote, isInvoiceCoverEnabled } from "@/lib/ai";
+import { aiDraftError, guardAdminAiDraft } from "@/lib/ai/admin-guard";
 import { invoiceCoverSchema } from "@/lib/ai/types";
 import { buildInvoiceEmailContext } from "@/lib/invoices/invoice-email-context";
 import { sendInvoiceSentEmail } from "@/lib/invoices/send-invoice-email";
 import { ensureInvoicePdf } from "@/lib/pdf/resolve-view";
+import { getServiceRoleClient } from "@/lib/supabase/server";
 
 function formString(formData: FormData, key: string): string {
   return String(formData.get(key) ?? "").trim();
@@ -71,6 +73,7 @@ export async function createClientAction(formData: FormData): Promise<void> {
   const primary_email = formString(formData, "primary_email");
   const status = formString(formData, "status");
   const billing_model = formString(formData, "billing_model");
+  const is_founding = formData.get("is_founding") === "on";
 
   if (!name || !primary_email) {
     throw new Error("Name and email are required.");
@@ -79,11 +82,26 @@ export async function createClientAction(formData: FormData): Promise<void> {
     throw new Error("Invalid status or billing model.");
   }
 
+  if (is_founding) {
+    const { count } = (await getServiceRoleClient()
+      ?.from("clients")
+      .select("*", { count: "exact", head: true })
+      .eq("is_founding", true)) ?? { count: 0 };
+    if ((count ?? 0) >= 2) {
+      throw new Error("Founding client quota reached (max 2).");
+    }
+  }
+
   const rateRaw = formOptional(formData, "default_rate");
   const default_rate_cents = rateRaw ? dollarsToCents(rateRaw) : null;
   if (rateRaw && default_rate_cents === null) {
     throw new Error("Invalid default rate.");
   }
+
+  const care_start = is_founding ? new Date().toISOString() : null;
+  const care_end = is_founding
+    ? new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
+    : null;
 
   const result = await createClient({
     name,
@@ -94,6 +112,9 @@ export async function createClientAction(formData: FormData): Promise<void> {
     default_rate_cents,
     payment_terms: formOptional(formData, "payment_terms") ?? "net_15",
     notes: formOptional(formData, "notes"),
+    is_founding,
+    care_start,
+    care_end,
   });
 
   if (result.error || !result.row) {
@@ -301,11 +322,14 @@ export async function updateInvoiceStatusAction(
 }
 
 export async function draftInvoiceCoverAction(invoiceId: string) {
-  await requireAdmin();
+  const user = await requireAdmin();
 
   if (!isInvoiceCoverEnabled()) {
     return { ok: false as const, error: "Invoice cover AI is disabled." };
   }
+
+  const gated = await guardAdminAiDraft("invoice-cover", user);
+  if (!gated.ok) return gated;
 
   const built = await buildInvoiceEmailContext(invoiceId);
   if (!built.ok) {
@@ -319,10 +343,7 @@ export async function draftInvoiceCoverAction(invoiceId: string) {
     const draft = await draftInvoiceCoverNote(built.context.coverFacts);
     return { ok: true as const, draft };
   } catch (err) {
-    return {
-      ok: false as const,
-      error: err instanceof Error ? err.message : "Draft failed.",
-    };
+    return { ok: false as const, error: aiDraftError(err) };
   }
 }
 

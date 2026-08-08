@@ -6,15 +6,10 @@ import { requireAdmin } from "@/lib/admin/auth";
 import { parseLeadFinderCsv } from "@/lib/admin/outbound/parse-csv";
 import {
   addDoNotContact,
-  getLeadCandidate,
   importLeadCandidates,
   updateLeadCandidate,
   type LeadCandidateStatus,
 } from "@/lib/admin/outbound/queries";
-import {
-  draftOutboundPersonalization,
-  isOutboundPersonalizationEnabled,
-} from "@/lib/ai";
 import { outboundPersonalizationSchema } from "@/lib/ai/types";
 
 const STATUSES: LeadCandidateStatus[] = [
@@ -103,37 +98,6 @@ export async function updateLeadEmailAction(formData: FormData): Promise<void> {
   if (error) throw new Error(error);
 
   revalidatePath("/admin/outbound");
-}
-
-export async function draftOutboundPersonalizationAction(leadId: string) {
-  await requireAdmin();
-
-  if (!isOutboundPersonalizationEnabled()) {
-    return {
-      ok: false as const,
-      error: "Outbound personalization AI is disabled.",
-    };
-  }
-
-  const { row, error } = await getLeadCandidate(leadId);
-  if (error) return { ok: false as const, error };
-  if (!row) return { ok: false as const, error: "Lead not found." };
-
-  try {
-    const draft = await draftOutboundPersonalization({
-      name: row.name,
-      website: row.website,
-      city: row.city,
-      vertical: row.vertical,
-      reasons: row.reasons,
-    });
-    return { ok: true as const, draft };
-  } catch (err) {
-    return {
-      ok: false as const,
-      error: err instanceof Error ? err.message : "Draft failed.",
-    };
-  }
 }
 
 export async function saveOutboundPersonalizationAction(

@@ -44,21 +44,3 @@ export function formatInvoiceCoverInput(facts: InvoiceCoverFacts): string {
     `Internal notes: ${facts.notes?.trim() || "—"}`,
   ].join("\n");
 }
-
-export type OutboundLineFacts = {
-  name: string;
-  website: string | null;
-  city: string;
-  vertical: string | null;
-  reasons: string[];
-};
-
-export function formatOutboundLineInput(facts: OutboundLineFacts): string {
-  return [
-    `Company: ${facts.name}`,
-    `Website: ${facts.website?.trim() || "—"}`,
-    `City: ${facts.city}`,
-    `Vertical: ${facts.vertical?.trim() || "—"}`,
-    `Reasons: ${facts.reasons.length > 0 ? facts.reasons.join(" | ") : "—"}`,
-  ].join("\n");
-}
