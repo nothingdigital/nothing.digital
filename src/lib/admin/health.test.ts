@@ -1,0 +1,75 @@
+import { describe, expect, it } from "vitest";
+
+import {
+  HEALTH_INTEGRATION_KEYS,
+  INTEGRATION_LABELS,
+  parseHealthPayload,
+} from "@/lib/admin/health";
+
+const emptyIntegrations = {
+  supabase: false,
+  resend: false,
+  sentry: false,
+  umami: false,
+  calendly: false,
+  listmonk: false,
+  ai: false,
+};
+
+describe("parseHealthPayload", () => {
+  it("returns integrations from a valid body", () => {
+    const result = parseHealthPayload({
+      status: "ok",
+      timestamp: "2026-08-06T12:00:00.000Z",
+      integrations: {
+        supabase: true,
+        resend: true,
+        sentry: false,
+        umami: true,
+        calendly: false,
+        listmonk: true,
+        ai: true,
+      },
+    });
+
+    expect(result).toEqual({
+      ok: true,
+      integrations: {
+        supabase: true,
+        resend: true,
+        sentry: false,
+        umami: true,
+        calendly: false,
+        listmonk: true,
+        ai: true,
+      },
+    });
+  });
+
+  it("returns ok: false for null or malformed payloads", () => {
+    expect(parseHealthPayload(null)).toEqual({
+      ok: false,
+      integrations: emptyIntegrations,
+    });
+    expect(parseHealthPayload(undefined)).toEqual({
+      ok: false,
+      integrations: emptyIntegrations,
+    });
+    expect(parseHealthPayload({ status: "ok" })).toEqual({
+      ok: false,
+      integrations: emptyIntegrations,
+    });
+    expect(parseHealthPayload({ integrations: "nope" })).toEqual({
+      ok: false,
+      integrations: emptyIntegrations,
+    });
+  });
+});
+
+describe("INTEGRATION_LABELS", () => {
+  it("labels every HEALTH_INTEGRATION_KEYS entry", () => {
+    for (const key of HEALTH_INTEGRATION_KEYS) {
+      expect(INTEGRATION_LABELS[key].length).toBeGreaterThan(0);
+    }
+  });
+});

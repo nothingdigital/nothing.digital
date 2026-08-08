@@ -25,6 +25,7 @@
     --input: 38 22% 78%;
     --ring: 36 72% 34%;
     --radius: 0.5rem;
+    --logo-dot: #fbbf24;
   }
 
   .dark {
@@ -52,6 +53,16 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
   * {
     @apply border-border;
   }
@@ -79,5 +90,39 @@
   ::selection {
     background: hsl(var(--accent) / 0.85);
     color: hsl(var(--accent-foreground));
+  }
+
+  /* ponytail: kill animations/transitions for reduced-motion users */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* ponytail: teal hero glow, joins brass body wash */
+  .hero-glow {
+    background: radial-gradient(
+      closest-side,
+      hsl(var(--accent) / 0.22),
+      transparent
+    );
+  }
+}
+
+@layer components {
+  /* ponytail: gradient hairline between stacked same-variant sections */
+  .section-divider {
+    height: 1px;
+    width: 100%;
+    max-width: 64rem;
+    margin-inline: auto;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--border)),
+      transparent
+    );
   }
 }

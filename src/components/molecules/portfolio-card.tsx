@@ -1,10 +1,7 @@
-import * as React from "react";
-
 import Image from "next/image";
 import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
 import { routes } from "@/lib/routes";
 
 export interface PortfolioCardProps {
@@ -14,7 +11,6 @@ export interface PortfolioCardProps {
   industry: string;
   services: string[];
   coverImage?: string;
-  className?: string;
 }
 
 export function PortfolioCard({
@@ -24,15 +20,11 @@ export function PortfolioCard({
   industry,
   services,
   coverImage,
-  className,
 }: PortfolioCardProps) {
   return (
     <Link
       href={routes.portfolio.detail(slug)}
-      className={cn(
-        "group block overflow-hidden rounded-lg border bg-card shadow-sm transition-colors hover:border-primary/50 hover:shadow-md",
-        className,
-      )}
+      className="group block overflow-hidden rounded-lg border bg-card shadow-sm transition hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-md"
     >
       <div className="relative aspect-[16/10] w-full overflow-hidden bg-muted">
         <Image

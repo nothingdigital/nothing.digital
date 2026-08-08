@@ -1,36 +1,45 @@
-# Conversion Improvements — Scratchpad
+# Current state
 
-## Current state
-
-- Goal: Implement worthwhile items from 10-point conversion audit; skip asset-dependent/deceptive ones.
-- Status: Done locally, uncommitted. Awaiting push approval.
-- Current step: QA passed (lint, 55/55 unit, production build).
-- Next action: Push when user confirms.
-- Updated: 2026-08-05
+Goal: hybrid lead-gen activation (Approach C).
+Status: agent inbound cleanup shipped. Owner boxes open (Instantly / Listmonk / Places).
+Current step: owner starts Instantly warmup + Listmonk drip; agent done for this wave.
+Next action: owner preflight; optional commit of agent changes.
+Updated: 2026-08-07
 
 ## Plan
 
-1. ✅ Investigator: mapped pages/forms/content/tests/deploy.
-2. ✅ Architect (inline): scope = 2 edits only; rest skip/exists.
-3. ✅ Engineer: Why Us section home + pricing FAQ contact page.
-4. ✅ QA: lint + unit + build clean.
-5. Devops: none — Vercel auto-deploy on push.
+- [x] audit agents (map, outbound, inbound, growth)
+- [x] design approved (hybrid C) → spec + plan written
+- [x] Calendly on confirm email + success UI
+- [x] Honest nurture Day-0 + email footer cleanup
+- [x] Always team Resend (+ n8n fan-out)
+- [x] Umami events (contact_submit, newsletter_subscribe, calendly_click)
+- [x] Delete AvailabilityWidget mock + dead import
+- [x] Docs: conversion-boost + this board
+- [ ] Owner: Instantly DNS/warmup ≥14d
+- [ ] Owner: Listmonk 0/3/7 drip + E2E
+- [ ] Owner: GOOGLE_PLACES_API_KEY on Vercel + live lead-finder / map
+- [ ] Owner: confirm mig 005 + **009** (map lat/lng); review CSV → Instantly (admin export only)
+- [ ] Owner: founding-client slot 1
+- [ ] Keep AI outbound personalization OFF for first send
 
 ## Decisions
 
-- Ponytail triage of 10 items:
-  - DONE: #3 Why Us section (page.tsx), #6 pricing ballparks FAQ (contact/page.tsx).
-  - PRE-EXISTING: #1 service icons, #5 blog (3 MDX), #6 process sections, #8 portfolio+case studies, #9 budget/service qualifiers in contact form.
-  - SKIP: #2/#4 testimonials (no real quotes; testimonial-card.tsx ready), #7 lead magnet (asset doesn't exist), #9 multi-step form + calendar link (user to create free Cal.com, then wire), #10 scarcity/discounts (dark pattern).
-- Pricing ranges (user-approved): sites $5–15K, software $15–60K, apps $20–80K, email $1.5–5K/mo.
-- Note: builder subagent overwrote this file mid-task; restored. Keep builders away from parent scratchpad.
+- Approach C hybrid.
+- Cold ≠ warm ≠ transactional.
+- Contact nurture = Resend Day-0 only if score > 60; no Listmonk auto-subscribe.
+- Admin Instantly export only — ignore CLI `instantly-import-*.csv` until after review.
+- Spec: `docs/superpowers/specs/2026-08-07-lead-gen-design.md`
+- Plan: `docs/superpowers/plans/2026-08-07-lead-gen.md`
 
 ## Dead ends
 
-- cavecrew-investigator subagent type broken ("Model not found: haiku/.") — use `explore` instead.
+- Full ML scoring; Instantly API; Calendly→CRM; self-serve scheduler; fake availability slots.
 
 ## Progress log
 
-- 2026-08-05: Prior design refresh deployed (`d762e76`), clock seal fix pushed (`00e304a`).
-- 2026-08-05: Conversion audit received; triage done; investigation done.
-- 2026-08-05: Builder shipped both edits; lint+unit+build pass; diff reviewed.
+- Ponytail cleanup applied (6 agents): components, site/brand, admin app, lib/admin+kb, lib core, scripts/e2e. Skipped: `database.ts` gen types, editing applied migrations, `body_text` drop, cookie-consent→`<dialog>`.
+- Ponytail full-code review (278/278): findings-only report `docs/runbooks/archive/ponytail-full-review-2026-08-08.md` (~−1090 lines upper bound). Re-run: `docs/runbooks/ponytail-full-review.md`.
+- Admin outbound map: `/admin/outbound/map` (MapLibre + Places → lead pins; Berry AL). Spec `2026-08-08-admin-outbound-map-design.md`. Needs Places key on Vercel + mig 009.
+- Implemented inbound cleanup: templates, contact route dual-notify, success Calendly CTA, Umami helper, deleted AvailabilityWidget.
+- Audits: activation gap not tooling gap; dual DNC remains manual for pilot.

@@ -1,14 +1,11 @@
 import type { Metadata } from "next";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { DM_Serif_Display, Inter, JetBrains_Mono } from "next/font/google";
-import Script from "next/script";
 
-import { CursorGlow } from "@/components/atoms/cursor-glow";
 import { JsonLd } from "@/components/atoms/json-ld";
 import { logoDotColorScript } from "@/components/atoms/logo-dot";
-import { ThemeProvider } from "@/components/providers/theme-provider";
+import { CookieConsent } from "@/components/molecules/cookie-consent";
 import { sameAs, siteConfig } from "@/lib/site";
+import { ThemeProvider } from "next-themes";
 import "./globals.css";
 
 const inter = Inter({
@@ -77,17 +74,13 @@ export default function RootLayout({
       className={`${inter.variable} ${jetbrainsMono.variable} ${dmSerifDisplay.variable}`}
       suppressHydrationWarning
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: logoDotColorScript }} />
+      </head>
       <body className="min-h-screen font-sans antialiased">
-        <Script
-          id="logo-dot-color"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{ __html: logoDotColorScript }}
-        />
-        <ThemeProvider>
-          <CursorGlow />
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
-          <Analytics />
-          <SpeedInsights />
+          <CookieConsent />
         </ThemeProvider>
         <JsonLd data={organizationJsonLd} />
       </body>

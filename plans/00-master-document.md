@@ -2,10 +2,13 @@
 
 > **Version:** 1.0  
 > **Date:** 2026-08-04  
-> **Status:** Phase 3 Code/Validation Complete — Phase 4 Skipped — External Account Setup Pending  
+> **Status:** Phase 1–3 complete (close-outs pending) · Phase 4 skipped · Phase 5 launched (post-launch in progress) · Phase 6 in progress · Pack H client ops shipped · Growth tactics triage shipped — see `docs/growth-tactics.md`  
 > **General Contractor:** Kimi (Orchestration Agent)  
 > **Specialist Agents:** Principal Architect · DevOps Engineer · QA Engineer · Gap Analyst  
 > **Domain:** `nothing.digital`
+
+> **Last Updated:** 2026-08-07 — Admin wave + site polish on `main`; docs consolidated  
+> **Next (live board only):** [`SCRATCHPAD.md`](../SCRATCHPAD.md) — do not duplicate remaining work here
 
 ---
 
@@ -15,14 +18,15 @@
 2. [Critical Decision: The `nothing://` Protocol](#2-critical-decision-the-nothing-protocol)
 3. [Project Overview](#3-project-overview)
 4. [Team & Ownership](#4-team--ownership)
-5. [Phase 1: Foundation & Infrastructure](#5-phase-1-foundation--infrastructure)
-6. [Phase 2: Core Development](#6-phase-2-core-development)
-7. [Phase 3: Integration, QA & Polish](#7-phase-3-integration-qa--polish)
-8. [Phase 4: The `nothing://` Experience](#8-phase-4-the-nothing-experience)
-9. [Phase 5: Launch & Post-Launch](#9-phase-5-launch--post-launch)
+5. [Phase 1: Foundation & Infrastructure — Complete](#phase-1)
+6. [Phase 2: Core Development — Complete](#phase-2)
+7. [Phase 3: Integration, QA & Polish — Complete](#phase-3)
+8. [Phase 4: The `nothing://` Experience — Skipped](#phase-4)
+9. [Phase 5: Launch & Post-Launch — In Progress](#phase-5)
 10. [Cross-Cutting Concerns](#10-cross-cutting-concerns)
 11. [Risk Register](#11-risk-register)
-12. [Reference Documents](#12-reference-documents)
+12. [Phase 6: PikaPods & Ops Backend — In Progress](#phase-6)
+13. [Reference Documents](#13-reference-documents)
 
 ---
 
@@ -32,12 +36,13 @@ This master document consolidates the outputs of four specialist planning agents
 
 ### Specialist Agent Deliverables
 
-| Agent                   | Document                    | Lines | Key Contribution                                                                            |
-| ----------------------- | --------------------------- | ----- | ------------------------------------------------------------------------------------------- |
-| **Principal Architect** | `01-principal-architect.md` | 2,763 | System architecture, component design, `nothing://` feasibility analysis, data architecture |
-| **DevOps Engineer**     | `02-devops-engineer.md`     | 949   | CI/CD pipelines, DNS/SSL, security headers, monitoring, cost estimation (~$95/mo)           |
-| **QA Engineer**         | `03-qa-engineer.md`         | 1,563 | Testing pyramid, WCAG 2.1 AA compliance, performance budgets, E2E strategy                  |
-| **Gap Analyst**         | `04-gap-analysis.md`        | 555   | 67 gaps identified, 10 critical risks, stakeholder questions                                |
+| Agent                   | Document                      | Lines | Key Contribution                                                                                    |
+| ----------------------- | ----------------------------- | ----- | --------------------------------------------------------------------------------------------------- |
+| **Principal Architect** | `01-principal-architect.md`   | 2,763 | System architecture, component design, `nothing://` feasibility analysis, data architecture         |
+| **DevOps Engineer**     | `02-devops-engineer.md`       | 949   | CI/CD pipelines, DNS/SSL, security headers, monitoring, cost estimation (~$95/mo)                   |
+| **QA Engineer**         | `03-qa-engineer.md`           | 1,563 | Testing pyramid, WCAG 2.1 AA compliance, performance budgets, E2E strategy                          |
+| **Gap Analyst**         | `04-gap-analysis.md`          | 555   | 67 gaps identified, 10 critical risks, stakeholder questions                                        |
+| **PikaPods & Ops**      | `05-pikapods-integrations.md` | —     | Umami, Listmonk, n8n, Kuma, secondary pods, `/admin` dashboard, secretary CRM — costs + build specs |
 
 ### Estimated Timeline
 
@@ -232,7 +237,17 @@ Nothing.Digital is a digital services company specializing in website developmen
 
 ---
 
-## 5. Phase 1: Foundation & Infrastructure
+<a id="phase-1"></a>
+
+## 5. Phase 1: Foundation & Infrastructure — Complete
+
+> **To-Do:** Verify remaining external-account gaps and document credential-only steps.
+>
+> **Verified live:** Vercel project + custom domain + `www` redirect; Cloudflare authoritative DNS + Vercel edge SSL; Supabase project with migrations `001`/`002` applied; Resend DKIM present and domain verified in prior run; core production env vars set (site + contact form work).
+>
+> **Pending (requires dashboard/credentials):** GitHub branch-protection/secret-scanning review, Cloudflare DNSSEC/WAF only if proxy is enabled. List mock environments done; listmonk: true.
+
+**ponytail:** Resend SPF now includes `_spf.resend.com` directly — no separate SPF migration needed.
 
 > **Duration:** 1 week  
 > **Goal:** Repository, CI/CD, infrastructure, and design system are ready for development.  
@@ -299,8 +314,8 @@ Nothing.Digital is a digital services company specializing in website developmen
 
 | Step | Task                                            | Owner  | Effort | Status |
 | ---- | ----------------------------------------------- | ------ | ------ | ------ |
-| 1.33 | Set up Sentry error tracking (DSN, source maps) | DevOps | S      | 🔲     |
-| 1.34 | Enable Vercel Analytics + Speed Insights        | DevOps | S      | 🔲     |
+| 1.33 | Set up Sentry error tracking (DSN, source maps) | DevOps | S      | ✅     |
+| 1.34 | Enable Speed Insights; disable Vercel Analytics | DevOps | S      | ✅     |
 | 1.35 | Configure UptimeRobot monitoring                | DevOps | S      | 🔲     |
 
 ### Phase 1 Deliverables
@@ -316,7 +331,11 @@ Nothing.Digital is a digital services company specializing in website developmen
 
 ---
 
-## 6. Phase 2: Core Development
+<a id="phase-2"></a>
+
+## 6. Phase 2: Core Development — Complete
+
+> **To-Do:** ~~Add client-logo trust indicators, full Calendly embed (when volume justifies)~~ Done locally: anonymized client-logo strip on home page and env-gated lazy-loaded Calendly iframe on `/contact`. Reach Lighthouse ≥ 90 remains blocked on matching-arch CI runner.
 
 > **Duration:** 2–3 weeks  
 > **Goal:** All core pages built, forms functional, content populated.  
@@ -349,13 +368,13 @@ Nothing.Digital is a digital services company specializing in website developmen
 
 ### 6.3 Homepage
 
-| Step | Task                                                  | Owner    | Effort | Status |
-| ---- | ----------------------------------------------------- | -------- | ------ | ------ |
-| 2.16 | Hero Section (headline, subheadline, CTA, background) | Frontend | M      | 🔲     |
-| 2.17 | Services Overview (4-card grid with icons)            | Frontend | M      | 🔲     |
-| 2.18 | Featured Case Studies (2 highlighted with metrics)    | Frontend | M      | 🔲     |
-| 2.19 | Trust Indicators (client logos, stats, testimonials)  | Frontend | M      | 🔲     |
-| 2.20 | Newsletter Signup section                             | Frontend | S      | 🔲     |
+| Step | Task                                                  | Owner    | Effort | Status                                               |
+| ---- | ----------------------------------------------------- | -------- | ------ | ---------------------------------------------------- |
+| 2.16 | Hero Section (headline, subheadline, CTA, background) | Frontend | M      | 🔲                                                   |
+| 2.17 | Services Overview (4-card grid with icons)            | Frontend | M      | 🔲                                                   |
+| 2.18 | Featured Case Studies (2 highlighted with metrics)    | Frontend | M      | ✅ (2026-08-06; anonymized MDX + home Selected work) |
+| 2.19 | Trust Indicators (client logos, stats, testimonials)  | Frontend | M      | 🔲 logos later; quotes in case studies               |
+| 2.20 | Newsletter Signup section                             | Frontend | S      | 🔲                                                   |
 
 ### 6.4 Service Pages
 
@@ -369,12 +388,12 @@ Nothing.Digital is a digital services company specializing in website developmen
 
 ### 6.5 Portfolio Page
 
-| Step | Task                                                | Owner    | Effort | Status |
-| ---- | --------------------------------------------------- | -------- | ------ | ------ |
-| 2.26 | Create case study MDX files with frontmatter schema | Content  | M      | 🔲     |
-| 2.27 | Build filterable grid with client-side filtering    | Frontend | M      | 🔲     |
-| 2.28 | Build portfolio detail page (`/portfolio/[slug]`)   | Frontend | M      | 🔲     |
-| 2.29 | Add client testimonials section                     | Frontend | S      | 🔲     |
+| Step | Task                                                | Owner    | Effort | Status                                   |
+| ---- | --------------------------------------------------- | -------- | ------ | ---------------------------------------- |
+| 2.26 | Create case study MDX files with frontmatter schema | Content  | M      | ✅ (3 anonymized studies, 2026-08-06)    |
+| 2.27 | Build filterable grid with client-side filtering    | Frontend | M      | 🔲                                       |
+| 2.28 | Build portfolio detail page (`/portfolio/[slug]`)   | Frontend | M      | 🔲                                       |
+| 2.29 | Add client testimonials section                     | Frontend | S      | ✅ (per case study; named clients LATER) |
 
 ### 6.6 About Page
 
@@ -397,12 +416,12 @@ Nothing.Digital is a digital services company specializing in website developmen
 
 ### 6.8 Contact Page
 
-| Step | Task                                                         | Owner    | Effort | Status |
-| ---- | ------------------------------------------------------------ | -------- | ------ | ------ |
-| 2.39 | Contact form (name, email, phone, service dropdown, message) | Frontend | M      | 🔲     |
-| 2.40 | Embed Calendly booking widget                                | Frontend | S      | 🔲     |
-| 2.41 | FAQ accordion section                                        | Frontend | S      | 🔲     |
-| 2.42 | Contact info + social links                                  | Frontend | S      | 🔲     |
+| Step | Task                                                         | Owner    | Effort | Status                                       |
+| ---- | ------------------------------------------------------------ | -------- | ------ | -------------------------------------------- |
+| 2.39 | Contact form (name, email, phone, service dropdown, message) | Frontend | M      | 🔲                                           |
+| 2.40 | Embed Calendly booking widget                                | Frontend | S      | ✅ CTA link (env-gated); full embed deferred |
+| 2.41 | FAQ accordion section                                        | Frontend | S      | 🔲                                           |
+| 2.42 | Contact info + social links                                  | Frontend | S      | 🔲                                           |
 
 ### 6.9 Legal Pages
 
@@ -433,7 +452,15 @@ Nothing.Digital is a digital services company specializing in website developmen
 
 ---
 
-## 7. Phase 3: Integration, QA & Polish
+<a id="phase-3"></a>
+
+## 7. Phase 3: Integration, QA & Polish — Complete
+
+> **To-Do:** Complete search-engine verification + sitemap submission; document Lighthouse CI arch fix.
+>
+> **Verified live:** `/sitemap.xml` and `/robots.txt` serve `200`; Google Search Console `TXT` verification record is in DNS.
+>
+> **Pending:** Verify Google Search Console property and submit sitemap; add Bing `TXT` verification record and submit sitemap; run Lighthouse CI in GitHub Actions only (skip local arm64/x64 Chrome mismatch).
 
 > **Duration:** 1 week  
 > **Goal:** WCAG 2.1 AA compliance, performance budgets met, all tests passing.  
@@ -484,12 +511,12 @@ Nothing.Digital is a digital services company specializing in website developmen
 
 ### 7.5 Analytics Integration
 
-| Step | Task                                                                 | Owner    | Effort | Status |
-| ---- | -------------------------------------------------------------------- | -------- | ------ | ------ |
-| 3.24 | Install Plausible Analytics (privacy-first, no cookie banner needed) | Frontend | S      | 🔲     |
-| 3.25 | Configure event tracking plan (page_view, form_submit, etc.)         | Frontend | S      | 🔲     |
-| 3.26 | Set up Google Search Console + Bing Webmaster Tools                  | DevOps   | S      | 🔲     |
-| 3.27 | Submit sitemap to search engines                                     | DevOps   | S      | 🔲     |
+| Step | Task                                                                     | Owner    | Effort | Status  |
+| ---- | ------------------------------------------------------------------------ | -------- | ------ | ------- |
+| 3.24 | Install Umami (PikaPods) — cookieless, drop Plausible / Vercel Analytics | Frontend | S      | ✅ Live |
+| 3.25 | Configure event tracking plan (page_view, form_submit, etc.)             | Frontend | S      | 🔲      |
+| 3.26 | Set up Google Search Console + Bing Webmaster Tools                      | DevOps   | S      | 🔲      |
+| 3.27 | Submit sitemap to search engines                                         | DevOps   | S      | 🔲      |
 
 ### Phase 3 Deliverables
 
@@ -502,14 +529,20 @@ Nothing.Digital is a digital services company specializing in website developmen
 
 ---
 
-## 8. Phase 4: The `nothing://` Experience
+<a id="phase-4"></a>
+
+## 8. Phase 4: The `nothing://` Experience — Skipped
 
 > **Status:** Skipped  
 > **Reason:** Stakeholder decided to eliminate the `nothing://` display requirement and focus entirely on the web experience (Option B from Section 2). No Tauri desktop app, PWA protocol handlers, or browser extension will be built.
 
 ---
 
-## 9. Phase 5: Launch & Post-Launch
+<a id="phase-5"></a>
+
+## 9. Phase 5: Launch & Post-Launch — In Progress
+
+> **To-Do:** Post-launch Week 1 monitoring, HubSpot CRM integration, content calendar, and team training.
 
 > **Duration:** 1 week  
 > **Goal:** Live production site, monitoring active, team trained.  
@@ -517,51 +550,51 @@ Nothing.Digital is a digital services company specializing in website developmen
 
 ### 9.1 Pre-Launch Checklist
 
-| Step | Task                                                      | Owner  | Effort | Status |
-| ---- | --------------------------------------------------------- | ------ | ------ | ------ |
-| 5.1  | Final DNS propagation check (dnschecker.org)              | DevOps | S      | 🔲     |
-| 5.2  | SSL Labs rating A+ verification                           | DevOps | S      | 🔲     |
-| 5.3  | End-to-end form submission test (contact + newsletter)    | QA     | S      | 🔲     |
-| 5.4  | Email delivery test (confirmation + team notification)    | QA     | S      | 🔲     |
-| 5.5  | Calendly embed functionality test                         | QA     | S      | 🔲     |
-| 5.6  | Social share link preview test (OG images, meta tags)     | QA     | S      | 🔲     |
-| 5.7  | 404 and 500 error page test                               | QA     | S      | 🔲     |
-| 5.8  | Cookie consent banner test (accept/reject/essential-only) | QA     | S      | 🔲     |
+| Step | Task                                                      | Owner  | Effort | Status                                                                    |
+| ---- | --------------------------------------------------------- | ------ | ------ | ------------------------------------------------------------------------- |
+| 5.1  | Final DNS propagation check (dnschecker.org)              | DevOps | S      | ✅ Script + runbook in `docs/runbooks/dns.md`                             |
+| 5.2  | SSL Labs rating A+ verification                           | DevOps | S      | ✅ Smoke check script + runbook; HSTS includeSubDomains/preload added     |
+| 5.3  | End-to-end form submission test (contact + newsletter)    | QA     | S      | ✅ (contact verified live 2026-08-05; newsletter pending)                 |
+| 5.4  | Email delivery test (confirmation + team notification)    | QA     | S      | ✅ (both delivered, 2026-08-05)                                           |
+| 5.5  | Calendly embed functionality test                         | QA     | S      | ✅ Playwright smoke test in `e2e/calendly.spec.ts`                        |
+| 5.6  | Social share link preview test (OG images, meta tags)     | QA     | S      | ✅ Playwright OG/Twitter meta test + image reachability                   |
+| 5.7  | 404 and 500 error page test                               | QA     | S      | ✅ Custom error layout + component tests + 404 E2E; global-error UI ready |
+| 5.8  | Cookie consent banner test (accept/reject/essential-only) | QA     | S      | ✅ (shipped 2026-08-06; gates analytics on accept)                        |
 
 ### 9.2 Launch Day
 
-| Step | Task                                           | Owner   | Effort | Status |
-| ---- | ---------------------------------------------- | ------- | ------ | ------ |
-| 5.9  | Merge `staging` → `main` (Vercel auto-deploys) | DevOps  | S      | 🔲     |
-| 5.10 | Verify production URL loads correctly          | DevOps  | S      | 🔲     |
-| 5.11 | Announce launch on social media                | Content | S      | 🔲     |
-| 5.12 | Send launch email to newsletter subscribers    | Content | S      | 🔲     |
+| Step | Task                                           | Owner   | Effort | Status                                         |
+| ---- | ---------------------------------------------- | ------- | ------ | ---------------------------------------------- |
+| 5.9  | Merge `staging` → `main` (Vercel auto-deploys) | DevOps  | S      | ✅ (trunk-based on `main`; auto-deploys live)  |
+| 5.10 | Verify production URL loads correctly          | DevOps  | S      | ✅ (https://nothing.digital live)              |
+| 5.11 | Announce launch on social media                | Content | S      | ✅ Copy in `content/launch/social-posts.md`    |
+| 5.12 | Send launch email to newsletter subscribers    | Content | S      | ✅ Copy in `content/emails/launch-campaign.md` |
 
 ### 9.3 Post-Launch Week 1
 
 | Step | Task                                            | Owner   | Effort | Status |
 | ---- | ----------------------------------------------- | ------- | ------ | ------ |
 | 5.13 | Monitor Sentry for errors (daily review)        | DevOps  | S      | 🔲     |
-| 5.14 | Review Plausible Analytics dashboard            | Content | S      | 🔲     |
+| 5.14 | Review Umami Analytics dashboard                | Content | S      | 🔲     |
 | 5.15 | Check Google Search Console for indexing        | DevOps  | S      | 🔲     |
 | 5.16 | Review Core Web Vitals in Vercel Speed Insights | QA      | S      | 🔲     |
 | 5.17 | Collect and triage user feedback                | Content | S      | 🔲     |
 
 ### 9.4 Post-Launch Month 1–3
 
-| Step | Task                                                 | Owner   | Effort | Status |
-| ---- | ---------------------------------------------------- | ------- | ------ | ------ |
-| 5.18 | Integrate HubSpot CRM for lead tracking              | Backend | M      | 🔲     |
-| 5.19 | Set up email marketing platform (ConvertKit/Beehiiv) | Content | M      | 🔲     |
-| 5.20 | Publish first post-launch blog post                  | Content | M      | 🔲     |
-| 5.21 | Add new portfolio case study                         | Content | M      | 🔲     |
-| 5.22 | Run first disaster recovery drill                    | DevOps  | S      | 🔲     |
-| 5.23 | Quarterly dependency update (Dependabot PRs)         | DevOps  | S      | 🔲     |
+| Step | Task                                                 | Owner   | Effort | Status                                                |
+| ---- | ---------------------------------------------------- | ------- | ------ | ----------------------------------------------------- |
+| 5.18 | Integrate HubSpot CRM for lead tracking              | Backend | M      | 🔲                                                    |
+| 5.19 | Set up email marketing platform (ConvertKit/Beehiiv) | Content | M      | 🔲                                                    |
+| 5.20 | Publish first post-launch blog post                  | Content | M      | ✅ (`content/blog/soft-launch-notes.mdx`, 2026-08-06) |
+| 5.21 | Add new portfolio case study                         | Content | M      | ✅ (studio launch case study; no invented clients)    |
+| 5.22 | Run first disaster recovery drill                    | DevOps  | S      | 🔲                                                    |
+| 5.23 | Quarterly dependency update (Dependabot PRs)         | DevOps  | S      | 🔲                                                    |
 
 ### Phase 5 Deliverables
 
-- [ ] Production site live at `https://nothing.digital`
-- [ ] All monitoring dashboards active
+- [x] Production site live at `https://nothing.digital`
+- [ ] All monitoring dashboards active (Sentry wired; needs `SENTRY_DSN` env)
 - [ ] CRM integrated and lead pipeline operational
 - [ ] Content calendar established
 - [ ] Team trained on deployment and rollback procedures
@@ -653,16 +686,72 @@ Applies to **all phases**:
 
 ---
 
-## 12. Reference Documents
+<a id="phase-6"></a>
 
-| Document                     | Path                               | Description                                                            |
-| ---------------------------- | ---------------------------------- | ---------------------------------------------------------------------- |
-| **Project Brief**            | Original attachment                | Source requirements from stakeholder                                   |
-| **Principal Architect Plan** | `/plans/01-principal-architect.md` | Full architecture, component design, `nothing://` deep-dive            |
-| **DevOps Plan**              | `/plans/02-devops-engineer.md`     | CI/CD, infrastructure, security, monitoring, cost details              |
-| **QA Strategy**              | `/plans/03-qa-engineer.md`         | Testing pyramid, a11y compliance, performance budgets, E2E specs       |
-| **Gap Analysis**             | `/plans/04-gap-analysis.md`        | 67 gaps, risk register, stakeholder questions, compliance requirements |
-| **Master Document**          | `/plans/00-master-document.md`     | This document — single source of truth                                 |
+## 12. Phase 6: PikaPods & Ops Backend — In Progress
+
+> **To-Do:** Confirm `002_client_ops.sql` is applied; decide on n8n pod.
+>
+> **Verified:** `clients`, `invoices`, `client_assets`, `client_work_items` tables exist — migration `002_client_ops.sql` is applied.
+>
+> **Decision:** n8n pod deferred (no active Slack/Listmonk fan-out use case); `notifyN8n()` remains env-gated no-op.
+
+> **Status:** In progress — 6.1–6.4 live; 6.5 n8n deferred; **Pack H client ops shipped**
+> **Detail doc:** [`05-pikapods-integrations.md`](./05-pikapods-integrations.md)  
+> **Goal:** Sidecar open-source tools on PikaPods + owner/secretary management software alongside the client-facing site.
+
+### Done vs next vs later
+
+|           | Work                                                                                                                                                                                                                                                 |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Done**  | `/admin`; Umami + Calendly + Listmonk live; n8n/Kuma code ready; **Pack H** clients/billing/assets/work (admin-only); admin follow-ups 1–6 (ops glance, inbox→client, newsletter CSV, work sort, health chips, asset `monitor_url`)                  |
+| **Next**  | Apply `003_asset_monitor_url.sql` (+ `004_profiles.sql` if needed); Bing TXT + GSC/Bing sitemaps; SPF duplicate cleanup; activate Listmonk drip; founding outreach (2 slots) — `docs/runbooks/ops-credentials.md` + `docs/runbooks/listmonk-drip.md` |
+| **Later** | Calendly webhook/`bookings`; Kuma; secretary roles; n8n Slack fan-out; IT monitoring                                                                                                                                                                 |
+
+### Scope (ponytail order)
+
+| Step | Work                                              | Est. $/mo | Gate                                           |
+| ---- | ------------------------------------------------- | --------- | ---------------------------------------------- |
+| 6.1  | Owner `/admin` inbox (Supabase Auth magic link)   | $0        | ✅ code; gate: Auth + `ADMIN_EMAILS`           |
+| 6.2  | Umami on PikaPods → drop Vercel Analytics         | ~$1.80    | ✅ Live                                        |
+| 6.3  | Calendly on `/contact` (+ webhook when volume)    | $0–10     | ✅ Live; webhook deferred                      |
+| 6.4  | Listmonk when campaigns start                     | ~$2–3     | ✅ Live; campaign content pending              |
+| 6.5  | n8n when Slack/Listmonk fan-out needed            | ~$4–5     | 🟡 code ready; 🔲 pod + webhook env            |
+| 6.6  | Uptime Kuma only if free UptimeRobot insufficient | ~$1.80    | 🟡 admin link ready; prefer UptimeRobot        |
+| 6.7  | Secretary role (Phase B) on hire                  | $0        | Least-privilege staff login                    |
+| 6.8  | Secondary pods (FreeScout, etc.)                  | defer     | See §6 of detail doc — default **no**          |
+| 7.1  | Pack H client accounts + manual billing           | $0        | ✅ code; apply `002_client_ops.sql`            |
+| 7.2  | Pack H assets + work queue                        | $0        | ✅ code                                        |
+| 7.3  | Client URL uptime links on assets                 | $0–2      | ✅ `monitor_url` + edit page (migration `003`) |
+| 7.4  | IT asset monitoring                               | defer     | ⬜ When IT retainers exist                     |
+
+**Year-1 recommended pack:** Admin + Umami + Listmonk ≈ **$5–15/mo** incremental.
+
+**Standards:** SOLID module boundaries, never-nesting critical paths, YAGNI on secondary pods and first-party booking until volume hurts.
+
+**Client ops runbook:** [`docs/runbooks/client-ops.md`](../docs/runbooks/client-ops.md)
+
+---
+
+## 13. Reference Documents
+
+| Document                     | Path                                 | Description                                                                                                            |
+| ---------------------------- | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| **Project Brief**            | Original attachment                  | Source requirements from stakeholder                                                                                   |
+| **Principal Architect Plan** | `/plans/01-principal-architect.md`   | Full architecture, component design, `nothing://` deep-dive                                                            |
+| **DevOps Plan**              | `/plans/02-devops-engineer.md`       | CI/CD, infrastructure, security, monitoring, cost details                                                              |
+| **QA Strategy**              | `/plans/03-qa-engineer.md`           | Testing pyramid, a11y compliance, performance budgets, E2E specs                                                       |
+| **Gap Analysis**             | `/plans/04-gap-analysis.md`          | 67 gaps, risk register, stakeholder questions, compliance requirements                                                 |
+| **PikaPods & Ops Backend**   | `/plans/05-pikapods-integrations.md` | Sidecar OSS pods (Umami/Listmonk/n8n/Kuma), cost rollup, `/admin` + secretary phases                                   |
+| **Growth Tactics**           | `/docs/growth-tactics.md`            | Full yes/no/later triage, cadence, drips, ballpark ranges                                                              |
+| **Conversion Boost**         | `/docs/conversion-boost.md`          | YAGNI features for booking/scheduling lift; admin/client ideas + pitch deck outline                                    |
+| **Customer Facing Plan**     | `/docs/customer-facing-plan.md`      | YAGNI improvements for booking/scheduling on public site; steps for carousel, prefill, schema, measurement, pitch deck |
+| **n8n Next**                 | `/docs/n8n-next.md`                  | Pod, workflow, runbook, measurement for fan-out (deferred until volume)                                                |
+| **Live board**               | `/SCRATCHPAD.md`                     | Remaining owner/agent work — only live checklist                                                                       |
+| **Docs index**               | `/docs/README.md`                    | Map of SoTs vs archive                                                                                                 |
+| **Ops credentials**          | `/docs/runbooks/ops-credentials.md`  | Dashboard / env / migrations / AI enablement                                                                           |
+| **Next Steps**               | `/docs/next-steps.md`                | Stub → SCRATCHPAD; hire-deferred CRM outline only                                                                      |
+| **Master Document**          | `/plans/00-master-document.md`       | This document — roadmap narrative (not the live board)                                                                 |
 
 ---
 
@@ -680,4 +769,4 @@ Applies to **all phases**:
 ---
 
 _Document maintained by the General Contractor. Updated after each phase completion._  
-_Last Updated: 2026-08-04_
+_Last Updated: 2026-08-07 — Docs consolidated; live board = `SCRATCHPAD.md`_

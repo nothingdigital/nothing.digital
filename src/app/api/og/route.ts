@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 // ponytail: simple SVG OG image route; replaces @vercel/og dependency.
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://nothing.digital";
-
 function escapeXml(text: string): string {
   return text
     .replace(/&/g, "&amp;")
@@ -33,7 +31,6 @@ export function GET(request: NextRequest): NextResponse {
     headers: {
       "Content-Type": "image/svg+xml",
       "Cache-Control": "public, max-age=86400, immutable",
-      Link: `<${SITE_URL}/api/og?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}>; rel="canonical"`,
     },
   });
 }

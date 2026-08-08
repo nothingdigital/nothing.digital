@@ -9,6 +9,7 @@ export function HeroClock() {
 
   // ponytail: direct style mutation, no state churn per mousemove
   const handleTilt = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const el = tiltRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
@@ -27,10 +28,15 @@ export function HeroClock() {
     return () => clearInterval(id);
   }, []);
 
+  // Width + aspect-square only (no fixed height) so narrow viewports scale evenly;
+  // shrink-0 / self-center defeat grid/flex stretch that was turning the dial into an oval.
+  const frameClassName =
+    "relative mx-auto aspect-square h-auto w-full max-w-64 shrink-0 self-center sm:max-w-72 md:max-w-80 lg:max-w-96";
+
   if (!time) {
     // ponytail: render static placeholder to avoid hydration mismatch.
     return (
-      <div className="relative mx-auto aspect-square w-64 md:w-80 lg:w-96">
+      <div className={frameClassName}>
         <div className="absolute inset-0 rounded-full border-4 border-primary/20" />
       </div>
     );
@@ -49,7 +55,8 @@ export function HeroClock() {
       ref={tiltRef}
       onMouseMove={handleTilt}
       onMouseLeave={resetTilt}
-      className="relative mx-auto aspect-square w-64 transition-transform duration-200 ease-out md:w-80 lg:w-96"
+      className={`${frameClassName} transition-transform duration-200 ease-out`}
+      role="img"
       aria-label={`Current time ${time.toLocaleTimeString()}`}
     >
       {/* rotating seal text */}

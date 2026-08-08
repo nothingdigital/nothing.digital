@@ -15,7 +15,9 @@ export default defineConfig({
   webServer: {
     command: "pnpm build && pnpm start",
     url: "http://localhost:3000",
-    reuseExistingServer: !process.env.CI,
+    // CI a11y job starts `pnpm start` itself after downloading the build artifact.
+    reuseExistingServer:
+      !process.env.CI || process.env.PLAYWRIGHT_REUSE_SERVER === "1",
     timeout: 120 * 1000,
   },
   projects: [

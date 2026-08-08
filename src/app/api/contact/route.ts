@@ -1,32 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
 
+import { brandConfig } from "@/brand";
 import { env } from "@/lib/env";
 
 import {
   contactConfirmationEmailTemplate,
   teamNotificationEmailTemplate,
+  nurtureDay0EmailTemplate,
 } from "@/lib/email/templates";
+import { notifyN8n } from "@/lib/n8n";
+import { scoreLead } from "@/lib/admin/client-ops";
 import { getRateLimiter } from "@/lib/rate-limit";
+import { getClientIp } from "@/lib/request";
 import { getResendClient } from "@/lib/resend";
 import { getServiceRoleClient } from "@/lib/supabase/server";
 import { contactSchema, type ContactInput } from "@/lib/validations/contact";
 
-const FROM_EMAIL = "Nothing.Digital <hello@nothing.digital>";
 const TEAM_EMAIL = env.private.CONTACT_NOTIFY_EMAIL ?? "team@nothing.digital";
-
-function isHoneypotTriggered(data: ContactInput): boolean {
-  return Boolean(data.website && data.website.length > 0);
-}
-
-function formatZodErrors(
-  error: z.ZodError,
-): Array<{ path: PropertyKey[]; message: string }> {
-  return error.issues.map((issue) => ({
-    path: issue.path,
-    message: issue.message,
-  }));
-}
+const CALENDLY =
+  env.private.CALENDLY_URL || "https://calendly.com/nothing-digital/30min";
 
 async function storeSubmission(data: ContactInput) {
   const supabase = getServiceRoleClient();
@@ -40,6 +32,7 @@ async function storeSubmission(data: ContactInput) {
       company: data.company ?? null,
       service: data.service ?? null,
       budget: data.budget ?? null,
+      timeline: data.timeline ?? null,
       message: data.message,
       status: "new",
     })
@@ -54,38 +47,6 @@ async function storeSubmission(data: ContactInput) {
   return submission.id;
 }
 
-async function sendConfirmationEmail(data: ContactInput) {
-  const resend = getResendClient();
-  if (!resend) throw new Error("Resend client unavailable (missing API key)");
-
-  await resend.emails.send({
-    from: FROM_EMAIL,
-    to: data.email,
-    subject: "We received your message — Nothing.Digital",
-    html: contactConfirmationEmailTemplate(data),
-  });
-}
-
-async function sendTeamNotification(data: ContactInput, submissionId: string) {
-  const resend = getResendClient();
-  if (!resend) throw new Error("Resend client unavailable (missing API key)");
-
-  await resend.emails.send({
-    from: FROM_EMAIL,
-    to: TEAM_EMAIL,
-    subject: `New contact submission from ${data.name}`,
-    html: teamNotificationEmailTemplate(data, submissionId),
-  });
-}
-
-function getClientIp(request: NextRequest): string {
-  return (
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-    request.headers.get("x-real-ip") ??
-    "unknown"
-  );
-}
-
 export async function POST(request: NextRequest): Promise<NextResponse> {
   let data: unknown;
 
@@ -98,17 +59,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const parseResult = contactSchema.safeParse(data);
   if (!parseResult.success) {
     return NextResponse.json(
-      {
-        error: "Validation failed",
-        details: formatZodErrors(parseResult.error),
-      },
+      { error: "Validation failed", details: parseResult.error.issues },
       { status: 400 },
     );
   }
 
   const validated = parseResult.data;
 
-  if (isHoneypotTriggered(validated)) {
+  if (validated.website && validated.website.length > 0) {
     return NextResponse.json(
       { success: true, message: "Submission received" },
       { status: 201 },
@@ -134,9 +92,37 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     );
   }
 
+  const resend = getResendClient();
+  if (!resend) {
+    console.error("[contact] Resend client unavailable (missing API key)");
+    return NextResponse.json(
+      { error: "Failed to send notification. Please try again later." },
+      { status: 500 },
+    );
+  }
+
   try {
-    await sendConfirmationEmail(validated);
-    await sendTeamNotification(validated, submissionId);
+    await resend.emails.send({
+      from: brandConfig.fromEmail,
+      to: validated.email,
+      subject: "We received your message — Nothing.Digital",
+      html: contactConfirmationEmailTemplate(validated, CALENDLY),
+    });
+    // Always Resend team notify; n8n is optional fan-out below (never replace).
+    await resend.emails.send({
+      from: brandConfig.fromEmail,
+      to: TEAM_EMAIL,
+      subject: `New contact submission from ${validated.name}`,
+      html: teamNotificationEmailTemplate(validated, submissionId),
+    });
+    if (scoreLead(validated) > 60) {
+      await resend.emails.send({
+        from: brandConfig.fromEmail,
+        to: validated.email,
+        subject: "Let's schedule a call — Nothing.Digital",
+        html: nurtureDay0EmailTemplate(validated, CALENDLY),
+      });
+    }
   } catch (error) {
     console.error("[contact] Email delivery failed:", error);
     return NextResponse.json(
@@ -144,6 +130,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       { status: 500 },
     );
   }
+
+  // ponytail: optional fan-out after critical path; never blocks 201.
+  void notifyN8n("contact", {
+    id: submissionId,
+    name: validated.name,
+    email: validated.email,
+    company: validated.company ?? null,
+    service: validated.service ?? null,
+  });
 
   return NextResponse.json(
     { success: true, message: "Submission received" },

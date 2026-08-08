@@ -1,10 +1,9 @@
-"use client";
-
 import Link from "next/link";
 
-import { cn } from "@/lib/utils";
 import { routes } from "@/lib/routes";
 import { siteConfig, socialLinks } from "@/lib/site";
+import { BrandWordmark } from "@/components/atoms/brand-wordmark";
+import { Seal } from "@/components/atoms/seal";
 import { NewsletterForm } from "./newsletter-form";
 
 const serviceLinks = [
@@ -12,6 +11,9 @@ const serviceLinks = [
   { label: "Software Solutions", href: routes.services.softwareSolutions },
   { label: "Applications", href: routes.services.applications },
   { label: "Email Marketing", href: routes.services.emailMarketing },
+  { label: "AI Solutions", href: routes.services.aiSolutions },
+  { label: "Tech Literacy", href: routes.services.techLiteracy },
+  { label: "Coding & SQL", href: routes.services.codingSql },
 ];
 
 const companyLinks = [
@@ -28,25 +30,50 @@ const legalLinks = [
   { label: "Accessibility", href: "/accessibility" },
 ];
 
-export interface FooterProps {
-  className?: string;
+function FooterColumn({
+  title,
+  links,
+}: {
+  title: string;
+  links: Array<{ label: string; href: string }>;
+}) {
+  return (
+    <div>
+      <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.2em]">
+        {title}
+      </h3>
+      <ul className="mt-3 space-y-2">
+        {links.map((link) => (
+          <li key={link.href}>
+            <Link
+              href={link.href}
+              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+            >
+              {link.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
-export function Footer({ className }: FooterProps) {
+export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className={cn("border-t bg-background", className)}>
+    <footer className="border-t bg-background">
       <div className="container mx-auto px-4 py-12 md:px-6 lg:px-8">
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           <div>
             <Link
               href={routes.home}
-              className="font-display text-xl tracking-tight"
+              className="inline-block"
+              aria-label="Nothing.Digital home"
             >
-              Nothing<span className="italic text-primary">.</span>Digital
+              <BrandWordmark />
             </Link>
-            <p className="mt-2 text-sm text-muted-foreground">
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               {siteConfig.tagline}
             </p>
             {socialLinks.length > 0 ? (
@@ -67,48 +94,15 @@ export function Footer({ className }: FooterProps) {
             ) : null}
           </div>
 
-          <div>
-            <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.2em]">
-              Services
-            </h3>
-            <ul className="mt-3 space-y-2">
-              {serviceLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.2em]">
-              Company
-            </h3>
-            <ul className="mt-3 space-y-2">
-              {companyLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <FooterColumn title="Services" links={serviceLinks} />
+          <FooterColumn title="Company" links={companyLinks} />
 
           <div>
             <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.2em]">
               Newsletter
             </h3>
             <p className="mt-3 text-sm text-muted-foreground">
-              Get insights delivered to your inbox.
+              Monthly tips on shipping digital products faster. No spam.
             </p>
             <div className="mt-3">
               <NewsletterForm />
@@ -116,7 +110,11 @@ export function Footer({ className }: FooterProps) {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t pt-8 md:flex-row">
+        <div className="mt-12 flex justify-center border-t pt-8">
+          <Seal className="text-foreground" />
+        </div>
+
+        <div className="mt-6 flex flex-col items-center justify-between gap-4 md:flex-row">
           <p className="text-sm text-muted-foreground">
             © {currentYear} {siteConfig.name}. All rights reserved.
           </p>

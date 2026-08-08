@@ -1,11 +1,6 @@
-export const siteConfig = {
-  name: "Nothing.Digital",
-  tagline: "Built on time. Built to last.",
-  description:
-    "Senior web and software development studio. Custom websites, software, apps, and email marketing — delivered on fixed timelines.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://nothing.digital",
-  email: "hello@nothing.digital",
-} as const;
+import { brandConfig } from "@/brand";
+
+export const siteConfig = brandConfig;
 
 export interface SocialLink {
   label: string;
