@@ -11,8 +11,8 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-function renderForm() {
-  return render(<ContactForm />);
+function renderForm(calendlyUrl?: string) {
+  return render(<ContactForm calendlyUrl={calendlyUrl} />);
 }
 
 it("shows validation errors and focuses the first invalid field", async () => {
@@ -39,7 +39,7 @@ it("submits the form and shows a success message", async () => {
     json: async () => ({ success: true }),
   } as Response);
 
-  renderForm();
+  renderForm("https://calendly.com/nothing-digital/30min");
 
   await userEvent.type(screen.getByLabelText(/name/i), "Jane Doe");
   await userEvent.type(screen.getByLabelText(/email/i), "jane@example.com");
@@ -59,6 +59,9 @@ it("submits the form and shows a success message", async () => {
     ).toBeInTheDocument();
   });
 
+  expect(
+    screen.getByRole("link", { name: /book a scoping call now/i }),
+  ).toHaveAttribute("href", "https://calendly.com/nothing-digital/30min");
   expect(
     screen.getByRole("link", { name: /see how pricing works/i }),
   ).toHaveAttribute("href", "/pricing");

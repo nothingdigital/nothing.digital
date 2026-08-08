@@ -7,7 +7,6 @@ import { Reveal } from "@/components/atoms/reveal";
 import { Button } from "@/components/ui/button";
 import { ServiceCard } from "@/components/molecules/service-card";
 import { HeroClock } from "@/components/atoms/hero-clock";
-import { AvailabilityWidget } from "@/components/molecules/availability-widget";
 import { routes } from "@/lib/routes";
 import { serviceSummaries } from "@/lib/services";
 

@@ -43,6 +43,9 @@ export function NewsletterForm() {
       } | null;
       if (body?.message) setSuccessMessage(body.message);
 
+      (
+        window as Window & { umami?: { track: (name: string) => void } }
+      ).umami?.track("newsletter_subscribe");
       setStatus("success");
       reset();
     } catch {

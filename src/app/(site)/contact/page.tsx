@@ -157,6 +157,7 @@ export default function ContactPage() {
                     href={calendlyUrl}
                     target="_blank"
                     rel="noopener noreferrer"
+                    data-umami-event="calendly_click"
                     className="text-muted-foreground hover:text-foreground"
                   >
                     Pick a time that works for you
@@ -167,7 +168,7 @@ export default function ContactPage() {
           </div>
 
           <div className="rounded-xl border-2 border-border bg-background p-6 shadow-md md:p-8">
-            <ContactForm />
+            <ContactForm calendlyUrl={calendlyUrl} />
           </div>
         </div>
 

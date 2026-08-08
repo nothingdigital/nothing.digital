@@ -19,16 +19,17 @@ function baseTemplate(title: string, body: string): string {
         ${body}
       </div>
       <div style="background: #f8f8f8; padding: 24px; text-align: center; font-size: 12px; color: #666; border-top: 1px solid #eee;">
-        <p style="margin: 0 0 8px;">This email was sent by n8n fan-out from your contact form. Built to showcase our email marketing services.</p>
-        <a href="https://nothing.digital" style="color: #4f46e5; text-decoration: none;">nothing.digital</a> • 
-        <a href="https://nothing.digital/services/email-marketing" style="color: #4f46e5; text-decoration: none;">Email Marketing Services</a>
+        <a href="https://nothing.digital" style="color: #4f46e5; text-decoration: none;">nothing.digital</a>
       </div>
     </div>
   </body>
 </html>`;
 }
 
-export function contactConfirmationEmailTemplate(data: ContactInput): string {
+export function contactConfirmationEmailTemplate(
+  data: ContactInput,
+  calendlyUrl: string,
+): string {
   const estimateHtml =
     data.timeline || data.budget
       ? `
@@ -48,8 +49,8 @@ export function contactConfirmationEmailTemplate(data: ContactInput): string {
       <p style="font-size: 15px; margin: 0 0 16px; color: #334155;"><strong>Your message:</strong></p>
       <p style="font-size: 15px; line-height: 1.6; color: #475569; margin: 0; white-space: pre-wrap;">${data.message}</p>
     </div>
-    <a href="https://nothing.digital" style="display: inline-block; background: #4f46e5; color: white; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 15px;">Visit nothing.digital</a>
-    <p style="margin-top: 32px; font-size: 13px; color: #64748b;">This email was crafted to showcase our email marketing services. Expect a personal reply soon.</p>
+    <a href="${calendlyUrl}" style="display: inline-block; background: #4f46e5; color: white; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 15px;">Book a scoping call</a>
+    <p style="margin-top: 16px; font-size: 13px; color: #64748b;">Or wait for our reply within one business day.</p>
   `;
 
   return baseTemplate("We received your message — Nothing.Digital", body);
@@ -82,7 +83,7 @@ export function teamNotificationEmailTemplate(
       ${data.message.replace(/\n/g, "<br />")}
     </div>
     <a href="https://nothing.digital/admin/inbox" style="display: inline-block; background: #4f46e5; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600; margin-bottom: 24px;">View in Admin Inbox</a>
-    <p style="font-size: 12px; color: #888; margin: 0;">Submission ID: ${submissionId} • Received via n8n fan-out to showcase our email marketing.</p>
+    <p style="font-size: 12px; color: #888; margin: 0;">Submission ID: ${submissionId}</p>
   `;
 
   return baseTemplate(`New contact submission from ${data.name}`, body);
@@ -148,7 +149,7 @@ export function invoiceSentEmailTemplate(data: {
   return baseTemplate(`Invoice ${data.number} — Nothing.Digital`, body);
 }
 
-// ponytail: score-based day 0 nurture to re-engage with scheduler link. Reuse base + calendly url. No full sequence (Listmonk for that).
+// ponytail: score-based day-0 only. Listmonk owns multi-touch for newsletter subs.
 export function nurtureDay0EmailTemplate(
   data: ContactInput,
   calendlyUrl: string,
@@ -157,8 +158,7 @@ export function nurtureDay0EmailTemplate(
     <h1 style="font-size: 20px; margin: 0 0 16px;">Let's schedule a call</h1>
     <p>Hi ${data.name}, thanks for your message. To move forward with your ${data.service || "project"}, book a scoping call here:</p>
     <a href="${calendlyUrl}" style="display: inline-block; background: #111; color: #fff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600;">Book a scoping call</a>
-    <p style="margin-top: 24px;">We'll follow up with a case study in 3 days and a soft CTA in 7 days via our nurture sequence.</p>
-    <p style="margin-top: 16px; font-size: 13px; color: #555;">This is automated to showcase our email marketing services.</p>
+    <p style="margin-top: 24px; font-size: 13px; color: #555;">We'll also reply personally within one business day.</p>
   `;
 
   return baseTemplate("Let's schedule a call — Nothing.Digital", body);

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import type { Resend } from "resend";
 
 import { getFromEmail } from "@/brand";
-import { env, isN8nConfigured } from "@/lib/env";
+import { env } from "@/lib/env";
 
 import {
   contactConfirmationEmailTemplate,
@@ -18,6 +18,8 @@ import { getServiceRoleClient } from "@/lib/supabase/server";
 import { contactSchema, type ContactInput } from "@/lib/validations/contact";
 
 const TEAM_EMAIL = env.private.CONTACT_NOTIFY_EMAIL ?? "team@nothing.digital";
+const CALENDLY =
+  env.private.CALENDLY_URL || "https://calendly.com/nothing-digital/30min";
 
 async function storeSubmission(data: ContactInput) {
   const supabase = getServiceRoleClient();
@@ -51,7 +53,7 @@ async function sendConfirmationEmail(resend: Resend, data: ContactInput) {
     from: getFromEmail(),
     to: data.email,
     subject: "We received your message — Nothing.Digital",
-    html: contactConfirmationEmailTemplate(data),
+    html: contactConfirmationEmailTemplate(data, CALENDLY),
   });
 }
 
@@ -69,13 +71,11 @@ async function sendTeamNotification(
 }
 
 async function sendNurtureEmail(resend: Resend, data: ContactInput) {
-  const calendlyUrl =
-    env.private.CALENDLY_URL || "https://calendly.com/nothing-digital/30min";
   await resend.emails.send({
     from: getFromEmail(),
     to: data.email,
     subject: "Let's schedule a call — Nothing.Digital",
-    html: nurtureDay0EmailTemplate(data, calendlyUrl),
+    html: nurtureDay0EmailTemplate(data, CALENDLY),
   });
 }
 
@@ -135,9 +135,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   try {
     await sendConfirmationEmail(resend, validated);
-    if (!isN8nConfigured()) {
-      await sendTeamNotification(resend, validated, submissionId);
-    }
+    // Always Resend team notify; n8n is optional fan-out below (never replace).
+    await sendTeamNotification(resend, validated, submissionId);
     if (scoreLead(validated) > 60) {
       await sendNurtureEmail(resend, validated);
     }

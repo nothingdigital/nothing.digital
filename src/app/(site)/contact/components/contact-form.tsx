@@ -55,7 +55,7 @@ function toApiPayload(data: FormValues): ContactInput {
   };
 }
 
-export function ContactForm() {
+export function ContactForm({ calendlyUrl }: { calendlyUrl?: string }) {
   const [status, setStatus] = React.useState<
     "idle" | "loading" | "success" | "error"
   >("idle");
@@ -116,6 +116,9 @@ export function ContactForm() {
           );
         }
 
+        (
+          window as Window & { umami?: { track: (name: string) => void } }
+        ).umami?.track("contact_submit");
         setSubmittedService(data.service);
         setStatus("success");
         reset();
@@ -150,6 +153,19 @@ export function ContactForm() {
         <p className="text-sm font-medium text-green-800 dark:text-green-100">
           Thanks — we will be in touch soon. We reply within one business day.
         </p>
+        {calendlyUrl ? (
+          <p className="text-sm">
+            <a
+              href={calendlyUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-umami-event="calendly_click"
+              className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
+            >
+              Book a scoping call now
+            </a>
+          </p>
+        ) : null}
         <p className="text-sm text-muted-foreground">While you wait:</p>
         <ul className="space-y-2 text-sm">
           <li>

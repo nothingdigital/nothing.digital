@@ -1,62 +1,43 @@
 # Current state
 
-Goal: audit lead gen, clean debt, plan to get leads flowing.
-Status: owner picked hybrid C. Presenting design for approval → then write spec.
-Current step: design sections → owner OK → `docs/superpowers/specs/2026-08-07-lead-gen-design.md`.
-Next action: get design approval section-by-section; write spec; then writing-plans.
+Goal: hybrid lead-gen activation (Approach C).
+Status: agent inbound cleanup shipped. Owner boxes open (Instantly / Listmonk / Places).
+Current step: owner starts Instantly warmup + Listmonk drip; agent done for this wave.
+Next action: owner preflight; optional commit of agent changes.
 Updated: 2026-08-07
 
 ## Plan
 
-- [x] agent: cavecrew-investigator — map lead-gen code
-- [x] agent: explore — outbound pipeline audit
-- [x] agent: explore — inbound + nurture audit
-- [x] agent: general — growth opportunities → recommend hybrid C
-- [x] clarify primary goal with owner → **C hybrid**
-- [ ] propose approaches + design (§1–2 approved; presenting §3)
-- [ ] write spec + implementation plan
-- [ ] cleanup PRs (agent-doable)
-- [ ] owner boxes called out separately
+- [x] audit agents (map, outbound, inbound, growth)
+- [x] design approved (hybrid C) → spec + plan written
+- [x] Calendly on confirm email + success UI
+- [x] Honest nurture Day-0 + email footer cleanup
+- [x] Always team Resend (+ n8n fan-out)
+- [x] Umami events (contact_submit, newsletter_subscribe, calendly_click)
+- [x] Delete AvailabilityWidget mock + dead import
+- [x] Docs: conversion-boost + this board
+- [ ] Owner: Instantly DNS/warmup ≥14d
+- [ ] Owner: Listmonk 0/3/7 drip + E2E
+- [ ] Owner: GOOGLE_PLACES_API_KEY on Vercel + live lead-finder / map
+- [ ] Owner: confirm mig 005 + **009** (map lat/lng); review CSV → Instantly (admin export only)
+- [ ] Owner: founding-client slot 1
+- [ ] Keep AI outbound personalization OFF for first send
 
 ## Decisions
 
-- Cold ≠ warm ≠ transactional — Instantly / Listmonk / Resend stay separated.
-- YAGNI: no new queue; reuse lead-finder → admin outbound → Instantly CSV; Listmonk warm drip; Resend transactional.
-- Agents recommend **Approach C hybrid**: Instantly warmup Day 1 + Listmonk drip + founding-client + Umami + inbound Calendly CTAs in parallel.
-- Keep AI outbound personalization OFF for first cold send (lines from lead-finder `--ai-rank` / manual edit only; no admin AI redraft).
-- Do not invent product roadmap beyond lead gen.
-- [x] AI follow-ons + polish on `main` (ops brief · invoice cover HITL · rate limits · Settings rows). Public brief removed.
-- [x] Ponytail AI shrink: `AI_ENABLED` master flag, shared gateway, `draftObject`, HITL shell, drop admin outbound AI draft.
+- Approach C hybrid.
+- Cold ≠ warm ≠ transactional.
+- Contact nurture = Resend Day-0 only if score > 60; no Listmonk auto-subscribe.
+- Admin Instantly export only — ignore CLI `instantly-import-*.csv` until after review.
+- Spec: `docs/superpowers/specs/2026-08-07-lead-gen-design.md`
+- Plan: `docs/superpowers/plans/2026-08-07-lead-gen.md`
 
 ## Dead ends
 
-- Full ML scoring (rule-based enough).
-- New queue for nurture (reuse Listmonk + Resend).
-- Instantly API push (CSV hybrid stays).
-- conversion-boost orphans not worth building now: parseLeadToBooking, Calendar Sync, self-serve scheduler (Calendly is SoT).
+- Full ML scoring; Instantly API; Calendly→CRM; self-serve scheduler; fake availability slots.
 
 ## Progress log
 
-- [Audit inbound+nurture](a26c1951-ecab-4834-a51b-1dbd6cc21c42): capture+inbox solid. Nurture weak: Day-0 only for score>60; Listmonk drip owner-open; confirmation/success lack Calendly; AvailabilityWidget imported but never rendered (mock slots); phone stripped before API; false Day 3/7 promise in nurture template; team notify skipped when n8n on.
-- [Audit outbound](ddee5cf7-aaf9-412c-a9f9-40f5348a76f8): hybrid CSV shipped; blocked Instantly DNS/warmup + Places key + mig 005. Debt: dual DNC, CLI Instantly CSV bypasses review, re-import dupes, personalization/sequence mismatch.
-- [Map lead-gen code](bac3881f-8d80-49a9-9448-747a85f99265): no `triggerNurture`; day-0 inline in contact route. Modules inbox+outbound on.
-- [Lead growth opportunities](2bdfeec2-864b-40f8-b966-6f808ddbe212): activation gap not tooling gap. Hybrid 2-week wave recommended.
-
-## Agent-ready cleanup (after design approval)
-
-1. Calendly on contact confirmation + success state
-2. Honest nurture copy (drop false Day 3/7 promise) or bridge to Listmonk
-3. Fix transactional email footers (n8n marketing copy)
-4. Render or delete AvailabilityWidget dead import
-5. Umami events: contact_submit, newsletter_subscribe, calendly_click
-6. Docs: conversion-boost + SCRATCHPAD reconcile; outbound on live board
-7. Dual-notify safety: always Resend team + n8n
-
-## Owner boxes (not agent)
-
-- Instantly account/DNS/warmup ≥14d
-- Listmonk drip UI (templates + 0/3/7 + E2E)
-- GOOGLE_PLACES_API_KEY (+ optional Hunter)
-- Confirm mig 005 (+007 if AI later)
-- Founding-client slot 1
-- Live lead-finder run + admin review + Instantly import
+- Admin outbound map: `/admin/outbound/map` (MapLibre + Places → lead pins; Berry AL). Spec `2026-08-08-admin-outbound-map-design.md`. Needs Places key on Vercel + mig 009.
+- Implemented inbound cleanup: templates, contact route dual-notify, success Calendly CTA, Umami helper, deleted AvailabilityWidget.
+- Audits: activation gap not tooling gap; dual DNC remains manual for pilot.
