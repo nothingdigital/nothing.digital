@@ -61,12 +61,17 @@ export default async function AdminOutboundPage({
 
   return (
     <div className="space-y-8">
-      <div>
-        <h2 className="font-display text-3xl tracking-tight">Outbound</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          CLI finds leads — review here, then download Instantly CSV. Never
-          import cold lists into Listmonk.
-        </p>
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h2 className="font-display text-3xl tracking-tight">Outbound</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            CLI finds leads — review here, then download Instantly CSV. Never
+            import cold lists into Listmonk.
+          </p>
+        </div>
+        <Button asChild size="sm" variant="outline">
+          <Link href="/admin/outbound/map">Map</Link>
+        </Button>
       </div>
 
       <section className="space-y-3 rounded-lg border border-border bg-card px-4 py-5">

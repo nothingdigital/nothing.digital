@@ -1,17 +1,7 @@
-export type VerticalPack = "trades" | "pro" | "hospitality";
+import type { PlaceCandidate } from "../../src/lib/leads/places";
 
-export type PlaceCandidate = {
-  placeId: string;
-  name: string;
-  phone: string | null;
-  address: string | null;
-  website: string | null;
-  types: string[];
-  rating: number | null;
-  reviewCount: number | null;
-  vertical: VerticalPack;
-  query: string;
-};
+export type { PlaceCandidate };
+export type VerticalPack = "trades" | "pro" | "hospitality";
 
 export type ScoreResult = {
   score: number;

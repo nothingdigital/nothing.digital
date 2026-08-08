@@ -157,19 +157,20 @@ No Stripe Checkout in v1 — payment links/PDFs via invoice `external_url` or em
 **Auth:** Supabase (password / Google / magic link) + `ADMIN_EMAILS` allowlist.  
 **Entry:** `https://nothing.digital/admin` · How-to: [`runbooks/client-ops.md`](./runbooks/client-ops.md)
 
-| Route               | Capability                                            | Used for                                                                                                                         |
-| ------------------- | ----------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `/admin`            | Today loops + glance counts (+ optional AI ops brief) | Daily triage: inbox, overdue invoices, blocked/due work, weekly outbound, Listmonk setup                                         |
-| `/admin/inbox`      | Contact submissions                                   | Rule-based `scoreLead` (0–100) for sort/badge; status new → read → replied → archived; optional AI reply draft (HITL — you send) |
-| `/admin/outbound`   | Lead review queue                                     | Import lead-finder CSV → approve/reject/suppress → Instantly CSV export; optional AI personalization line                        |
-| `/admin/clients`    | CRM accounts                                          | Clients, assets (sites/domains + optional monitor URL), work, files, invoices                                                    |
-| `/admin/billing`    | All invoices                                          | Create/edit; mark draft/sent/paid/void; overdue computed on read                                                                 |
-| `/admin/work`       | Cross-client work queue                               | Status + sort (due/priority/created); no kanban/assignees in v1                                                                  |
-| `/admin/newsletter` | Local subscriber mirror                               | Export/manage mirror; **Listmonk is SoT** for campaigns                                                                          |
-| `/admin/health`     | Integration chips + Open links                        | Env presence + launchers to Umami/Listmonk/Instantly/etc.; Listmonk drip checklist                                               |
-| `/admin/docs`       | Internal knowledge base (handbook / policies)         | Nested spaces/folders/pages; markdown drafts; review → approve; hybrid import; acknowledgments                                   |
-| `/admin/system-map` | This document (rendered)                              | Operator + agent orientation — how the system works                                                                              |
-| `/admin/settings`   | Tool links / config surface                           | Same external dashboards; kill switches are env vars on Vercel                                                                   |
+| Route                 | Capability                                            | Used for                                                                                                                         |
+| --------------------- | ----------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `/admin`              | Today loops + glance counts (+ optional AI ops brief) | Daily triage: inbox, overdue invoices, blocked/due work, weekly outbound, Listmonk setup                                         |
+| `/admin/inbox`        | Contact submissions                                   | Rule-based `scoreLead` (0–100) for sort/badge; status new → read → replied → archived; optional AI reply draft (HITL — you send) |
+| `/admin/outbound`     | Lead review queue                                     | Import lead-finder CSV **or** map pins → approve/reject/suppress → Instantly CSV export; optional AI personalization line        |
+| `/admin/outbound/map` | Local business map                                    | MapLibre + Places search/drop pin → Add to `lead_candidates` (lat/lng); center Berry AL                                          |
+| `/admin/clients`      | CRM accounts                                          | Clients, assets (sites/domains + optional monitor URL), work, files, invoices                                                    |
+| `/admin/billing`      | All invoices                                          | Create/edit; mark draft/sent/paid/void; overdue computed on read                                                                 |
+| `/admin/work`         | Cross-client work queue                               | Status + sort (due/priority/created); no kanban/assignees in v1                                                                  |
+| `/admin/newsletter`   | Local subscriber mirror                               | Export/manage mirror; **Listmonk is SoT** for campaigns                                                                          |
+| `/admin/health`       | Integration chips + Open links                        | Env presence + launchers to Umami/Listmonk/Instantly/etc.; Listmonk drip checklist                                               |
+| `/admin/docs`         | Internal knowledge base (handbook / policies)         | Nested spaces/folders/pages; markdown drafts; review → approve; hybrid import; acknowledgments                                   |
+| `/admin/system-map`   | This document (rendered)                              | Operator + agent orientation — how the system works                                                                              |
+| `/admin/settings`     | Tool links / config surface                           | Same external dashboards; kill switches are env vars on Vercel                                                                   |
 
 **AI admin features:** Needs `AI_GATEWAY_API_KEY` + `AI_ENABLED=true` (+ brand module `ai`). Inbox draft, ops brief, invoice cover HITL. Outbound Instantly lines come from lead-finder `--ai-rank` or manual edit — not a separate admin AI draft.
 
@@ -196,7 +197,7 @@ Legend: **Live** = usable in production · **Optional** = code ready, env/accoun
 | **Google Search Console**   | Indexing                   | GSC UI                                                      | [search.google.com/search-console](https://search.google.com/search-console)                | Sitemap (done) · weekly Coverage                                           | Live                               |
 | **Bing Webmaster**          | Indexing                   | Bing UI                                                     | [bing.com/webmasters](https://www.bing.com/webmasters)                                      | Sitemap submit (remaining)                                                 | Setup open                         |
 | **AI Gateway**              | LLM drafts                 | Vercel AI Gateway + app flags                               | Vercel AI Gateway docs · flags in §5                                                        | Inbox/brief/ops/invoice/outbound AI                                        | Optional (code shipped)            |
-| **Google Places / Hunter**  | Lead discovery CLI         | Local `pnpm lead-finder`                                    | Env: `GOOGLE_PLACES_API_KEY`, optional `HUNTER_API_KEY`                                     | Build outbound CSV                                                         | Optional for outbound pilot        |
+| **Google Places / Hunter**  | Lead discovery CLI + map   | Local `pnpm lead-finder` · `/admin/outbound/map`            | Env: `GOOGLE_PLACES_API_KEY`, optional `HUNTER_API_KEY`                                     | Build outbound CSV / map pins                                              | Optional for outbound pilot        |
 | **n8n**                     | Webhook fan-out            | Env only today                                              | `N8N_WEBHOOK_URL` / `N8N_DASHBOARD_URL`                                                     | Slack/Listmonk glue after contact/newsletter                               | Deferred (code no-ops without env) |
 | **Uptime Kuma**             | Self-hosted uptime         | Dashboard link only                                         | `KUMA_DASHBOARD_URL`                                                                        | Only if UptimeRobot fails you                                              | Deferred                           |
 | **Shlink / secondary pods** | URL shortener etc.         | —                                                           | plans only                                                                                  | —                                                                          | Deferred                           |
@@ -238,13 +239,15 @@ Details: [`runbooks/client-ops.md`](./runbooks/client-ops.md).
 
 ### C. Cold outbound → Instantly
 
-1. `pnpm lead-finder` (Places ± Hunter) → CSV under `data/lead-finder/out/`.
-2. `/admin/outbound` → upload → review → Approve / Reject / Suppress (DNC).
+1. Discover via `pnpm lead-finder` (CSV) **or** `/admin/outbound/map` (Places search / drop pin → Add to outbound).
+2. `/admin/outbound` → review → Approve / Reject / Suppress (DNC).
 3. Optional personalization line → Save.
 4. Download Instantly CSV → import in Instantly.
 5. Sequence copy: `content/emails/northport-cold-sequence.md`.
 6. Caps ~20–40/day/inbox; bounce ≥5% → pause.
 7. Log handoff on Home weekly outbound loop.
+
+Map needs `GOOGLE_PLACES_API_KEY` on Vercel + mig `009_lead_geo.sql` (`lat`/`lng`). Default center: 11628 Cripple Creek Rd, Berry, AL.
 
 Runbooks: [`outbound-instantly.md`](./runbooks/outbound-instantly.md) · [`outbound-pilot.md`](./runbooks/outbound-pilot.md).
 
@@ -281,6 +284,8 @@ Runbook: [`listmonk-drip.md`](./runbooks/listmonk-drip.md).
 | `005_admin_loops.sql`          | Today loops, checklists, lead candidates, DNC          |
 | `006_pdf_documents.sql`        | Invoice PDFs, documents, Storage                       |
 | `007_lead_personalization.sql` | Lead `personalization` column                          |
+| `008_kb_docs.sql`              | Admin knowledge base                                   |
+| `009_lead_geo.sql`             | Lead `lat`/`lng` for outbound map pins                 |
 
 Apply via Supabase SQL editor when SCRATCHPAD / ops-credentials say so. Empty Billing/Work until you create clients — no seed data.
 

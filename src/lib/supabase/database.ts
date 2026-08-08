@@ -370,6 +370,8 @@ type Tables = {
       review_count: number | null;
       status: string;
       personalization: string | null;
+      lat: number | null;
+      lng: number | null;
       created_at: string;
       updated_at: string;
     };
@@ -392,6 +394,8 @@ type Tables = {
       review_count?: number | null;
       status?: string;
       personalization?: string | null;
+      lat?: number | null;
+      lng?: number | null;
       created_at?: string;
       updated_at?: string;
     };
@@ -414,6 +418,8 @@ type Tables = {
       review_count?: number | null;
       status?: string;
       personalization?: string | null;
+      lat?: number | null;
+      lng?: number | null;
       created_at?: string;
       updated_at?: string;
     };

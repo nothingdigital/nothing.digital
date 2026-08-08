@@ -20,7 +20,7 @@ import { FIXTURE_CANDIDATES } from "./fixtures";
 import { discoverCandidates, parseVerticals } from "./places";
 import { fetchWebsiteSnapshot, scoreWebsite } from "./scorer";
 import { isSuppressed, loadSuppressionList } from "./suppress";
-import type { PlaceCandidate, ScoredLead } from "./types";
+import type { PlaceCandidate, ScoredLead, VerticalPack } from "./types";
 
 function argFlag(name: string): boolean {
   return process.argv.includes(`--${name}`);
@@ -114,7 +114,7 @@ async function main() {
 
   const candidates = useFixture
     ? FIXTURE_CANDIDATES.filter((row) =>
-        verticals ? verticals.includes(row.vertical) : true,
+        verticals ? verticals.includes(row.vertical as VerticalPack) : true,
       )
     : await discoverCandidates(placesKey!, allCategoryQueries(verticals));
 
