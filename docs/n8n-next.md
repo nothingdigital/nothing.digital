@@ -61,7 +61,7 @@ ponytail: pod only on volume. Workflow with existing nodes, no custom. Delete if
 
 Tested with sample payload - workflow triggers on POST to test URL. Production next after Vercel env + redeploy.
 
-Updated: 2026-08-06. Env set, redeploy triggered with this commit.
+Updated: 2026-08-06. Env set, redeploy triggered with this commit (and this one again to force another deploy after env).
 
 Link in master. Commit after test.
 
