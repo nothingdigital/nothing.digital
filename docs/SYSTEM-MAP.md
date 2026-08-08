@@ -1,7 +1,7 @@
 # Nothing.Digital — System Map
 
 > **Audience:** Owner + agents  
-> **Updated:** 2026-08-07  
+> **Updated:** 2026-08-08  
 > **Role:** How the product works end-to-end — purpose, client, admin, integrations, workflows.  
 > **Not a todo board.** Live remaining work lives only in [`../SCRATCHPAD.md`](../SCRATCHPAD.md).
 
@@ -29,8 +29,8 @@ Deep how-tos stay in runbooks. This map answers _what / why / where / when_.
 **Canonical short entry:** [`/AGENTS.md`](../AGENTS.md) (read order, rules, brand pointer).  
 Longer paste prompt: [`superpowers/HANDOFF-post-launch-ops.md`](./superpowers/HANDOFF-post-launch-ops.md).
 
-**Shipped:** site + `/admin` CRM, Pack F/H, client kit (`src/brand/` + module gates), Umami, Calendly, Listmonk env, Resend transactional (incl. score-gated day-0 nurture), Instantly CSV hybrid outbound, rule-based inbox lead scoring, AI code (flags may be off).  
-**Owner-only:** Instantly account/DNS/warmup, Listmonk drip UI (day 3/7), Bing sitemap, AI Gateway keys, Places/Hunter keys, some migration confirmations — see SCRATCHPAD.  
+**Shipped:** site + `/admin` CRM (incl. KB `/admin/docs`), Pack F/H, client kit (`src/brand/` + module gates), Umami (+ events), Calendly, Listmonk env, Resend transactional (score-gated day-0 nurture; always team notify), Instantly CSV hybrid outbound, `/admin/outbound/map` (MapLibre + Places), rule-based inbox lead scoring, founding-client flag, AI HITL (`AI_ENABLED`).  
+**Owner-only:** Instantly account/DNS/warmup, Listmonk drip UI (day 3/7), Bing sitemap, AI Gateway keys, Places key on Vercel, mig confirmations (005 loops / founding, 008 KB, 009 geo) — see SCRATCHPAD.  
 **Live focus:** lead-gen activation (hybrid Instantly + Listmonk + inbound) — design/spec on SCRATCHPAD, not duplicated here.
 
 ---
@@ -86,10 +86,13 @@ Cold leads → Admin review → Instantly sequences (not Listmonk)
 | Warm email    | Listmonk @ `newsletter.nothing.digital` | Opt-in newsletter + drips                              |
 | Cold email    | Instantly (`app.instantly.ai`)          | Sequences after human CSV review                       |
 | Transactional | Resend                                  | Contact confirm, admin notify, day-0 nurture, invoices |
-| Analytics     | Umami @ `analytics.nothing.digital`     | Owned traffic (cookie-gated)                           |
+| Analytics     | Umami @ `analytics.nothing.digital`     | Owned traffic (cookie-gated); events below             |
 | Booking       | Calendly                                | Scoping calls (SoT; no in-app bookings table)          |
+| Map tiles     | OSM via MapLibre                        | Admin outbound map only (no Google Maps JS)            |
 
 Health chips: `https://nothing.digital/api/health` (env presence, not live uptime).
+
+**Umami events (shipped):** `contact_submit`, `newsletter_subscribe`, `calendly_click`.
 
 ### Brand & modules (client kit Phase 0)
 
@@ -109,7 +112,7 @@ Redeploy this frame for other clients later without a rewrite. **Approach 1:** s
 | `billing`    | `/admin/billing`                            | on         |
 | `work`       | `/admin/work`                               | on         |
 | `newsletter` | `/admin/newsletter` + Listmonk APIs         | on         |
-| `outbound`   | `/admin/outbound`                           | on         |
+| `outbound`   | `/admin/outbound` + `/admin/outbound/map`   | on         |
 | `health`     | `/admin/health`                             | on         |
 | `docs`       | `/admin/docs`                               | on         |
 | `ai`         | AI master switch (env flags still required) | on         |
@@ -163,14 +166,15 @@ No Stripe Checkout in v1 — payment links/PDFs via invoice `external_url` or em
 | `/admin/inbox`        | Contact submissions                                   | Rule-based `scoreLead` (0–100) for sort/badge; status new → read → replied → archived; optional AI reply draft (HITL — you send) |
 | `/admin/outbound`     | Lead review queue                                     | Import lead-finder CSV **or** map pins → approve/reject/suppress → Instantly CSV export; optional AI personalization line        |
 | `/admin/outbound/map` | Local business map                                    | MapLibre + Places search/drop pin → Add to `lead_candidates` (lat/lng); center Berry AL                                          |
-| `/admin/clients`      | CRM accounts                                          | Clients, assets (sites/domains + optional monitor URL), work, files, invoices                                                    |
+| `/admin/clients`      | CRM accounts                                          | Clients (optional founding flag + 12mo care dates, max 2), assets, work, files, invoices                                         |
 | `/admin/billing`      | All invoices                                          | Create/edit; mark draft/sent/paid/void; overdue computed on read                                                                 |
 | `/admin/work`         | Cross-client work queue                               | Status + sort (due/priority/created); no kanban/assignees in v1                                                                  |
 | `/admin/newsletter`   | Local subscriber mirror                               | Export/manage mirror; **Listmonk is SoT** for campaigns                                                                          |
 | `/admin/health`       | Integration chips + Open links                        | Env presence + launchers to Umami/Listmonk/Instantly/etc.; Listmonk drip checklist                                               |
-| `/admin/docs`         | Internal knowledge base (handbook / policies)         | Nested spaces/folders/pages; markdown drafts; review → approve; hybrid import; acknowledgments                                   |
-| `/admin/system-map`   | This document (rendered)                              | Operator + agent orientation — how the system works                                                                              |
+| `/admin/docs`         | Internal knowledge base (handbook / policies)         | Nested spaces/folders/pages; markdown drafts; review → approve; hybrid import; acknowledgments (`008_kb_docs`)                   |
+| `/admin/system-map`   | This document (rendered from `docs/SYSTEM-MAP.md`)    | Operator + agent orientation — how the system works                                                                              |
 | `/admin/settings`     | Tool links / config surface                           | Same external dashboards; kill switches are env vars on Vercel                                                                   |
+| `/admin/login`        | Staff sign-in                                         | Supabase password / Google / magic link + `ADMIN_EMAILS`                                                                         |
 
 **AI admin features:** Needs `AI_GATEWAY_API_KEY` + `AI_ENABLED=true` (+ brand module `ai`). Inbox draft, ops brief, invoice cover HITL. Outbound Instantly lines come from lead-finder `--ai-rank` or manual edit — not a separate admin AI draft.
 
@@ -189,8 +193,9 @@ Legend: **Live** = usable in production · **Optional** = code ready, env/accoun
 | **Resend**                  | Transactional email        | App only (no campaign UI)                                   | [resend.com](https://resend.com) · DNS SPF                                                  | Contact confirms, day-0 nurture (score > 60), invoice emails, admin notify | Live                               |
 | **Listmonk**                | Warm newsletter + drips    | Pod UI + site form + `/admin/newsletter` + Health checklist | [newsletter.nothing.digital](https://newsletter.nothing.digital) · `LISTMONK_DASHBOARD_URL` | Opt-in list, welcome sequence, monthly broadcast                           | Live (drip UI checklist open)      |
 | **Instantly**               | Cold outbound sequences    | Instantly UI + `/admin/outbound` CSV                        | [app.instantly.ai](https://app.instantly.ai)                                                | Warmup, daily caps, 3-step cold sequence                                   | Live hybrid (CSV; no API yet)      |
-| **Umami**                   | Privacy-friendly analytics | Pod UI · `/admin/health`                                    | [analytics.nothing.digital](https://analytics.nothing.digital) · `UMAMI_DASHBOARD_URL`      | Traffic after cookie accept                                                | Live                               |
+| **Umami**                   | Privacy-friendly analytics | Pod UI · `/admin/health` · site events                      | [analytics.nothing.digital](https://analytics.nothing.digital) · `UMAMI_DASHBOARD_URL`      | Traffic + `contact_submit` / `newsletter_subscribe` / `calendly_click`     | Live                               |
 | **Calendly**                | Booking SoT                | Site CTAs · Health/Settings                                 | `CALENDLY_URL`                                                                              | Scoping calls                                                              | Live                               |
+| **MapLibre + OSM**          | Admin outbound map tiles   | `/admin/outbound/map`                                       | OSM raster tiles (browser)                                                                  | Pin/search UI only; Places stay server-side                                | Live (admin)                       |
 | **Sentry**                  | Errors / traces            | Dashboard · `/admin/health`                                 | [sentry.io](https://sentry.io)                                                              | Production issues                                                          | Live                               |
 | **UptimeRobot**             | External uptime            | Dashboard · optional asset Monitor URL                      | [uptimerobot.com](https://uptimerobot.com) · `UPTIMEROBOT_DASHBOARD_URL`                    | Homepage + `/api/health` alerts                                            | Live                               |
 | **Vercel Speed Insights**   | CWV                        | Vercel project                                              | Vercel → Speed Insights                                                                     | LCP/INP/CLS                                                                | Live                               |
@@ -220,7 +225,7 @@ Credentials & remaining dashboard steps: [`runbooks/ops-credentials.md`](./runbo
 ### A. Warm inbound → reply / nurture
 
 1. Visitor submits `/contact` → row in admin Inbox + Resend confirmation.
-2. Team notify via Resend **unless** `N8N_WEBHOOK_URL` is set (then n8n fan-out only — dual-notify still open debt).
+2. Team notify **always** via Resend; optional `N8N_WEBHOOK_URL` fan-out after (does not replace Resend).
 3. If `scoreLead(submission) > 60` → Resend **day-0 nurture** (Calendly soft CTA). Day 3/7 live in **Listmonk**, not app code — nurture copy must not promise them until drip UI is live.
 4. `/admin/inbox` → triage by score + status.
 5. Optional: **Draft reply** (AI) → edit → **Approve & Send** via Resend (HITL; no auto-send).
@@ -275,17 +280,20 @@ Runbook: [`listmonk-drip.md`](./runbooks/listmonk-drip.md).
 **Admin gate:** email in `ADMIN_EMAILS` (comma-separated) + Supabase Auth user.  
 **Client portal:** sign-in with client `primary_email` (separate from staff).
 
-| Migration                      | Provides                                               |
-| ------------------------------ | ------------------------------------------------------ |
-| `001_initial.sql`              | Base (contact submissions, etc.)                       |
-| `002_client_ops.sql`           | Clients, invoices, assets, work                        |
-| `003_asset_monitor_url.sql`    | Asset `monitor_url`                                    |
-| `004_profiles.sql`             | `profiles` / `app_role` / `is_staff` (confirm applied) |
-| `005_admin_loops.sql`          | Today loops, checklists, lead candidates, DNC          |
-| `006_pdf_documents.sql`        | Invoice PDFs, documents, Storage                       |
-| `007_lead_personalization.sql` | Lead `personalization` column                          |
-| `008_kb_docs.sql`              | Admin knowledge base                                   |
-| `009_lead_geo.sql`             | Lead `lat`/`lng` for outbound map pins                 |
+| Migration                      | Provides                                                                |
+| ------------------------------ | ----------------------------------------------------------------------- |
+| `001_initial.sql`              | Base (contact submissions, etc.)                                        |
+| `002_client_ops.sql`           | Clients, invoices, assets, work                                         |
+| `003_asset_monitor_url.sql`    | Asset `monitor_url`                                                     |
+| `004_profiles.sql`             | `profiles` / `app_role` / `is_staff` (confirm applied)                  |
+| `005_admin_loops.sql`          | Today loops, checklists, lead candidates, DNC                           |
+| `005_founding_client.sql`      | Client `is_founding` + `care_start` / `care_end` (same prefix as loops) |
+| `006_pdf_documents.sql`        | Invoice PDFs, documents, Storage                                        |
+| `007_lead_personalization.sql` | Lead `personalization` column                                           |
+| `008_kb_docs.sql`              | Admin KB (`kb_spaces` / `kb_nodes` / `kb_pages` + Storage)              |
+| `009_lead_geo.sql`             | Lead `lat`/`lng` for outbound map pins                                  |
+
+> Note: two files share the `005_` prefix (`admin_loops` + `founding_client`). Apply both.
 
 Apply via Supabase SQL editor when SCRATCHPAD / ops-credentials say so. Empty Billing/Work until you create clients — no seed data.
 
@@ -316,23 +324,24 @@ Apply via Supabase SQL editor when SCRATCHPAD / ops-credentials say so. Empty Bi
 
 ## 10. Doc index
 
-| Need                     | Document                                                                                                                   |
-| ------------------------ | -------------------------------------------------------------------------------------------------------------------------- |
-| **This map**             | [`SYSTEM-MAP.md`](./SYSTEM-MAP.md)                                                                                         |
-| Live remaining work      | [`../SCRATCHPAD.md`](../SCRATCHPAD.md)                                                                                     |
-| Docs hub                 | [`README.md`](./README.md)                                                                                                 |
-| Agent entry              | [`../AGENTS.md`](../AGENTS.md)                                                                                             |
-| Client kit / brand       | [`client-kit.md`](./client-kit.md) · [`runbooks/create-client-checklist.md`](./runbooks/create-client-checklist.md)        |
-| Credentials / dashboards | [`runbooks/ops-credentials.md`](./runbooks/ops-credentials.md)                                                             |
-| Admin CRM how-to         | [`runbooks/client-ops.md`](./runbooks/client-ops.md)                                                                       |
-| Listmonk drip            | [`runbooks/listmonk-drip.md`](./runbooks/listmonk-drip.md)                                                                 |
-| Cold outbound            | [`runbooks/outbound-instantly.md`](./runbooks/outbound-instantly.md) · [`outbound-pilot.md`](./runbooks/outbound-pilot.md) |
-| Monitoring               | [`runbooks/monitoring.md`](./runbooks/monitoring.md) · [`post-launch-monitoring.md`](./runbooks/post-launch-monitoring.md) |
-| DNS / SSL                | [`runbooks/dns.md`](./runbooks/dns.md) · [`ssl.md`](./runbooks/ssl.md)                                                     |
-| Growth YES/NO/LATER      | [`growth-tactics.md`](./growth-tactics.md)                                                                                 |
-| Agent paste prompt       | [`superpowers/HANDOFF-post-launch-ops.md`](./superpowers/HANDOFF-post-launch-ops.md)                                       |
-| AI design                | [`superpowers/specs/2026-08-06-ai-integration-design.md`](./superpowers/specs/2026-08-06-ai-integration-design.md)         |
-| Contracts / sales        | [`contracts/`](./contracts/) · [`sales/`](./sales/)                                                                        |
+| Need                     | Document                                                                                                                                                                                                                                       |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **This map**             | [`SYSTEM-MAP.md`](./SYSTEM-MAP.md)                                                                                                                                                                                                             |
+| Live remaining work      | [`../SCRATCHPAD.md`](../SCRATCHPAD.md)                                                                                                                                                                                                         |
+| Docs hub                 | [`README.md`](./README.md)                                                                                                                                                                                                                     |
+| Agent entry              | [`../AGENTS.md`](../AGENTS.md)                                                                                                                                                                                                                 |
+| Client kit / brand       | [`client-kit.md`](./client-kit.md) · [`runbooks/create-client-checklist.md`](./runbooks/create-client-checklist.md) · design [`2026-08-07-client-kit-design.md`](./superpowers/specs/2026-08-07-client-kit-design.md)                          |
+| Founding package         | Spec [`2026-08-06-founding-client-package-design.md`](./superpowers/specs/2026-08-06-founding-client-package-design.md) · mig `005_founding_client`                                                                                            |
+| Credentials / dashboards | [`runbooks/ops-credentials.md`](./runbooks/ops-credentials.md)                                                                                                                                                                                 |
+| Admin CRM how-to         | [`runbooks/client-ops.md`](./runbooks/client-ops.md)                                                                                                                                                                                           |
+| Listmonk drip            | [`runbooks/listmonk-drip.md`](./runbooks/listmonk-drip.md)                                                                                                                                                                                     |
+| Cold outbound            | [`runbooks/outbound-instantly.md`](./runbooks/outbound-instantly.md) · [`outbound-pilot.md`](./runbooks/outbound-pilot.md) · map spec [`2026-08-08-admin-outbound-map-design.md`](./superpowers/specs/2026-08-08-admin-outbound-map-design.md) |
+| Monitoring               | [`runbooks/monitoring.md`](./runbooks/monitoring.md) · [`post-launch-monitoring.md`](./runbooks/post-launch-monitoring.md)                                                                                                                     |
+| DNS / SSL                | [`runbooks/dns.md`](./runbooks/dns.md) · [`ssl.md`](./runbooks/ssl.md)                                                                                                                                                                         |
+| Growth YES/NO/LATER      | [`growth-tactics.md`](./growth-tactics.md)                                                                                                                                                                                                     |
+| Agent paste prompt       | [`superpowers/HANDOFF-post-launch-ops.md`](./superpowers/HANDOFF-post-launch-ops.md)                                                                                                                                                           |
+| AI design                | [`superpowers/specs/2026-08-06-ai-integration-design.md`](./superpowers/specs/2026-08-06-ai-integration-design.md)                                                                                                                             |
+| Contracts / sales        | [`contracts/`](./contracts/) · [`sales/`](./sales/)                                                                                                                                                                                            |
 
 ---
 

@@ -24,7 +24,7 @@ Brand + module flags live in **`src/brand/`**. Guide: [`docs/client-kit.md`](./d
 
 ## Shipped vs owner
 
-|                |                                                                                                                                                                                                                                           |
-| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Shipped**    | Site + `/admin` CRM, Pack F/H, client kit (`src/brand/`), Umami, Calendly, Listmonk env, Resend transactional (+ day-0 nurture), Instantly CSV hybrid outbound, rule-based lead scoring, AI code (flags may be off). Details: SYSTEM-MAP. |
-| **Owner-only** | Instantly account/DNS/warmup, Listmonk drip UI, Bing sitemap, AI Gateway keys, Places/Hunter keys, some migration confirmations — see SCRATCHPAD.                                                                                         |
+|                |                                                                                                                                                                                                          |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Shipped**    | Site + `/admin` CRM (KB), Pack F/H, client kit, Umami events, Calendly, Listmonk env, Resend (+ day-0 nurture), Instantly CSV + outbound map, lead scoring, founding flag, AI HITL. Details: SYSTEM-MAP. |
+| **Owner-only** | Instantly DNS/warmup, Listmonk drip UI, Bing sitemap, AI Gateway keys, Places key on Vercel, migs 005/008/009 — see SCRATCHPAD.                                                                          |
