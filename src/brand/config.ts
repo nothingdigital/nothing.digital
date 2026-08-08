@@ -3,6 +3,10 @@ export type BrandAssets = {
   wordmarkDark: string;
   seal: string;
   ogDefault: string;
+  /** Official Anonymouse — Quiet Clever expression */
+  mascotQuiet: string;
+  /** Anonymouse — Friendly expression (social / stickers) */
+  mascotFriendly: string;
 };
 
 export type BrandConfig = {
@@ -32,5 +36,7 @@ export const brandConfig: BrandConfig = {
     wordmarkDark: "/images/brand/wordmark-dark.png",
     seal: "/images/brand/seal.png",
     ogDefault: "/og/default.png",
+    mascotQuiet: "/images/brand/anonymouse-quiet.png",
+    mascotFriendly: "/images/brand/anonymouse-friendly.png",
   },
 };
