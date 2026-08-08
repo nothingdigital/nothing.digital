@@ -3,31 +3,33 @@ import Image from "next/image";
 import { brandConfig } from "@/brand";
 import { cn } from "@/lib/utils";
 
-type MascotExpression = "quiet" | "friendly";
+type MascotVariant = "terminal" | "quiet" | "friendly";
 
 interface BrandMascotProps {
-  expression?: MascotExpression;
+  /** Site default is the pixel terminal. Anonymouse variants are opt-in. */
+  variant?: MascotVariant;
   className?: string;
   /** Pixel width/height of the rendered image box */
   size?: number;
   priority?: boolean;
 }
 
-const SRC: Record<MascotExpression, string> = {
+const SRC: Record<MascotVariant, string> = {
+  terminal: brandConfig.assets.mascot,
   quiet: brandConfig.assets.mascotQuiet,
   friendly: brandConfig.assets.mascotFriendly,
 };
 
-/** Anonymouse brand mascot. Default = Quiet Clever (official). */
+/** Brand mascot. Default = pixel terminal. */
 export function BrandMascot({
-  expression = "quiet",
+  variant = "terminal",
   className,
   size = 160,
   priority,
 }: BrandMascotProps) {
   return (
     <Image
-      src={SRC[expression]}
+      src={SRC[variant]}
       alt=""
       width={size}
       height={size}

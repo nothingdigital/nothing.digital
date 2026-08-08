@@ -41,7 +41,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
         env:
-          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+          # Dependabot PRs often get empty secrets; blank SITE_URL breaks metadataBase.
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://nothing.digital' }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}

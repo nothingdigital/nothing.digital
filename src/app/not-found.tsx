@@ -10,9 +10,8 @@ export default function NotFound() {
     <ErrorLayout>
       <section className="container mx-auto flex flex-1 flex-col items-center justify-center px-4 py-24 text-center md:px-6 lg:px-8">
         <BrandMascot
-          expression="quiet"
           size={208}
-          className="mb-8 h-40 w-40 md:h-52 md:w-52"
+          className="mb-8 h-40 w-40 rounded-lg md:h-52 md:w-52"
           priority
         />
         <h1 className="font-display text-6xl tracking-tight">404</h1>
