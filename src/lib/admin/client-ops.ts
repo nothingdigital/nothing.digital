@@ -58,40 +58,47 @@ export const WORK_SORTS = ["due", "priority", "created"] as const;
 
 export type WorkSort = (typeof WORK_SORTS)[number];
 
+function isOneOf<T extends string>(
+  values: readonly T[],
+  value: string,
+): value is T {
+  return (values as readonly string[]).includes(value);
+}
+
 export function isClientStatus(value: string): value is ClientStatus {
-  return (CLIENT_STATUSES as readonly string[]).includes(value);
+  return isOneOf(CLIENT_STATUSES, value);
 }
 
 export function isBillingModel(value: string): value is BillingModel {
-  return (BILLING_MODELS as readonly string[]).includes(value);
+  return isOneOf(BILLING_MODELS, value);
 }
 
 export function isInvoiceStatus(value: string): value is InvoiceStatus {
-  return (INVOICE_STATUSES as readonly string[]).includes(value);
+  return isOneOf(INVOICE_STATUSES, value);
 }
 
 export function isAssetType(value: string): value is AssetType {
-  return (ASSET_TYPES as readonly string[]).includes(value);
+  return isOneOf(ASSET_TYPES, value);
 }
 
 export function isAssetEnv(value: string): value is AssetEnv {
-  return (ASSET_ENVS as readonly string[]).includes(value);
+  return isOneOf(ASSET_ENVS, value);
 }
 
 export function isAssetStatus(value: string): value is AssetStatus {
-  return (ASSET_STATUSES as readonly string[]).includes(value);
+  return isOneOf(ASSET_STATUSES, value);
 }
 
 export function isWorkStatus(value: string): value is WorkStatus {
-  return (WORK_STATUSES as readonly string[]).includes(value);
+  return isOneOf(WORK_STATUSES, value);
 }
 
 export function isWorkPriority(value: string): value is WorkPriority {
-  return (WORK_PRIORITIES as readonly string[]).includes(value);
+  return isOneOf(WORK_PRIORITIES, value);
 }
 
 export function isWorkSort(value: string): value is WorkSort {
-  return (WORK_SORTS as readonly string[]).includes(value);
+  return isOneOf(WORK_SORTS, value);
 }
 
 const PRIORITY_RANK: Record<WorkPriority, number> = {
@@ -117,7 +124,6 @@ export function compareWorkItems(
   a: { due_at: string | null; priority: string; created_at: string },
   b: { due_at: string | null; priority: string; created_at: string },
   sort: WorkSort,
-  _now: Date = new Date(),
 ): number {
   if (sort === "due") {
     if (a.due_at === null && b.due_at === null) return 0;

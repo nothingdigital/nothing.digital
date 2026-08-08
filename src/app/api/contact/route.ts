@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import type { Resend } from "resend";
 
-import { getFromEmail } from "@/brand";
+import { brandConfig } from "@/brand";
 import { env } from "@/lib/env";
 
 import {
@@ -46,37 +45,6 @@ async function storeSubmission(data: ContactInput) {
   }
 
   return submission.id;
-}
-
-async function sendConfirmationEmail(resend: Resend, data: ContactInput) {
-  await resend.emails.send({
-    from: getFromEmail(),
-    to: data.email,
-    subject: "We received your message — Nothing.Digital",
-    html: contactConfirmationEmailTemplate(data, CALENDLY),
-  });
-}
-
-async function sendTeamNotification(
-  resend: Resend,
-  data: ContactInput,
-  submissionId: string,
-) {
-  await resend.emails.send({
-    from: getFromEmail(),
-    to: TEAM_EMAIL,
-    subject: `New contact submission from ${data.name}`,
-    html: teamNotificationEmailTemplate(data, submissionId),
-  });
-}
-
-async function sendNurtureEmail(resend: Resend, data: ContactInput) {
-  await resend.emails.send({
-    from: getFromEmail(),
-    to: data.email,
-    subject: "Let's schedule a call — Nothing.Digital",
-    html: nurtureDay0EmailTemplate(data, CALENDLY),
-  });
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -134,11 +102,26 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   }
 
   try {
-    await sendConfirmationEmail(resend, validated);
+    await resend.emails.send({
+      from: brandConfig.fromEmail,
+      to: validated.email,
+      subject: "We received your message — Nothing.Digital",
+      html: contactConfirmationEmailTemplate(validated, CALENDLY),
+    });
     // Always Resend team notify; n8n is optional fan-out below (never replace).
-    await sendTeamNotification(resend, validated, submissionId);
+    await resend.emails.send({
+      from: brandConfig.fromEmail,
+      to: TEAM_EMAIL,
+      subject: `New contact submission from ${validated.name}`,
+      html: teamNotificationEmailTemplate(validated, submissionId),
+    });
     if (scoreLead(validated) > 60) {
-      await sendNurtureEmail(resend, validated);
+      await resend.emails.send({
+        from: brandConfig.fromEmail,
+        to: validated.email,
+        subject: "Let's schedule a call — Nothing.Digital",
+        html: nurtureDay0EmailTemplate(validated, CALENDLY),
+      });
     }
   } catch (error) {
     console.error("[contact] Email delivery failed:", error);

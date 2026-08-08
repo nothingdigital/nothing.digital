@@ -199,6 +199,22 @@ export async function deleteNode(
   return { ok: true, error: null };
 }
 
+async function loadPage(
+  supabase: NonNullable<ReturnType<typeof getServiceRoleClient>>,
+  pageId: string,
+): Promise<{ row: KbPage | null; error: string | null }> {
+  const { data, error } = await supabase
+    .from("kb_pages")
+    .select("*")
+    .eq("id", pageId)
+    .maybeSingle();
+
+  if (error || !data) {
+    return { row: null, error: error?.message ?? "Page not found." };
+  }
+  return { row: data, error: null };
+}
+
 async function appendVersion(
   supabase: NonNullable<ReturnType<typeof getServiceRoleClient>>,
   page: KbPage,
@@ -255,15 +271,8 @@ export async function savePageBody(input: {
   const supabase = getServiceRoleClient();
   if (!supabase) return notConfigured({ row: null });
 
-  const { data: page, error } = await supabase
-    .from("kb_pages")
-    .select("*")
-    .eq("id", input.pageId)
-    .maybeSingle();
-
-  if (error || !page) {
-    return { row: null, error: error?.message ?? "Page not found." };
-  }
+  const { row: page, error } = await loadPage(supabase, input.pageId);
+  if (error || !page) return { row: null, error: error ?? "Page not found." };
 
   // ponytail: edit after approve sends back to draft in same save
   const status =
@@ -286,15 +295,8 @@ export async function transitionPageStatus(input: {
   const supabase = getServiceRoleClient();
   if (!supabase) return notConfigured({ row: null });
 
-  const { data: page, error } = await supabase
-    .from("kb_pages")
-    .select("*")
-    .eq("id", input.pageId)
-    .maybeSingle();
-
-  if (error || !page) {
-    return { row: null, error: error?.message ?? "Page not found." };
-  }
+  const { row: page, error } = await loadPage(supabase, input.pageId);
+  if (error || !page) return { row: null, error: error ?? "Page not found." };
 
   try {
     assertTransition(page.status as KbStatus, input.to);
@@ -341,15 +343,8 @@ export async function restoreVersionToDraft(input: {
   const supabase = getServiceRoleClient();
   if (!supabase) return notConfigured({ row: null });
 
-  const { data: page, error } = await supabase
-    .from("kb_pages")
-    .select("*")
-    .eq("id", input.pageId)
-    .maybeSingle();
-
-  if (error || !page) {
-    return { row: null, error: error?.message ?? "Page not found." };
-  }
+  const { row: page, error } = await loadPage(supabase, input.pageId);
+  if (error || !page) return { row: null, error: error ?? "Page not found." };
 
   const { data: snap, error: snapError } = await supabase
     .from("kb_versions")
@@ -448,15 +443,8 @@ export async function acknowledgePage(input: {
   const supabase = getServiceRoleClient();
   if (!supabase) return notConfigured({ row: null });
 
-  const { data: page, error } = await supabase
-    .from("kb_pages")
-    .select("*")
-    .eq("id", input.pageId)
-    .maybeSingle();
-
-  if (error || !page) {
-    return { row: null, error: error?.message ?? "Page not found." };
-  }
+  const { row: page, error } = await loadPage(supabase, input.pageId);
+  if (error || !page) return { row: null, error: error ?? "Page not found." };
 
   if (
     !needsAck({
@@ -510,14 +498,15 @@ export async function listPagesNeedingAckForUser(userId: string): Promise<{
   const supabase = getServiceRoleClient();
   if (!supabase) return notConfigured({ rows: [] as PageWithNode[] });
 
-  const { data: pages, error } = await supabase
+  const { data, error } = await supabase
     .from("kb_pages")
-    .select("*")
+    .select("*, node:kb_nodes(*)")
     .eq("status", "approved")
     .eq("requires_ack", true);
 
   if (error) return { rows: [], error: error.message };
-  if (!pages?.length) return { rows: [], error: null };
+  const pages = (data ?? []) as Array<KbPage & { node: KbNode | null }>;
+  if (!pages.length) return { rows: [], error: null };
 
   const { data: acks, error: ackError } = await supabase
     .from("kb_acknowledgments")
@@ -536,32 +525,21 @@ export async function listPagesNeedingAckForUser(userId: string): Promise<{
     if (ack.version > prev) ackByPage.set(ack.page_id, ack.version);
   }
 
-  const needing = pages.filter((p) =>
-    needsAck({
-      status: p.status,
-      requiresAck: p.requires_ack,
-      approvedVersion: p.approved_version,
-      userAckVersion: ackByPage.get(p.id) ?? null,
-    }),
-  );
-
-  if (needing.length === 0) return { rows: [], error: null };
-
-  const { data: nodes, error: nodeError } = await supabase
-    .from("kb_nodes")
-    .select("*")
-    .in(
-      "id",
-      needing.map((p) => p.node_id),
-    );
-
-  if (nodeError) return { rows: [], error: nodeError.message };
-  const nodeById = new Map((nodes ?? []).map((n) => [n.id, n]));
-
   const rows: PageWithNode[] = [];
-  for (const p of needing) {
-    const node = nodeById.get(p.node_id);
-    if (node) rows.push({ ...p, node });
+  for (const row of pages) {
+    const { node, ...page } = row;
+    if (!node) continue;
+    if (
+      !needsAck({
+        status: page.status,
+        requiresAck: page.requires_ack,
+        approvedVersion: page.approved_version,
+        userAckVersion: ackByPage.get(page.id) ?? null,
+      })
+    ) {
+      continue;
+    }
+    rows.push({ ...page, node });
   }
   return { rows, error: null };
 }

@@ -9,16 +9,14 @@ export type LeadCandidateRow =
 export type LeadCandidateStatus =
   "needs_email" | "ready" | "approved" | "rejected" | "suppressed";
 
-function notConfigured<T>(): { rows: T[]; error: string } {
-  return { rows: [], error: "Supabase is not configured." };
-}
-
 export async function listLeadCandidates(filters?: {
   status?: LeadCandidateStatus;
   withGeo?: boolean;
 }): Promise<{ rows: LeadCandidateRow[]; error: string | null }> {
   const supabase = getServiceRoleClient();
-  if (!supabase) return notConfigured();
+  if (!supabase) {
+    return { rows: [], error: "Supabase is not configured." };
+  }
 
   let query = supabase
     .from("lead_candidates")
@@ -248,7 +246,9 @@ export async function listDoNotContact(): Promise<{
   error: string | null;
 }> {
   const supabase = getServiceRoleClient();
-  if (!supabase) return notConfigured();
+  if (!supabase) {
+    return { rows: [], error: "Supabase is not configured." };
+  }
 
   const { data, error } = await supabase
     .from("do_not_contact")

@@ -186,18 +186,34 @@ export function OutboundMap({ savedPins, placesConfigured }: Props) {
     }
   }, [savedPins, preview]);
 
+  async function runPlacesQuery(
+    body: unknown,
+    failMsg: string,
+  ): Promise<PreviewPin[] | null> {
+    setBusy(true);
+    setMessage(null);
+    try {
+      const data = await fetchPlaces(body);
+      if (!data.ok) {
+        setMessage(data.error ?? failMsg);
+        return null;
+      }
+      return withGeo(data.places);
+    } finally {
+      setBusy(false);
+    }
+  }
+
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
 
     const onClick = async (e: MapMouseEvent) => {
       if (!dropPinMode || !placesConfigured) return;
-      setBusy(true);
-      setMessage(null);
-      try {
-        const lat = e.lngLat.lat;
-        const lng = e.lngLat.lng;
-        const data = await fetchPlaces({
+      const lat = e.lngLat.lat;
+      const lng = e.lngLat.lng;
+      const pins = await runPlacesQuery(
+        {
           query: `business near ${lat.toFixed(4)},${lng.toFixed(4)}`,
           vertical: "map",
           bounds: {
@@ -206,22 +222,17 @@ export function OutboundMap({ savedPins, placesConfigured }: Props) {
             north: lat + 0.01,
             east: lng + 0.01,
           },
-        });
-        if (!data.ok) {
-          setMessage(data.error ?? "Resolve failed.");
-          return;
-        }
-        const pins = withGeo(data.places);
-        if (pins.length === 0) {
-          setMessage("No Places match near that pin. Try Search this area.");
-          return;
-        }
-        setPreview(pins);
-        setSelected({ kind: "preview", pin: pins[0]! });
-        setDropPinMode(false);
-      } finally {
-        setBusy(false);
+        },
+        "Resolve failed.",
+      );
+      if (!pins) return;
+      if (pins.length === 0) {
+        setMessage("No Places match near that pin. Try Search this area.");
+        return;
       }
+      setPreview(pins);
+      setSelected({ kind: "preview", pin: pins[0]! });
+      setDropPinMode(false);
     };
 
     map.on("click", onClick);
@@ -246,10 +257,8 @@ export function OutboundMap({ savedPins, placesConfigured }: Props) {
     }
 
     const b = map.getBounds();
-    setBusy(true);
-    setMessage(null);
-    try {
-      const data = await fetchPlaces({
+    const pins = await runPlacesQuery(
+      {
         query: text,
         vertical,
         bounds: {
@@ -258,22 +267,19 @@ export function OutboundMap({ savedPins, placesConfigured }: Props) {
           north: b.getNorth(),
           east: b.getEast(),
         },
-      });
-      if (!data.ok) {
-        setMessage(data.error ?? "Search failed.");
-        setPreview([]);
-        return;
-      }
-      const pins = withGeo(data.places);
-      setPreview(pins);
-      setMessage(
-        pins.length
-          ? `${pins.length} preview pin(s). Click one to add.`
-          : "No results with coordinates.",
-      );
-    } finally {
-      setBusy(false);
+      },
+      "Search failed.",
+    );
+    if (!pins) {
+      setPreview([]);
+      return;
     }
+    setPreview(pins);
+    setMessage(
+      pins.length
+        ? `${pins.length} preview pin(s). Click one to add.`
+        : "No results with coordinates.",
+    );
   }
 
   async function addSelected() {

@@ -8,24 +8,17 @@ import { Button } from "@/components/ui/button";
 import { getAdminToolLinks } from "@/lib/admin/config";
 import { listCheckedChecklistKeys } from "@/lib/admin/loops/queries";
 import { INSTANTLY_PREFLIGHT_ITEMS } from "@/lib/admin/loops/rules/runbook-setup";
-import { countApprovedReady } from "@/lib/admin/outbound/instantly-csv";
 import {
   listLeadCandidates,
   type LeadCandidateStatus,
 } from "@/lib/admin/outbound/queries";
 
+import { LEAD_CANDIDATE_STATUSES } from "./actions";
+
 export const metadata: Metadata = {
   title: "Outbound",
   robots: { index: false, follow: false },
 };
-
-const STATUS_FILTERS = new Set([
-  "needs_email",
-  "ready",
-  "approved",
-  "rejected",
-  "suppressed",
-]);
 
 export default async function AdminOutboundPage({
   searchParams,
@@ -34,7 +27,8 @@ export default async function AdminOutboundPage({
 }) {
   const params = await searchParams;
   const filter =
-    params.filter && STATUS_FILTERS.has(params.filter)
+    params.filter &&
+    (LEAD_CANDIDATE_STATUSES as readonly string[]).includes(params.filter)
       ? (params.filter as LeadCandidateStatus)
       : "all";
 
@@ -45,19 +39,9 @@ export default async function AdminOutboundPage({
     listLeadCandidates({ status: "approved" }),
   ]);
 
-  const exportReady = countApprovedReady(
-    (approved.error ? [] : approved.rows).map((row) => ({
-      email: row.email,
-      name: row.name,
-      website: row.website,
-      phone: row.phone,
-      city: row.city,
-      score: row.score,
-      reasons: row.reasons,
-      status: row.status,
-      personalization: row.personalization,
-    })),
-  );
+  const exportReady = (approved.error ? [] : approved.rows).filter(
+    (row) => row.email,
+  ).length;
 
   return (
     <div className="space-y-8">

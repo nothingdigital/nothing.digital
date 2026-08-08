@@ -15,9 +15,8 @@ import { routes, serviceSlugs } from "@/lib/routes";
 import { serviceSummaries } from "@/lib/services";
 import { mapServiceToScope, calcPrice } from "@/lib/pricing";
 
-// ponytail: extend server schema client-side for phone/privacy; strip before POST.
+// ponytail: phone dropped until API stores it; privacyAccepted stripped before POST.
 const contactFormSchema = contactSchema.extend({
-  phone: z.string().max(20).optional(),
   privacyAccepted: z.boolean().refine((value) => value === true, {
     message: "You must agree to the Privacy Policy",
   }),
@@ -31,6 +30,9 @@ const budgetOptions = [
   { value: "15k-50k", label: "$15,000 – $50,000" },
   { value: "50k+", label: "$50,000+" },
 ];
+
+const selectClassName =
+  "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50";
 
 function slugToLabel(slug: string): string {
   const summary = serviceSummaries.find((service) => service.slug === slug);
@@ -77,7 +79,6 @@ export function ContactForm({ calendlyUrl }: { calendlyUrl?: string }) {
     defaultValues: {
       name: "",
       email: "",
-      phone: "",
       company: "",
       service: undefined,
       budget: undefined,
@@ -256,22 +257,6 @@ export function ContactForm({ calendlyUrl }: { calendlyUrl?: string }) {
       />
 
       <FormField
-        name="phone"
-        label="Phone (optional)"
-        control={control}
-        error={errors.phone}
-        render={(field) => (
-          <Input
-            id={field.name}
-            type="tel"
-            placeholder="+1 (555) 000-0000"
-            {...field}
-            value={field.value as string}
-          />
-        )}
-      />
-
-      <FormField
         name="company"
         label="Company (optional)"
         control={control}
@@ -300,7 +285,7 @@ export function ContactForm({ calendlyUrl }: { calendlyUrl?: string }) {
             onChange={(event) =>
               field.onChange(event.target.value || undefined)
             }
-            className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+            className={selectClassName}
           >
             <option value="">Select a service</option>
             {serviceSlugs.map((slug) => (
@@ -325,7 +310,7 @@ export function ContactForm({ calendlyUrl }: { calendlyUrl?: string }) {
             onChange={(event) =>
               field.onChange(event.target.value || undefined)
             }
-            className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+            className={selectClassName}
           >
             <option value="">Select a budget range</option>
             {budgetOptions.map((option) => (
@@ -350,7 +335,7 @@ export function ContactForm({ calendlyUrl }: { calendlyUrl?: string }) {
             onChange={(event) =>
               field.onChange(event.target.value || undefined)
             }
-            className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+            className={selectClassName}
           >
             <option value="">Select timeline</option>
             <option value="1">1 (rush)</option>

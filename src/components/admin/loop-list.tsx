@@ -10,34 +10,20 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { Loop } from "@/lib/admin/loops/types";
-import { cn } from "@/lib/utils";
 
-const SOURCE_LABEL: Record<Loop["source"], string> = {
-  inbox: "inbox",
-  billing: "billing",
-  work: "work",
-  outbound: "outbound",
-  setup: "setup",
-};
+const SNOOZE_OPTIONS = [
+  ["tomorrow", "Snooze tomorrow"],
+  ["3d", "Snooze 3 days"],
+  ["monday", "Snooze next Monday"],
+] as const;
 
-export function LoopCard({
-  loop,
-  handoff = false,
-}: {
-  loop: Loop;
-  handoff?: boolean;
-}) {
+export function LoopCard({ loop }: { loop: Loop }) {
   return (
-    <li
-      className={cn(
-        "rounded-lg border border-border bg-card px-4 py-4",
-        "space-y-3",
-      )}
-    >
+    <li className="space-y-3 rounded-lg border border-border bg-card px-4 py-4">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
           <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            {SOURCE_LABEL[loop.source]}
+            {loop.source}
           </p>
           <p className="mt-1 font-medium text-foreground">{loop.title}</p>
           <p className="mt-1 text-sm text-muted-foreground">{loop.detail}</p>
@@ -45,27 +31,15 @@ export function LoopCard({
         <details className="text-sm text-muted-foreground">
           <summary className="cursor-pointer select-none">⋯</summary>
           <div className="mt-2 flex flex-col items-end gap-1">
-            <form action={snoozeLoopAction}>
-              <input type="hidden" name="loop_key" value={loop.key} />
-              <input type="hidden" name="snooze" value="tomorrow" />
-              <button type="submit" className="hover:text-foreground">
-                Snooze tomorrow
-              </button>
-            </form>
-            <form action={snoozeLoopAction}>
-              <input type="hidden" name="loop_key" value={loop.key} />
-              <input type="hidden" name="snooze" value="3d" />
-              <button type="submit" className="hover:text-foreground">
-                Snooze 3 days
-              </button>
-            </form>
-            <form action={snoozeLoopAction}>
-              <input type="hidden" name="loop_key" value={loop.key} />
-              <input type="hidden" name="snooze" value="monday" />
-              <button type="submit" className="hover:text-foreground">
-                Snooze next Monday
-              </button>
-            </form>
+            {SNOOZE_OPTIONS.map(([snooze, label]) => (
+              <form key={snooze} action={snoozeLoopAction}>
+                <input type="hidden" name="loop_key" value={loop.key} />
+                <input type="hidden" name="snooze" value={snooze} />
+                <button type="submit" className="hover:text-foreground">
+                  {label}
+                </button>
+              </form>
+            ))}
             <form action={muteLoopAction}>
               <input type="hidden" name="loop_key" value={loop.key} />
               <button type="submit" className="hover:text-foreground">
@@ -87,7 +61,7 @@ export function LoopCard({
           </Link>
         </Button>
 
-        {loop.source === "outbound" && handoff ? (
+        {loop.source === "outbound" ? (
           <details className="w-full rounded-md border border-border px-3 py-2 text-sm">
             <summary className="cursor-pointer font-medium">
               Start handoff
@@ -157,11 +131,7 @@ export function LoopList({
   return (
     <ul className="space-y-3">
       {loops.map((loop) => (
-        <LoopCard
-          key={loop.key}
-          loop={loop}
-          handoff={loop.source === "outbound"}
-        />
+        <LoopCard key={loop.key} loop={loop} />
       ))}
     </ul>
   );

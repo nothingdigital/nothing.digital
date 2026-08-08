@@ -9,7 +9,6 @@ import {
   FieldError,
   ControllerRenderProps,
 } from "react-hook-form";
-import * as LabelPrimitive from "@radix-ui/react-label";
 
 export interface FormFieldProps<T extends FieldValues> {
   name: Path<T>;
@@ -30,12 +29,12 @@ export function FormField<T extends FieldValues>({
 
   return (
     <div className="space-y-2">
-      <LabelPrimitive.Root
+      <label
         htmlFor={name}
         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
       >
         {label}
-      </LabelPrimitive.Root>
+      </label>
       <Controller
         name={name}
         control={control}

@@ -1,3 +1,5 @@
+import { escapeCsvField } from "@/lib/admin/newsletter-csv";
+
 export type InstantlyExportLead = {
   email: string | null;
   name: string;
@@ -10,14 +12,9 @@ export type InstantlyExportLead = {
   personalization?: string | null;
 };
 
-function escapeCsv(value: string): string {
-  if (/[",\n\r]/.test(value)) return `"${value.replace(/"/g, '""')}"`;
-  return value;
-}
-
 function cell(value: string | number | null | undefined): string {
   if (value === null || value === undefined) return "";
-  return escapeCsv(String(value));
+  return escapeCsvField(String(value));
 }
 
 const HEADER =

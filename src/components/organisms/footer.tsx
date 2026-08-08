@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 
 import { routes } from "@/lib/routes";
@@ -31,6 +29,34 @@ const legalLinks = [
   { label: "Terms of Service", href: "/terms" },
   { label: "Accessibility", href: "/accessibility" },
 ];
+
+function FooterColumn({
+  title,
+  links,
+}: {
+  title: string;
+  links: Array<{ label: string; href: string }>;
+}) {
+  return (
+    <div>
+      <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.2em]">
+        {title}
+      </h3>
+      <ul className="mt-3 space-y-2">
+        {links.map((link) => (
+          <li key={link.href}>
+            <Link
+              href={link.href}
+              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+            >
+              {link.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -68,41 +94,8 @@ export function Footer() {
             ) : null}
           </div>
 
-          <div>
-            <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.2em]">
-              Services
-            </h3>
-            <ul className="mt-3 space-y-2">
-              {serviceLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.2em]">
-              Company
-            </h3>
-            <ul className="mt-3 space-y-2">
-              {companyLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <FooterColumn title="Services" links={serviceLinks} />
+          <FooterColumn title="Company" links={companyLinks} />
 
           <div>
             <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.2em]">

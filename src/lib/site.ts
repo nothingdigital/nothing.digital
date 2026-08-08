@@ -1,14 +1,6 @@
 import { brandConfig } from "@/brand";
 
-export const siteConfig = {
-  name: brandConfig.name,
-  tagline: brandConfig.tagline,
-  description: brandConfig.description,
-  url: brandConfig.url,
-  email: brandConfig.email,
-  contactEmail: brandConfig.contactEmail,
-  phone: brandConfig.phone,
-} as const;
+export const siteConfig = brandConfig;
 
 export interface SocialLink {
   label: string;

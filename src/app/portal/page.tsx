@@ -104,8 +104,7 @@ export default async function PortalPage() {
                         View PDF
                       </Link>
                     </>
-                  ) : null}
-                  {!invoice.view_token && invoice.external_url ? (
+                  ) : invoice.external_url ? (
                     <>
                       {" · "}
                       <a

@@ -9,7 +9,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-import { routes, type ServiceSlug } from "@/lib/routes";
+import { routes, serviceSlugs, type ServiceSlug } from "@/lib/routes";
 
 export interface ServiceSummary {
   slug: ServiceSlug;
@@ -18,64 +18,6 @@ export interface ServiceSummary {
   icon: LucideIcon;
   href: string;
 }
-
-// ponytail: static service placeholders; replace with CMS/config-driven data when content is ready.
-export const serviceSummaries: ServiceSummary[] = [
-  {
-    slug: "website-development",
-    title: "Website Development",
-    description:
-      "Custom, responsive websites built for performance and conversion.",
-    icon: Globe,
-    href: routes.services.websiteDevelopment,
-  },
-  {
-    slug: "software-solutions",
-    title: "Software Solutions",
-    description:
-      "Bespoke software and automation tools tailored to your workflow.",
-    icon: Code,
-    href: routes.services.softwareSolutions,
-  },
-  {
-    slug: "applications",
-    title: "Applications",
-    description: "Mobile and web apps designed for scale and user engagement.",
-    icon: Smartphone,
-    href: routes.services.applications,
-  },
-  {
-    slug: "email-marketing",
-    title: "Email Marketing",
-    description: "Data-driven campaigns that nurture leads and drive revenue.",
-    icon: Mail,
-    href: routes.services.emailMarketing,
-  },
-  {
-    slug: "ai-solutions",
-    title: "AI Solutions",
-    description:
-      "Practical AI built into your product, site, or ops — on a fixed timeline.",
-    icon: Sparkles,
-    href: routes.services.aiSolutions,
-  },
-  {
-    slug: "tech-literacy",
-    title: "Tech Literacy",
-    description:
-      "Patient, jargon-free sessions for older adults and beginners — computers, internet, everyday tech.",
-    icon: Monitor,
-    href: routes.services.techLiteracy,
-  },
-  {
-    slug: "coding-sql",
-    title: "Coding & SQL",
-    description:
-      "Project-based coding and SQL for kids, youth, and curious beginners.",
-    icon: GraduationCap,
-    href: routes.services.codingSql,
-  },
-];
 
 export interface ServiceDetail {
   slug: ServiceSlug;
@@ -88,10 +30,9 @@ export interface ServiceDetail {
   techStack: { name: string; rationale: string }[];
   processSteps: { title: string; description: string }[];
   faqItems: { question: string; answer: string }[];
-  jsonLd: Record<string, unknown>;
 }
 
-function serviceJsonLd(title: string, description: string) {
+export function serviceJsonLd(title: string, description: string) {
   return {
     "@type": "Service",
     name: title,
@@ -104,6 +45,7 @@ function serviceJsonLd(title: string, description: string) {
   };
 }
 
+// ponytail: static service placeholders; replace with CMS/config-driven data when content is ready.
 export const serviceDetails: Record<ServiceSlug, ServiceDetail> = {
   "website-development": {
     slug: "website-development",
@@ -174,10 +116,6 @@ export const serviceDetails: Record<ServiceSlug, ServiceDetail> = {
           "Yes. We can build from your Figma files or design the experience from scratch.",
       },
     ],
-    jsonLd: serviceJsonLd(
-      "Website Development",
-      "Custom, responsive websites built for performance, accessibility, and conversion.",
-    ),
   },
   "software-solutions": {
     slug: "software-solutions",
@@ -248,10 +186,6 @@ export const serviceDetails: Record<ServiceSlug, ServiceDetail> = {
           "We ship in small, reversible increments and offer maintenance retainers for continuous improvement.",
       },
     ],
-    jsonLd: serviceJsonLd(
-      "Software Solutions",
-      "Bespoke software and automation tools that streamline operations and unlock growth.",
-    ),
   },
   applications: {
     slug: "applications",
@@ -321,10 +255,6 @@ export const serviceDetails: Record<ServiceSlug, ServiceDetail> = {
           "Yes. We audit the codebase, stabilize critical issues, and recommend a roadmap before making changes.",
       },
     ],
-    jsonLd: serviceJsonLd(
-      "Applications",
-      "Mobile and web applications built for scale, engagement, and long-term maintainability.",
-    ),
   },
   "email-marketing": {
     slug: "email-marketing",
@@ -393,10 +323,6 @@ export const serviceDetails: Record<ServiceSlug, ServiceDetail> = {
           "We track opens, clicks, conversions, and revenue attribution, then optimize based on what moves the needle.",
       },
     ],
-    jsonLd: serviceJsonLd(
-      "Email Marketing",
-      "Data-driven email campaigns that nurture leads, retain customers, and drive revenue.",
-    ),
   },
   "ai-solutions": {
     slug: "ai-solutions",
@@ -471,10 +397,6 @@ export const serviceDetails: Record<ServiceSlug, ServiceDetail> = {
           "Yes. Implementation includes practical enablement so your team can use and maintain what we ship — not a black box handoff.",
       },
     ],
-    jsonLd: serviceJsonLd(
-      "AI Solutions",
-      "Practical AI built into your business, website, or product — delivered on a fixed timeline.",
-    ),
   },
   "tech-literacy": {
     slug: "tech-literacy",
@@ -546,10 +468,6 @@ export const serviceDetails: Record<ServiceSlug, ServiceDetail> = {
           "Either. We can meet locally when it works, or join by video. Tell us what is easiest when you book.",
       },
     ],
-    jsonLd: serviceJsonLd(
-      "Tech Literacy",
-      "Patient, jargon-free teaching for older adults and absolute beginners — computers, internet basics, and everyday technology.",
-    ),
   },
   "coding-sql": {
     slug: "coding-sql",
@@ -622,9 +540,26 @@ export const serviceDetails: Record<ServiceSlug, ServiceDetail> = {
           "No. We share plain-language progress notes and what to practice between sessions.",
       },
     ],
-    jsonLd: serviceJsonLd(
-      "Coding & SQL",
-      "Project-based coding and SQL foundations for kids, youth, and curious beginners.",
-    ),
   },
 };
+
+const serviceIcons: Record<ServiceSlug, LucideIcon> = {
+  "website-development": Globe,
+  "software-solutions": Code,
+  applications: Smartphone,
+  "email-marketing": Mail,
+  "ai-solutions": Sparkles,
+  "tech-literacy": Monitor,
+  "coding-sql": GraduationCap,
+};
+
+export const serviceSummaries: ServiceSummary[] = serviceSlugs.map((slug) => {
+  const detail = serviceDetails[slug];
+  return {
+    slug: detail.slug,
+    title: detail.title,
+    description: detail.description,
+    icon: serviceIcons[slug],
+    href: detail.href,
+  };
+});

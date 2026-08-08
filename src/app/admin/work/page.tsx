@@ -60,7 +60,7 @@ export default async function AdminWorkPage({
   const [{ rows, error }, { rows: clients, error: clientsError }] =
     await Promise.all([listWorkItems({ status: statusFilter }), listClients()]);
 
-  const sorted = [...rows].sort((a, b) => compareWorkItems(a, b, sort, now));
+  const sorted = [...rows].sort((a, b) => compareWorkItems(a, b, sort));
 
   return (
     <div className="space-y-6">

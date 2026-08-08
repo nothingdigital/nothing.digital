@@ -34,10 +34,6 @@ export function isAiEnabled(): boolean {
   );
 }
 
-export const isInboxDraftsEnabled = isAiEnabled;
-export const isOpsBriefEnabled = isAiEnabled;
-export const isInvoiceCoverEnabled = isAiEnabled;
-
 async function draftObject<T>({
   system,
   prompt,

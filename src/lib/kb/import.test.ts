@@ -1,16 +1,7 @@
 import { describe, expect, it } from "vitest";
 import * as XLSX from "xlsx";
 
-import { extractByFilename, extractNumbers, extractXlsx } from "./import";
-
-describe("extractNumbers", () => {
-  it("always fails with guidance", () => {
-    const result = extractNumbers(Buffer.from("x"));
-    expect(result.ok).toBe(false);
-    expect(result.markdown).toBe("");
-    expect(result.error).toMatch(/Numbers/i);
-  });
-});
+import { extractByFilename, extractXlsx } from "./import";
 
 describe("extractXlsx", () => {
   it("turns a sheet into a markdown table", async () => {
@@ -38,6 +29,7 @@ describe("extractByFilename", () => {
     );
     expect(result.ok).toBe(false);
     expect(result.markdown).toBe("");
+    expect(result.error).toMatch(/Numbers/i);
   });
 
   it("rejects unknown extensions", async () => {

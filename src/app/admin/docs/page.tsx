@@ -46,6 +46,24 @@ export default async function AdminDocsHomePage() {
     }
   }
 
+  const spaceSelect = (id: string) => (
+    <AdminField label="Space" htmlFor={id}>
+      <select
+        id={id}
+        name="space_id"
+        defaultValue={defaultSpace}
+        className={adminControlClass}
+        required
+      >
+        {spaces.map((s) => (
+          <option key={s.id} value={s.id}>
+            {s.title}
+          </option>
+        ))}
+      </select>
+    </AdminField>
+  );
+
   const parentSelect = (id: string) => (
     <AdminField label="Parent folder (optional)" htmlFor={id}>
       <select
@@ -103,21 +121,7 @@ export default async function AdminDocsHomePage() {
           <AdminField label="Title" htmlFor="page-title">
             <Input id="page-title" name="title" required />
           </AdminField>
-          <AdminField label="Space" htmlFor="page-space">
-            <select
-              id="page-space"
-              name="space_id"
-              defaultValue={defaultSpace}
-              className={adminControlClass}
-              required
-            >
-              {spaces.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.title}
-                </option>
-              ))}
-            </select>
-          </AdminField>
+          {spaceSelect("page-space")}
           {parentSelect("page-parent")}
           <label className="flex items-center gap-2 text-sm">
             <input type="checkbox" name="requires_ack" />
@@ -131,21 +135,7 @@ export default async function AdminDocsHomePage() {
           <AdminField label="Title" htmlFor="folder-title">
             <Input id="folder-title" name="title" required />
           </AdminField>
-          <AdminField label="Space" htmlFor="folder-space">
-            <select
-              id="folder-space"
-              name="space_id"
-              defaultValue={defaultSpace}
-              className={adminControlClass}
-              required
-            >
-              {spaces.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.title}
-                </option>
-              ))}
-            </select>
-          </AdminField>
+          {spaceSelect("folder-space")}
           {parentSelect("folder-parent")}
           <Button type="submit" variant="secondary">
             Create folder
@@ -162,21 +152,7 @@ export default async function AdminDocsHomePage() {
           <AdminField label="Title (optional)" htmlFor="import-title">
             <Input id="import-title" name="title" />
           </AdminField>
-          <AdminField label="Space" htmlFor="import-space">
-            <select
-              id="import-space"
-              name="space_id"
-              defaultValue={defaultSpace}
-              className={adminControlClass}
-              required
-            >
-              {spaces.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.title}
-                </option>
-              ))}
-            </select>
-          </AdminField>
+          {spaceSelect("import-space")}
           {parentSelect("import-parent")}
           <AdminField label="File" htmlFor="import-file">
             <Input

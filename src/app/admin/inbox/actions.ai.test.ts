@@ -4,7 +4,7 @@ const requireAdmin = vi.fn();
 const getContactSubmission = vi.fn();
 const updateContactStatus = vi.fn();
 const draftInboxReply = vi.fn();
-const isInboxDraftsEnabled = vi.fn();
+const isAiEnabled = vi.fn();
 const getResendClient = vi.fn();
 const revalidatePath = vi.fn();
 const guardAdminAiDraft = vi.fn();
@@ -26,7 +26,7 @@ vi.mock("@/lib/admin/client-ops-queries", () => ({
 
 vi.mock("@/lib/ai", () => ({
   draftInboxReply: (...args: unknown[]) => draftInboxReply(...args),
-  isInboxDraftsEnabled: (...args: unknown[]) => isInboxDraftsEnabled(...args),
+  isAiEnabled: (...args: unknown[]) => isAiEnabled(...args),
 }));
 
 vi.mock("@/lib/ai/admin-guard", () => ({
@@ -71,13 +71,13 @@ describe("draftInboxReplyAction", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     requireAdmin.mockResolvedValue({ email: "owner@nothing.digital" });
-    isInboxDraftsEnabled.mockReturnValue(true);
+    isAiEnabled.mockReturnValue(true);
     guardAdminAiDraft.mockResolvedValue({ ok: true });
     aiDraftError.mockReturnValue("Draft failed. Try again.");
   });
 
   it("refuses when drafts are disabled", async () => {
-    isInboxDraftsEnabled.mockReturnValue(false);
+    isAiEnabled.mockReturnValue(false);
     const { draftInboxReplyAction } = await import("./actions");
     const result = await draftInboxReplyAction("sub-1");
     expect(result).toEqual({
@@ -122,7 +122,7 @@ describe("sendInboxReplyAction", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     requireAdmin.mockResolvedValue(undefined);
-    isInboxDraftsEnabled.mockReturnValue(true);
+    isAiEnabled.mockReturnValue(true);
   });
 
   it("sends via Resend and marks replied", async () => {

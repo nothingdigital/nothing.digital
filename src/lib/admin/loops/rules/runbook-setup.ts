@@ -36,12 +36,11 @@ export const INSTANTLY_PREFLIGHT_ITEMS: ChecklistItemDef[] = [
   { key: "no-listmonk", label: "Listmonk empty of any cold CSV imports" },
 ];
 
-export function runbookSetupLoops(
-  uncheckedItemKeys: string[],
-  checklist: ChecklistItemDef[] = LISTMONK_DRIP_ITEMS,
-): Loop[] {
+export function runbookSetupLoops(uncheckedItemKeys: string[]): Loop[] {
   const unchecked = new Set(uncheckedItemKeys);
-  const remaining = checklist.filter((item) => unchecked.has(item.key));
+  const remaining = LISTMONK_DRIP_ITEMS.filter((item) =>
+    unchecked.has(item.key),
+  );
   if (remaining.length === 0) return [];
 
   return [

@@ -9,7 +9,7 @@ import { createClient } from "@/lib/admin/client-ops-queries";
 import { isInboxStatus, type InboxStatus } from "@/lib/admin/config";
 import { buildClientNotesFromSubmission } from "@/lib/admin/inbox-lead";
 import { getContactSubmission, updateContactStatus } from "@/lib/admin/queries";
-import { draftInboxReply, isInboxDraftsEnabled } from "@/lib/ai";
+import { draftInboxReply, isAiEnabled } from "@/lib/ai";
 import { aiDraftError, guardAdminAiDraft } from "@/lib/ai/admin-guard";
 import { inboxDraftSchema } from "@/lib/ai/types";
 import { inboxReplyEmailTemplate } from "@/lib/email/templates";
@@ -33,7 +33,7 @@ export async function updateInboxStatusAction(id: string, status: InboxStatus) {
 export async function draftInboxReplyAction(submissionId: string) {
   const user = await requireAdmin();
 
-  if (!isInboxDraftsEnabled()) {
+  if (!isAiEnabled()) {
     return { ok: false as const, error: "Inbox AI drafts are disabled." };
   }
 

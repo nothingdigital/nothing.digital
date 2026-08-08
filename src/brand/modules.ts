@@ -29,11 +29,8 @@ export const DEFAULT_MODULES: ModuleFlags = {
 };
 
 /** Merge overrides; `core` cannot be disabled. */
-export function withModules(
-  overrides: Partial<ModuleFlags> = {},
-  base: ModuleFlags = DEFAULT_MODULES,
-): ModuleFlags {
-  return { ...base, ...overrides, core: true };
+export function withModules(overrides: Partial<ModuleFlags> = {}): ModuleFlags {
+  return { ...DEFAULT_MODULES, ...overrides, core: true };
 }
 
 export function isModuleEnabled(

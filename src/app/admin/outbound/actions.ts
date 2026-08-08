@@ -1,5 +1,3 @@
-"use server";
-
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
@@ -18,6 +16,14 @@ import {
 import { MAP_HOME } from "@/lib/leads/places";
 import { outboundPersonalizationSchema } from "@/lib/ai/types";
 
+export const LEAD_CANDIDATE_STATUSES = [
+  "needs_email",
+  "ready",
+  "approved",
+  "rejected",
+  "suppressed",
+] as const satisfies readonly LeadCandidateStatus[];
+
 const mapLeadSchema = z.object({
   placeId: z.string().trim().min(1),
   name: z.string().trim().min(1),
@@ -33,21 +39,14 @@ const mapLeadSchema = z.object({
   email: z.string().nullable().optional(),
 });
 
-const STATUSES: LeadCandidateStatus[] = [
-  "needs_email",
-  "ready",
-  "approved",
-  "rejected",
-  "suppressed",
-];
-
 function isStatus(value: string): value is LeadCandidateStatus {
-  return (STATUSES as readonly string[]).includes(value);
+  return (LEAD_CANDIDATE_STATUSES as readonly string[]).includes(value);
 }
 
 export async function importLeadsCsvAction(
   formData: FormData,
 ): Promise<{ ok: true; imported: number } | { ok: false; error: string }> {
+  "use server";
   await requireAdmin();
 
   const file = formData.get("csv");
@@ -75,6 +74,7 @@ export async function importLeadsCsvAction(
 }
 
 export async function setLeadStatusAction(formData: FormData): Promise<void> {
+  "use server";
   await requireAdmin();
 
   const id = String(formData.get("id") ?? "").trim();
@@ -104,6 +104,7 @@ export async function setLeadStatusAction(formData: FormData): Promise<void> {
 }
 
 export async function updateLeadEmailAction(formData: FormData): Promise<void> {
+  "use server";
   await requireAdmin();
 
   const id = String(formData.get("id") ?? "").trim();
@@ -125,6 +126,7 @@ export async function saveOutboundPersonalizationAction(
   leadId: string,
   line: string,
 ) {
+  "use server";
   await requireAdmin();
 
   const parsed = outboundPersonalizationSchema.safeParse({ line });
@@ -148,6 +150,7 @@ export async function addLeadFromMapAction(
   | { ok: true; id: string; alreadyInQueue?: boolean }
   | { ok: false; error: string }
 > {
+  "use server";
   await requireAdmin();
 
   const parsed = mapLeadSchema.safeParse(input);

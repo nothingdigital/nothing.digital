@@ -1,10 +1,11 @@
 import { NORTHPORT_AL } from "./categories";
-import type { CategoryQuery, PlaceCandidate, VerticalPack } from "./types";
+import type { CategoryQuery, PlaceCandidate } from "./types";
 import {
   discoverCandidates as discoverShared,
-  parseVerticals as parseVerticalsShared,
   searchPlaces as searchShared,
 } from "../../src/lib/leads/places";
+
+export { parseVerticals } from "../../src/lib/leads/places";
 
 const NORTHPORT_BIAS = {
   latitude: NORTHPORT_AL.latitude,
@@ -34,10 +35,4 @@ export async function discoverCandidates(
     NORTHPORT_BIAS,
     delayMs,
   );
-}
-
-export function parseVerticals(
-  raw: string | undefined,
-): VerticalPack[] | undefined {
-  return parseVerticalsShared(raw);
 }

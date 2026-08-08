@@ -20,7 +20,7 @@ export type PlaceCandidate = {
   types: string[];
   rating: number | null;
   reviewCount: number | null;
-  vertical: VerticalPack | "map" | string;
+  vertical: VerticalPack | "map";
   query: string;
   lat?: number | null;
   lng?: number | null;

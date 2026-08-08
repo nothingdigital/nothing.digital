@@ -19,8 +19,7 @@ export async function GET(
     return new Response(downloaded.error ?? "Download failed", { status: 500 });
   }
 
-  const bytes = Buffer.from(await downloaded.data.arrayBuffer());
-  return new Response(bytes, {
+  return new Response(downloaded.data, {
     headers: {
       "Content-Type": row.mime ?? "application/octet-stream",
       "Content-Disposition": `attachment; filename="${row.filename.replace(/"/g, "")}"`,

@@ -34,11 +34,11 @@ export function InvoiceCoverDraftPanel({
 
   if (!needsCover) return null;
 
-  async function onFlush() {
+  async function sendCover(cover?: { subject: string; coverNote: string }) {
     setStatus("sending");
     setError(null);
     setWarning(null);
-    const result = await sendPendingInvoiceEmailAction(invoiceId);
+    const result = await sendPendingInvoiceEmailAction(invoiceId, cover);
     if (!result.ok) {
       setStatus("error");
       setError(result.error);
@@ -67,26 +67,6 @@ export function InvoiceCoverDraftPanel({
     setStatus("idle");
   }
 
-  async function onSend() {
-    setStatus("sending");
-    setError(null);
-    setWarning(null);
-    const result = await sendPendingInvoiceEmailAction(invoiceId, {
-      subject,
-      coverNote,
-    });
-    if (!result.ok) {
-      setStatus("error");
-      setError(result.error);
-      return;
-    }
-    setStatus("sent");
-    if (result.stampWarning) {
-      setWarning(result.stampWarning);
-    }
-    router.refresh();
-  }
-
   if (!enabled) {
     return (
       <div className="mt-2 w-full space-y-2 border-t border-border pt-2">
@@ -94,7 +74,7 @@ export function InvoiceCoverDraftPanel({
           type="button"
           size="sm"
           variant="outline"
-          onClick={onFlush}
+          onClick={() => void sendCover()}
           disabled={status === "sending" || status === "sent"}
         >
           {status === "sending" ? "Sending…" : "Send invoice email"}
@@ -142,7 +122,7 @@ export function InvoiceCoverDraftPanel({
         primary={{
           label: "Approve & Send",
           busyLabel: "Sending…",
-          onClick: onSend,
+          onClick: () => void sendCover({ subject, coverNote }),
           disabled:
             status === "sending" ||
             status === "sent" ||

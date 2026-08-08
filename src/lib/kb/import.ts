@@ -1,15 +1,9 @@
 import mammoth from "mammoth";
 import * as XLSX from "xlsx";
 
-export type ExtractResult = {
-  ok: boolean;
-  markdown: string;
-  error?: string;
-};
-
 export async function extractDocx(
   bytes: Buffer | Uint8Array,
-): Promise<ExtractResult> {
+): Promise<{ ok: boolean; markdown: string; error?: string }> {
   try {
     const buffer = bytes instanceof Buffer ? bytes : Buffer.from(bytes);
     // @ts-expect-error mammoth.convertToMarkdown exists in this version
@@ -59,7 +53,7 @@ function sheetToMarkdown(name: string, sheet: XLSX.WorkSheet): string {
 
 export async function extractXlsx(
   bytes: Buffer | Uint8Array,
-): Promise<ExtractResult> {
+): Promise<{ ok: boolean; markdown: string; error?: string }> {
   try {
     const buffer = bytes instanceof Buffer ? bytes : Buffer.from(bytes);
     const wb = XLSX.read(buffer, { type: "buffer" });
@@ -84,30 +78,26 @@ export async function extractXlsx(
   }
 }
 
-/** Numbers has no reliable open parser in-node; keep file, empty body. */
-export function extractNumbers(_bytes?: Buffer | Uint8Array): ExtractResult {
+export async function extractByFilename(
+  filename: string,
+  bytes: Buffer | Uint8Array,
+): Promise<{ ok: boolean; markdown: string; error?: string }> {
+  const lower = filename.toLowerCase();
+  if (lower.endsWith(".docx")) return extractDocx(bytes);
+  if (lower.endsWith(".xlsx") || lower.endsWith(".xls")) {
+    return extractXlsx(bytes);
+  }
+  if (lower.endsWith(".numbers")) {
+    return {
+      ok: false,
+      markdown: "",
+      error:
+        "Apple Numbers is not supported for extract. Export to XLSX and re-import, or paste content manually. Original file is kept as an attachment.",
+    };
+  }
   return {
     ok: false,
     markdown: "",
-    error:
-      "Apple Numbers is not supported for extract. Export to XLSX and re-import, or paste content manually. Original file is kept as an attachment.",
-  };
-}
-
-export function extractByFilename(
-  filename: string,
-  bytes: Buffer | Uint8Array,
-): Promise<ExtractResult> {
-  const lower = filename.toLowerCase();
-  if (lower.endsWith(".docx")) return extractDocx(bytes);
-  if (lower.endsWith(".xlsx") || lower.endsWith(".xls"))
-    return extractXlsx(bytes);
-  if (lower.endsWith(".numbers")) {
-    return Promise.resolve(extractNumbers(bytes));
-  }
-  return Promise.resolve({
-    ok: false,
-    markdown: "",
     error: `No extractor for ${filename}. Original file stored as attachment.`,
-  });
+  };
 }

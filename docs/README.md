@@ -15,6 +15,7 @@
 | Listmonk drip                  | [`runbooks/listmonk-drip.md`](./runbooks/listmonk-drip.md)                                                                 |
 | Monitoring                     | [`runbooks/monitoring.md`](./runbooks/monitoring.md) · [`post-launch-monitoring.md`](./runbooks/post-launch-monitoring.md) |
 | Growth YES/NO/LATER            | [`growth-tactics.md`](./growth-tactics.md)                                                                                 |
+| Ponytail full-code review      | [`runbooks/ponytail-full-review.md`](./runbooks/ponytail-full-review.md)                                                   |
 | Longer agent handoff           | [`superpowers/HANDOFF-post-launch-ops.md`](./superpowers/HANDOFF-post-launch-ops.md)                                       |
 | Master roadmap (historical)    | [`../plans/00-master-document.md`](../plans/00-master-document.md)                                                         |
 | PikaPods / sidecars            | [`../plans/05-pikapods-integrations.md`](../plans/05-pikapods-integrations.md)                                             |

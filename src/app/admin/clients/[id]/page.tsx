@@ -43,7 +43,7 @@ import {
   listClientWorkItems,
 } from "@/lib/admin/client-ops-queries";
 import { DOCUMENT_KINDS, listClientDocuments } from "@/lib/documents/queries";
-import { isInvoiceCoverEnabled } from "@/lib/ai";
+import { isAiEnabled } from "@/lib/ai";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -93,7 +93,7 @@ export default async function AdminClientDetailPage({
   const assets = assetsResult.rows;
   const workItems = workResult.rows;
   const documents = documentsResult.rows;
-  const coverEnabled = isInvoiceCoverEnabled();
+  const coverEnabled = isAiEnabled();
   const balance = openBalanceCents(invoices);
   const paid = invoices
     .filter((invoice) => invoice.status === "paid")

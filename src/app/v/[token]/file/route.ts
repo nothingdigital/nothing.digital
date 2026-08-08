@@ -36,17 +36,10 @@ export async function GET(
     "Content-Length": String(result.bytes.byteLength),
   });
 
-  if (download) {
-    headers.set(
-      "Content-Disposition",
-      `attachment; filename="${doc.downloadName}"`,
-    );
-  } else {
-    headers.set(
-      "Content-Disposition",
-      `inline; filename="${doc.downloadName}"`,
-    );
-  }
+  headers.set(
+    "Content-Disposition",
+    `${download ? "attachment" : "inline"}; filename="${doc.downloadName}"`,
+  );
 
   return new NextResponse(new Uint8Array(result.bytes), {
     status: 200,

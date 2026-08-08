@@ -6,7 +6,7 @@ import {
 } from "@/lib/admin/loops/queries";
 import type { LoopCollection } from "@/lib/admin/loops/types";
 import { countLeadsByStatus } from "@/lib/admin/outbound/queries";
-import { countOverdueInvoices } from "@/lib/admin/ops-glance";
+import { selectOverdueInvoices } from "@/lib/admin/ops-glance";
 import { listContactSubmissions } from "@/lib/admin/queries";
 
 export type TodayLoopsResult = {
@@ -68,7 +68,9 @@ export async function loadTodayLoopCollection(): Promise<TodayLoopsResult> {
     dataError,
     glance: {
       inbox: inbox.error ? null : inbox.rows.length,
-      overdue: invoices.error ? null : countOverdueInvoices(invoices.rows, now),
+      overdue: invoices.error
+        ? null
+        : selectOverdueInvoices(invoices.rows, now).length,
       work: work.error ? null : work.rows.length,
     },
   };

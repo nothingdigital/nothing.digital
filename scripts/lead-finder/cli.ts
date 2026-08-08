@@ -53,13 +53,11 @@ async function scoreAndEnrich(
     htmlByPlaceId.set(candidate.placeId, snapshot?.html ?? null);
 
     const { score, reasons } = scoreWebsite(candidate.website, snapshot);
-    const enrich = options.skipFetch
-      ? { email: null as string | null, source: "none" as const }
-      : await enrichLead({
-          website: candidate.website,
-          html: snapshot?.html ?? null,
-          hunterApiKey: options.hunterApiKey,
-        });
+    const enrich = await enrichLead({
+      website: candidate.website,
+      html: snapshot?.html ?? null,
+      hunterApiKey: options.hunterApiKey,
+    });
 
     results.push({
       ...candidate,

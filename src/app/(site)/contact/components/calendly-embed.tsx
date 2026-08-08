@@ -1,7 +1,7 @@
 "use client";
 
 import Script from "next/script";
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 interface CalendlyEmbedProps {
   url: string;
@@ -30,9 +30,9 @@ function buildEmbedUrl(url: string): string {
 // ponytail: initInlineWidget({ resize: true }) grows with content; plain iframes stay fixed and double-scroll.
 export function CalendlyEmbed({ url }: CalendlyEmbedProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const embedUrl = useMemo(() => buildEmbedUrl(url), [url]);
+  const embedUrl = buildEmbedUrl(url);
 
-  const mountWidget = useCallback(() => {
+  function mountWidget() {
     const parent = containerRef.current;
     if (!parent || !window.Calendly) return;
 
@@ -42,11 +42,9 @@ export function CalendlyEmbed({ url }: CalendlyEmbedProps) {
       parentElement: parent,
       resize: true,
     });
-  }, [embedUrl]);
+  }
 
-  useEffect(() => {
-    mountWidget();
-  }, [mountWidget]);
+  useEffect(mountWidget, [embedUrl]);
 
   return (
     <div className="w-full min-w-[320px] rounded-xl border-2 border-border bg-card shadow-md">

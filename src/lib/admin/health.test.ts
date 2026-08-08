@@ -2,8 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   HEALTH_INTEGRATION_KEYS,
-  chipToneForConfigured,
-  labelForIntegration,
+  INTEGRATION_LABELS,
   parseHealthPayload,
 } from "@/lib/admin/health";
 
@@ -67,17 +66,10 @@ describe("parseHealthPayload", () => {
   });
 });
 
-describe("labelForIntegration", () => {
+describe("INTEGRATION_LABELS", () => {
   it("labels every HEALTH_INTEGRATION_KEYS entry", () => {
     for (const key of HEALTH_INTEGRATION_KEYS) {
-      expect(labelForIntegration(key).length).toBeGreaterThan(0);
+      expect(INTEGRATION_LABELS[key].length).toBeGreaterThan(0);
     }
-  });
-});
-
-describe("chipToneForConfigured", () => {
-  it("returns ok tone when configured and missing when not", () => {
-    expect(chipToneForConfigured(true)).toBe("ok");
-    expect(chipToneForConfigured(false)).toBe("missing");
   });
 });

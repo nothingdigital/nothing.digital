@@ -3,7 +3,11 @@ import { notFound } from "next/navigation";
 
 import { ServicePageTemplate } from "@/components/templates/service-page";
 import { serviceSlugs, type ServiceSlug } from "@/lib/routes";
-import { serviceDetails, serviceSummaries } from "@/lib/services";
+import {
+  serviceDetails,
+  serviceJsonLd,
+  serviceSummaries,
+} from "@/lib/services";
 
 export function generateStaticParams() {
   return serviceSlugs.map((slug) => ({ slug }));
@@ -66,7 +70,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
       processSteps={service.processSteps}
       faqItems={service.faqItems}
       relatedServices={relatedFor(service.slug)}
-      jsonLd={service.jsonLd}
+      jsonLd={serviceJsonLd(service.title, service.description)}
     />
   );
 }

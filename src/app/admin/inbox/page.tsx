@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 
 import { createClientFromInboxAction } from "@/app/admin/inbox/actions";
-import { adminControlClass } from "@/components/admin/admin-form";
+import {
+  AdminFilterChip,
+  adminControlClass,
+} from "@/components/admin/admin-form";
 import { InboxReplyDraftPanel } from "@/components/admin/inbox-reply-draft-panel";
 import { StatusSelect } from "@/components/admin/status-select";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { INBOX_STATUSES, isInboxStatus } from "@/lib/admin/config";
-import { isInboxDraftsEnabled } from "@/lib/ai";
+import { isAiEnabled } from "@/lib/ai";
 import { listContactSubmissions } from "@/lib/admin/queries";
 import { scoreLead } from "@/lib/admin/client-ops";
 
@@ -30,7 +32,7 @@ export default async function AdminInboxPage({
   const scoredRows = rows
     .map((row) => ({ ...row, score: scoreLead(row) }))
     .sort((a, b) => b.score - a.score);
-  const draftsEnabled = isInboxDraftsEnabled();
+  const draftsEnabled = isAiEnabled();
 
   return (
     <div className="space-y-6">
@@ -42,9 +44,13 @@ export default async function AdminInboxPage({
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <FilterChip href="/admin/inbox" label="All" active={!statusFilter} />
+          <AdminFilterChip
+            href="/admin/inbox"
+            label="All"
+            active={!statusFilter}
+          />
           {INBOX_STATUSES.map((status) => (
-            <FilterChip
+            <AdminFilterChip
               key={status}
               href={`/admin/inbox?status=${status}`}
               label={status}
@@ -146,28 +152,5 @@ export default async function AdminInboxPage({
         ))}
       </ul>
     </div>
-  );
-}
-
-function FilterChip({
-  href,
-  label,
-  active,
-}: {
-  href: string;
-  label: string;
-  active: boolean;
-}) {
-  return (
-    <Link
-      href={href}
-      className={
-        active
-          ? "rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground"
-          : "rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground hover:text-foreground"
-      }
-    >
-      {label}
-    </Link>
   );
 }

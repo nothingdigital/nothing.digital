@@ -7,24 +7,10 @@ const FOCUSABLE_SELECTOR = [
   '[tabindex]:not([tabindex="-1"])',
 ].join(", ");
 
-function isVisible(el: HTMLElement): boolean {
-  let node: HTMLElement | null = el;
-  while (node) {
-    const style = getComputedStyle(node);
-    if (style.display === "none" || style.visibility === "hidden") {
-      return false;
-    }
-    node = node.parentElement;
-  }
-  return true;
-}
-
 export function getFocusableElements(container: HTMLElement): HTMLElement[] {
   return Array.from(
     container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
-  ).filter(
-    (el) => !el.hasAttribute("disabled") && el.tabIndex >= 0 && isVisible(el),
-  );
+  ).filter((el) => el.tabIndex >= 0 && el.checkVisibility());
 }
 
 /** Keep Tab / Shift+Tab cycling inside `container`. */

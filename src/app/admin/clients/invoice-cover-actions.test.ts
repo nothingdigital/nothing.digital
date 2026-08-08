@@ -5,7 +5,7 @@ const getInvoice = vi.fn();
 const updateInvoiceStatus = vi.fn();
 const updateInvoiceSentEmailedAt = vi.fn();
 const draftInvoiceCoverNote = vi.fn();
-const isInvoiceCoverEnabled = vi.fn();
+const isAiEnabled = vi.fn();
 const buildInvoiceEmailContext = vi.fn();
 const sendInvoiceSentEmail = vi.fn();
 const revalidatePath = vi.fn();
@@ -36,7 +36,7 @@ vi.mock("@/lib/admin/client-ops-queries", () => ({
 
 vi.mock("@/lib/ai", () => ({
   draftInvoiceCoverNote: (...args: unknown[]) => draftInvoiceCoverNote(...args),
-  isInvoiceCoverEnabled: (...args: unknown[]) => isInvoiceCoverEnabled(...args),
+  isAiEnabled: (...args: unknown[]) => isAiEnabled(...args),
 }));
 
 vi.mock("@/lib/ai/admin-guard", () => ({
@@ -122,7 +122,7 @@ describe("updateInvoiceStatusAction invoice email gating", () => {
   });
 
   it("auto-sends when cover flag is off", async () => {
-    isInvoiceCoverEnabled.mockReturnValue(false);
+    isAiEnabled.mockReturnValue(false);
     buildInvoiceEmailContext.mockResolvedValue({
       ok: true,
       context: emailContext,
@@ -137,7 +137,7 @@ describe("updateInvoiceStatusAction invoice email gating", () => {
   });
 
   it("does not auto-send when cover flag is on", async () => {
-    isInvoiceCoverEnabled.mockReturnValue(true);
+    isAiEnabled.mockReturnValue(true);
 
     const { updateInvoiceStatusAction } = await import("./actions");
     await updateInvoiceStatusAction("inv-1", "sent", "client-1");
@@ -151,13 +151,13 @@ describe("draftInvoiceCoverAction", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     requireAdmin.mockResolvedValue({ email: "owner@nothing.digital" });
-    isInvoiceCoverEnabled.mockReturnValue(true);
+    isAiEnabled.mockReturnValue(true);
     guardAdminAiDraft.mockResolvedValue({ ok: true });
     aiDraftError.mockReturnValue("Draft failed. Try again.");
   });
 
   it("refuses when disabled", async () => {
-    isInvoiceCoverEnabled.mockReturnValue(false);
+    isAiEnabled.mockReturnValue(false);
     const { draftInvoiceCoverAction } = await import("./actions");
     const result = await draftInvoiceCoverAction("inv-1");
     expect(result).toEqual({
@@ -188,11 +188,11 @@ describe("sendPendingInvoiceEmailAction", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     requireAdmin.mockResolvedValue(undefined);
-    isInvoiceCoverEnabled.mockReturnValue(true);
+    isAiEnabled.mockReturnValue(true);
   });
 
   it("refuses cover path when cover flag is off", async () => {
-    isInvoiceCoverEnabled.mockReturnValue(false);
+    isAiEnabled.mockReturnValue(false);
     const { sendPendingInvoiceEmailAction } = await import("./actions");
     const result = await sendPendingInvoiceEmailAction("inv-1", {
       subject: "Invoice INV-104 from Nothing.Digital",
@@ -324,7 +324,7 @@ describe("sendPendingInvoiceEmailAction", () => {
         subject: expect.anything(),
       }),
     );
-    expect(isInvoiceCoverEnabled).not.toHaveBeenCalled();
+    expect(isAiEnabled).not.toHaveBeenCalled();
   });
 
   it("refuses flush when status is not sent", async () => {

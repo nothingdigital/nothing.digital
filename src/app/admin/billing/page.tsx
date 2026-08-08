@@ -14,7 +14,7 @@ import {
   isInvoiceStatus,
 } from "@/lib/admin/client-ops";
 import { listInvoices } from "@/lib/admin/client-ops-queries";
-import { isInvoiceCoverEnabled } from "@/lib/ai";
+import { isAiEnabled } from "@/lib/ai";
 
 export const metadata: Metadata = {
   title: "Billing",
@@ -33,7 +33,7 @@ export default async function AdminBillingPage({
 
   const { rows, error } = await listInvoices({ status: statusFilter });
   const now = new Date();
-  const coverEnabled = isInvoiceCoverEnabled();
+  const coverEnabled = isAiEnabled();
   const visible = overdueOnly
     ? rows.filter((row) => effectiveInvoiceStatus(row, now) === "overdue")
     : rows;
