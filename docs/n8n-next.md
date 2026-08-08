@@ -61,6 +61,16 @@ ponytail: pod only on volume. Workflow with existing nodes, no custom. Delete if
 
 Tested with sample payload - workflow triggers on POST to test URL. Production next after Vercel env + redeploy.
 
+## Env for Production URL (to fix "env missing")
+
+1. Vercel dashboard > project > Settings > Environment Variables.
+2. Add for **both Production and Preview** (select the environments):
+   - Key: `N8N_WEBHOOK_URL`, Value: exact Production URL from n8n webhook node (full https://.../webhook/contact from your picture, no /test).
+   - Key: `N8N_DASHBOARD_URL`, Value: your n8n dashboard.
+   - Key: `N8N_WEBHOOK_SECRET`, Value: random 32-char if auth in node.
+3. Save. Trigger new deployment (Deployments > your branch preview > Redeploy).
+4. Open the new preview URL + `/api/health`. Refresh. Must show `"n8n": true`. If still missing, the preview env not picked — add the variable again for Preview specifically and redeploy.
+
 Updated: 2026-08-06. Env set, redeploy triggered with this commit (and this one again to force another deploy after env).
 
 Link in master. Commit after test.
