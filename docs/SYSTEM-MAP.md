@@ -114,22 +114,22 @@ Health chips: `https://nothing.digital/api/health` (env presence, not live uptim
 
 ### Public marketing site
 
-| Route                                  | Purpose                                                                        |
-| -------------------------------------- | ------------------------------------------------------------------------------ |
-| `/`                                    | Home + newsletter block                                                        |
-| `/services`, `/services/[slug]`        | Offerings                                                                      |
-| `/portfolio`, `/portfolio/[slug]`      | Case studies                                                                   |
-| `/pricing`                             | Packages / ballparks                                                           |
-| `/blog`, `/blog/[slug]`                | Content                                                                        |
-| `/about`                               | Studio story                                                                   |
-| `/contact`                             | Lead form → `/api/contact` → Supabase inbox + Resend; optional AI brief helper |
-| `/privacy`, `/terms`, `/accessibility` | Legal / a11y                                                                   |
+| Route                                  | Purpose                                              |
+| -------------------------------------- | ---------------------------------------------------- |
+| `/`                                    | Home + newsletter block                              |
+| `/services`, `/services/[slug]`        | Offerings                                            |
+| `/portfolio`, `/portfolio/[slug]`      | Case studies                                         |
+| `/pricing`                             | Packages / ballparks                                 |
+| `/blog`, `/blog/[slug]`                | Content                                              |
+| `/about`                               | Studio story                                         |
+| `/contact`                             | Lead form → `/api/contact` → Supabase inbox + Resend |
+| `/privacy`, `/terms`, `/accessibility` | Legal / a11y                                         |
 
 **CTAs:** Contact form and Calendly (`CALENDLY_URL`) — not a self-serve checkout.
 
 **Newsletter:** Site form → `/api/newsletter` → Listmonk (double opt-in). Never cold lists.
 
-**AI (optional flags):** On `/contact`, “Help me write a brief” fills fields; visitor edits before submit. Needs `AI_GATEWAY_API_KEY` + `AI_BRIEF_ASSISTANT_ENABLED=true`.
+**AI (optional flags):** Admin-only HITL drafts (inbox, ops brief, invoice cover, outbound). Needs `AI_GATEWAY_API_KEY` + per-feature `AI_*_ENABLED`. No public site AI.
 
 ### Client portal & public views
 

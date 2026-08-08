@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 
 import { getAdminEmails, getAdminToolLinks } from "@/lib/admin/config";
 import {
-  isBriefAssistantEnabled,
   isInboxDraftsEnabled,
   isInvoiceCoverEnabled,
   isOpsBriefEnabled,
@@ -74,10 +73,6 @@ export default async function AdminSettingsPage() {
     {
       key: "AI_GATEWAY_API_KEY",
       value: env.private.AI_GATEWAY_API_KEY ? "configured" : "not set",
-    },
-    {
-      key: "AI_BRIEF_ASSISTANT_ENABLED",
-      value: isBriefAssistantEnabled() ? "on" : "off",
     },
     {
       key: "AI_INBOX_DRAFTS_ENABLED",
