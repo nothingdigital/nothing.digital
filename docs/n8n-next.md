@@ -84,6 +84,19 @@ Updated: 2026-08-06. Env set, redeploy triggered with this commit (and this one 
 
 Link in master. Commit after test.
 
+**What should happen from n8n when you submit a contact form on the website:**
+
+- Form submits to /api/contact → Supabase insert + confirmation/team emails + rate limit.
+- Then `notifyN8n("contact", {name, email, message, service, budget, timeline...})` fires async (fire-and-forget, never blocks or fails the user flow or the 201 response).
+- If N8N_WEBHOOK_URL set and valid, POST to the URL with { "event": "contact", ...the form data }.
+- n8n webhook node triggers the workflow, Code node formats the message, Email node sends the notification to your real email with the details + admin inbox link, optional Supabase for booking.
+- n8n Executions shows the run with success for each node.
+- Your email receives the formatted notification.
+- Vercel logs no [n8n] error.
+- Health shows n8n: true.
+
+If nothing: env not set for the deployment (Preview for branch, Production for live), URL typo, workflow not active, path in node not matching the URL end, credential error in Email node (test the credential first), redeploy not done after env change.
+
 #ponytail: n8n is glue only. Resend primary. Measure before scaling. 1 workflow per event. No RAG or agents.
 
 ## Troubleshooting "env missing" in /api/health
