@@ -61,7 +61,7 @@ ponytail: pod only on volume. Workflow with existing nodes, no custom. Delete if
 
 Tested with sample payload - workflow triggers on POST to test URL. Production next after Vercel env + redeploy.
 
-Updated: 2026-08-06.
+Updated: 2026-08-06. Env set, redeploy triggered with this commit.
 
 Link in master. Commit after test.
 
@@ -70,13 +70,24 @@ Link in master. Commit after test.
 ## No Slack Alternative (Email Node)
 
 1. After Code node (format with to/subject/message), add Email > Send Email node.
-2. Credential: SMTP, host smtp.resend.com, port 587, user resend, password = RESEND_API_KEY from Vercel.
-3. From: n8n <hello@nothing.digital>
-4. To: {{ $json.to }} or team@nothing.digital
-5. Subject: {{ $json.subject }}
-6. Text: {{ $json.message }}
-7. Test with Listen + sample JSON - email arrives in team inbox.
-8. This reuses existing Resend, no new credential or Slack app.
+2. Credential: SMTP, host `smtp.resend.com`, port `587`, user `resend`, password = exact RESEND_API_KEY from Vercel/Resend dashboard (starts with re_ , the one used for site emails).
+3. SSL/TLS = on (STARTTLS).
+4. Client Host Name = `n8n bot` or leave blank.
+5. Test credential in n8n (the "Test" button in credential edit) - if "Couldn't connect" error:
+   - Confirm API key is valid and has SMTP permission in Resend dashboard (API Keys > the key > permissions).
+   - Domain verified in Resend (Domains tab).
+   - No firewall/VPN blocking outbound 587.
+   - Try without Client Host Name.
+   - Alternative: use n8n Resend node (search "Resend" in nodes) with API key instead of SMTP.
+6. From: n8n <hello@nothing.digital>
+7. To: your real email (create team@nothing.digital as alias in Resend if preferred, or use hello@ for to also).
+8. Subject: {{ $json.subject }}
+9. Text: {{ $json.message }}
+10. Test with Listen + sample JSON - email arrives.
+
+This reuses existing Resend key. No new credential if using Resend node. Retry the credential after fixes.
+
+Update md with your credential screenshot (redacted key) + test email result.
 
 Update this md with your Email node screenshot + test email. Commit after successful test with real form.
 
