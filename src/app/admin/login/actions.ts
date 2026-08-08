@@ -3,7 +3,7 @@
 import { createAuthServerClient } from "@/lib/supabase/auth-server";
 import { isAdminEmail } from "@/lib/admin/config";
 
-export type AdminPasswordSignInResult =
+type AdminPasswordSignInResult =
   | { ok: true }
   | {
       ok: false;
