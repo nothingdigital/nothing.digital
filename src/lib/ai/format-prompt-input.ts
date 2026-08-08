@@ -4,25 +4,25 @@ function loopLine(loop: Loop): string {
   return `- [${loop.source}] p${loop.priority} ${loop.title} — ${loop.detail}`;
 }
 
+function section<T extends Loop>(
+  label: string,
+  loops: readonly T[],
+  line: (loop: T) => string = loopLine as (loop: T) => string,
+): string {
+  if (loops.length === 0) return `${label}: none`;
+  return [`${label}:`, ...loops.map(line)].join("\n");
+}
+
 export function formatOpsBriefInput(collection: LoopCollection): string {
-  const open =
-    collection.open.length === 0
-      ? "Open: none"
-      : ["Open:", ...collection.open.map(loopLine)].join("\n");
-  const later =
-    collection.later.length === 0
-      ? "Later: none"
-      : ["Later:", ...collection.later.map(loopLine)].join("\n");
-  const closed =
-    collection.recentlyClosed.length === 0
-      ? "Recently closed: none"
-      : [
-          "Recently closed:",
-          ...collection.recentlyClosed.map(
-            (l) => `${loopLine(l)} (closed ${l.closedAt})`,
-          ),
-        ].join("\n");
-  return [open, later, closed].join("\n\n");
+  return [
+    section("Open", collection.open),
+    section("Later", collection.later),
+    section(
+      "Recently closed",
+      collection.recentlyClosed,
+      (l) => `${loopLine(l)} (closed ${l.closedAt})`,
+    ),
+  ].join("\n\n");
 }
 
 export type InvoiceCoverFacts = {
@@ -42,23 +42,5 @@ export function formatInvoiceCoverInput(facts: InvoiceCoverFacts): string {
     `Amount: ${facts.amountLabel}`,
     `Due: ${facts.dueLabel ?? "—"}`,
     `Internal notes: ${facts.notes?.trim() || "—"}`,
-  ].join("\n");
-}
-
-export type OutboundLineFacts = {
-  name: string;
-  website: string | null;
-  city: string;
-  vertical: string | null;
-  reasons: string[];
-};
-
-export function formatOutboundLineInput(facts: OutboundLineFacts): string {
-  return [
-    `Company: ${facts.name}`,
-    `Website: ${facts.website?.trim() || "—"}`,
-    `City: ${facts.city}`,
-    `Vertical: ${facts.vertical?.trim() || "—"}`,
-    `Reasons: ${facts.reasons.length > 0 ? facts.reasons.join(" | ") : "—"}`,
   ].join("\n");
 }

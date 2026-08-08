@@ -18,10 +18,6 @@ export type ViewableDoc = {
   externalUrl: string | null;
 };
 
-function newViewToken(): string {
-  return randomBytes(24).toString("hex");
-}
-
 export async function resolveViewToken(
   token: string,
 ): Promise<{ doc: ViewableDoc | null; error: string | null }> {
@@ -116,7 +112,7 @@ export async function ensureInvoicePdf(invoiceId: string): Promise<
     };
   }
 
-  const viewToken = invoice.view_token ?? newViewToken();
+  const viewToken = invoice.view_token ?? randomBytes(24).toString("hex");
   const pdfBytes = await renderInvoicePdf({
     number: invoice.number,
     title: invoice.title,

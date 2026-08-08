@@ -1,14 +1,10 @@
-"use client";
-
-import * as React from "react";
-
-import { motion, useReducedMotion } from "framer-motion";
+import type { ReactNode } from "react";
 import Link from "next/link";
 
 export interface ServiceCardProps {
   title: string;
   description: string;
-  icon: React.ReactNode;
+  icon: ReactNode;
   href: string;
 }
 
@@ -18,14 +14,9 @@ export function ServiceCard({
   icon,
   href,
 }: ServiceCardProps) {
-  const reduceMotion = useReducedMotion();
   return (
     <Link href={href} className="group block">
-      <motion.div
-        whileHover={reduceMotion ? undefined : { y: -6 }}
-        transition={{ duration: 0.2 }}
-        className="h-full rounded-xl border-2 border-border bg-card p-6 shadow-md transition-colors hover:border-primary hover:shadow-xl"
-      >
+      <div className="h-full rounded-xl border-2 border-border bg-card p-6 shadow-md transition-[colors,transform,box-shadow] duration-200 hover:-translate-y-1.5 hover:border-primary hover:shadow-xl motion-reduce:hover:translate-y-0">
         <div className="mb-5 inline-flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary ring-1 ring-primary/20">
           {icon}
         </div>
@@ -35,7 +26,7 @@ export function ServiceCard({
         <p className="text-sm leading-relaxed text-muted-foreground">
           {description}
         </p>
-      </motion.div>
+      </div>
     </Link>
   );
 }

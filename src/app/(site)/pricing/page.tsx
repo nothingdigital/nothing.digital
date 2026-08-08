@@ -4,6 +4,7 @@ import Link from "next/link";
 import { SectionContainer } from "@/components/atoms/section-container";
 import { PageHero } from "@/components/molecules/page-hero";
 import { Button } from "@/components/ui/button";
+import { PricingCalculator } from "@/components/molecules/pricing-calculator";
 import { pricingServices } from "@/lib/pricing";
 import { routes } from "@/lib/routes";
 
@@ -29,6 +30,8 @@ export default function PricingPage() {
         title="Pricing"
         description="Serious custom work, scoped to your goals. Every engagement gets a fixed quote after a free scoping call — no published rates, no surprise invoices."
       />
+
+      <PricingCalculator />
 
       <SectionContainer>
         <p className="mb-8 text-center font-mono text-xs uppercase tracking-[0.35em] text-primary">

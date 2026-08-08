@@ -7,10 +7,3 @@ export function selectOverdueInvoices<
     (invoice) => effectiveInvoiceStatus(invoice, now) === "overdue",
   );
 }
-
-export function countOverdueInvoices(
-  invoices: Array<{ status: string; due_at: string | null }>,
-  now: Date = new Date(),
-): number {
-  return selectOverdueInvoices(invoices, now).length;
-}

@@ -20,13 +20,9 @@ export async function middleware(request: NextRequest) {
 
   if (!url || !key) {
     if (isAdminLogin || isPortalLogin) return response;
-    if (isAdminPath) {
-      return NextResponse.redirect(new URL("/admin/login", request.url));
-    }
-    if (isPortalPath) {
-      return NextResponse.redirect(new URL("/portal/login", request.url));
-    }
-    return response;
+    return NextResponse.redirect(
+      new URL(isPortalPath ? "/portal/login" : "/admin/login", request.url),
+    );
   }
 
   const supabase = createServerClient(url, key, {
@@ -66,12 +62,9 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
-  if (isPortalPath) {
-    if (!user && !isPortalLogin) {
-      return NextResponse.redirect(new URL("/portal/login", request.url));
-    }
-
-    return response;
+  // Matcher is only /admin + /portal — portal path when not admin.
+  if (!user && !isPortalLogin) {
+    return NextResponse.redirect(new URL("/portal/login", request.url));
   }
 
   return response;

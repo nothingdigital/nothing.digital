@@ -5,8 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { getAdminToolLinks } from "@/lib/admin/config";
 import {
   HEALTH_INTEGRATION_KEYS,
-  chipToneForConfigured,
-  labelForIntegration,
+  INTEGRATION_LABELS,
   parseHealthPayload,
 } from "@/lib/admin/health";
 import { listCheckedChecklistKeys } from "@/lib/admin/loops/queries";
@@ -103,10 +102,9 @@ export default async function AdminHealthPage() {
         <div className="flex flex-wrap gap-2">
           {HEALTH_INTEGRATION_KEYS.map((key) => {
             const configured = health.integrations[key];
-            const tone = chipToneForConfigured(configured);
             return (
-              <Badge key={key} variant={tone === "ok" ? "default" : "outline"}>
-                {labelForIntegration(key)}:{" "}
+              <Badge key={key} variant={configured ? "default" : "outline"}>
+                {INTEGRATION_LABELS[key]}:{" "}
                 {configured ? "configured" : "missing"}
               </Badge>
             );

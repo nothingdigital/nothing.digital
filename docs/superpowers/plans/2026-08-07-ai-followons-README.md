@@ -7,11 +7,10 @@
 
 Ship three HITL admin AI surfaces: today ops brief, invoice cover-note, outbound personalization line — all gated, no auto-send/email from AI.
 
-## Flags (all need `AI_GATEWAY_API_KEY`)
+## Flags (need `AI_GATEWAY_API_KEY` + `AI_ENABLED=true`)
 
-- `AI_OPS_BRIEF_ENABLED`
-- `AI_INVOICE_COVER_ENABLED`
-- `AI_OUTBOUND_PERSONALIZATION_ENABLED`
+- Inbox drafts, ops brief, invoice cover HITL
+- Outbound Instantly lines: lead-finder `--ai-rank` / manual edit (no admin AI redraft)
 
 ## Migration
 

@@ -33,9 +33,8 @@ export async function GET(request: Request) {
       await supabase.auth.signOut();
       return NextResponse.redirect(`${origin}/portal/login?error=forbidden`);
     }
-    return NextResponse.redirect(
-      `${origin}${next.startsWith("/portal") ? next : "/portal"}`,
-    );
+    // ponytail: isPortal already means next starts with /portal.
+    return NextResponse.redirect(`${origin}${next}`);
   }
 
   if (!isAdminEmail(data.user.email)) {

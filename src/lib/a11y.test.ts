@@ -1,6 +1,23 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
 import { focusMainContent, getFocusableElements, trapTabKey } from "./a11y";
+
+// jsdom lacks checkVisibility — mirror the old ancestor walk for tests.
+beforeAll(() => {
+  if (!HTMLElement.prototype.checkVisibility) {
+    HTMLElement.prototype.checkVisibility = function checkVisibility() {
+      let node: HTMLElement | null = this;
+      while (node) {
+        const style = getComputedStyle(node);
+        if (style.display === "none" || style.visibility === "hidden") {
+          return false;
+        }
+        node = node.parentElement;
+      }
+      return true;
+    };
+  }
+});
 
 afterEach(() => {
   document.body.innerHTML = "";

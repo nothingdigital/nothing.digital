@@ -14,7 +14,7 @@ const CITY = "Northport, AL";
 
 export function leadsToCsv(leads: ScoredLead[]): string {
   const lines = [
-    "email,companyName,website,phone,address,city,vertical,query,placeId,score,reasons,emailSource,rating,reviewCount,suppressed",
+    "email,companyName,website,phone,address,city,vertical,query,placeId,score,reasons,emailSource,rating,reviewCount,suppressed,aiScore,aiReason,personalization",
   ];
   for (const l of leads) {
     lines.push(
@@ -34,6 +34,9 @@ export function leadsToCsv(leads: ScoredLead[]): string {
         cell(l.rating),
         cell(l.reviewCount),
         cell(l.suppressed),
+        cell(l.aiScore ?? ""),
+        cell(l.aiReason ?? ""),
+        cell(l.personalization ?? ""),
       ].join(","),
     );
   }
@@ -42,20 +45,28 @@ export function leadsToCsv(leads: ScoredLead[]): string {
 
 /** Instantly-friendly subset: only non-suppressed rows with email. */
 export function leadsToInstantlyCsv(leads: ScoredLead[]): string {
-  const lines = ["email,companyName,website,phone,city,score,reasons"];
+  const withPerso = leads.some(
+    (l) => l.email && !l.suppressed && l.personalization?.trim(),
+  );
+  const header = withPerso
+    ? "email,companyName,website,phone,city,score,reasons,personalization"
+    : "email,companyName,website,phone,city,score,reasons";
+
+  const lines = [header];
   for (const l of leads) {
     if (!l.email || l.suppressed) continue;
-    lines.push(
-      [
-        cell(l.email),
-        cell(l.name),
-        cell(l.website),
-        cell(l.phone),
-        cell(CITY),
-        cell(l.score),
-        cell(l.reasons.join("|")),
-      ].join(","),
-    );
+    const score = l.aiScore ?? l.score;
+    const cells = [
+      cell(l.email),
+      cell(l.name),
+      cell(l.website),
+      cell(l.phone),
+      cell(CITY),
+      cell(score),
+      cell(l.reasons.join("|")),
+    ];
+    if (withPerso) cells.push(cell(l.personalization ?? ""));
+    lines.push(cells.join(","));
   }
   return `${lines.join("\n")}\n`;
 }

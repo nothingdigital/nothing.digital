@@ -1,25 +1,26 @@
 # Next steps
 
-> **Superseded as a live board.** Use [`../SCRATCHPAD.md`](../SCRATCHPAD.md).  
-> Index: [`README.md`](./README.md).
-
 ## Owner remaining
 
-See SCRATCHPAD + [`runbooks/ops-credentials.md`](./runbooks/ops-credentials.md).
+See SCRATCHPAD + [`runbooks/ops-credentials.md`](./runbooks/ops-credentials.md) for env/dashboard.
 
 ## Deferred — secretary Phase B (on hire only)
 
 Do not start without an explicit hire. Outline:
 
-1. Confirm `004_profiles.sql` on production.
-2. RLS: clients / invoices / assets / work_items / contact_submissions → `is_staff()`.
-3. Magic-link auth allows `profiles.app_role = 'staff'`.
-4. Settings: invite staff (create profile + magic link).
-5. Runbook section in [`runbooks/client-ops.md`](./runbooks/client-ops.md).
+1. Confirm `004_profiles.sql` on production (RLS + is_staff() done).
+2. Magic-link auth allows `profiles.app_role = 'staff'`.
+3. Settings: invite staff (create profile + magic link).
+4. Runbook section in [`runbooks/client-ops.md`](./runbooks/client-ops.md) (updated with roles).
 
-## Don’t reinvent
+## Live board
 
-- A11y procedure: [`runbooks/a11y-manual.md`](./runbooks/a11y-manual.md) · last pass: [`runbooks/archive/a11y-manual-pass.md`](./runbooks/archive/a11y-manual-pass.md)
-- LHCI: `lighthouserc.json` + `.github/workflows/pr-validation.yml` (verified 2026-08-07)
-- Growth triage: [`growth-tactics.md`](./growth-tactics.md)
-- Phase checklists: [`../plans/archive/`](../plans/archive/) (historical)
+Use [`../SCRATCHPAD.md`](../SCRATCHPAD.md) for the current remaining (lead scoring done, nurture next, a11y verification, Kuma if needed).
+
+Unneeded cut: a11y procedure, LHCI (verified), growth triage, phase checklists moved to archive.
+
+Updated: 2026-08-06.
+
+**execute the live board in SCRATCHPAD.md.** Commit after each.
+
+#ponytail: cut unneeded, keep live in scratchpad. No over-documenting. Measure before adding more.

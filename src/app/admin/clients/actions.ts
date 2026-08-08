@@ -34,12 +34,13 @@ import {
   createDocumentWithUpload,
   isDocumentKind,
 } from "@/lib/documents/queries";
-import { draftInvoiceCoverNote, isInvoiceCoverEnabled } from "@/lib/ai";
+import { draftInvoiceCoverNote, isAiEnabled } from "@/lib/ai";
 import { aiDraftError, guardAdminAiDraft } from "@/lib/ai/admin-guard";
 import { invoiceCoverSchema } from "@/lib/ai/types";
 import { buildInvoiceEmailContext } from "@/lib/invoices/invoice-email-context";
 import { sendInvoiceSentEmail } from "@/lib/invoices/send-invoice-email";
 import { ensureInvoicePdf } from "@/lib/pdf/resolve-view";
+import { getServiceRoleClient } from "@/lib/supabase/server";
 
 function formString(formData: FormData, key: string): string {
   return String(formData.get(key) ?? "").trim();
@@ -65,6 +66,98 @@ function dateOrNull(raw: string | null): string | null {
   return date.toISOString();
 }
 
+function parseInvoiceForm(formData: FormData) {
+  const client_id = formString(formData, "client_id");
+  const number = formString(formData, "number");
+  const title = formString(formData, "title");
+  const status = formString(formData, "status");
+  const amount_cents = dollarsToCents(formString(formData, "amount"));
+
+  if (amount_cents === null) {
+    throw new Error("Invalid amount.");
+  }
+  if (!isInvoiceStatus(status)) {
+    throw new Error("Invalid invoice status.");
+  }
+
+  const paid_at =
+    status === "paid"
+      ? (dateOrNull(formOptional(formData, "paid_at")) ??
+        new Date().toISOString())
+      : null;
+
+  return {
+    client_id,
+    number,
+    title,
+    status,
+    amount_cents,
+    currency: formOptional(formData, "currency") ?? "USD",
+    issued_at: dateOrNull(formOptional(formData, "issued_at")),
+    due_at: dateOrNull(formOptional(formData, "due_at")),
+    paid_at,
+    external_url: formOptional(formData, "external_url"),
+    notes: formOptional(formData, "notes"),
+  };
+}
+
+function parseAssetForm(formData: FormData) {
+  const type = formString(formData, "type");
+  const name = formString(formData, "name");
+  const env = formString(formData, "env");
+  const status = formString(formData, "status");
+
+  if (!isAssetType(type) || !isAssetEnv(env) || !isAssetStatus(status)) {
+    throw new Error("Invalid asset fields.");
+  }
+
+  return {
+    client_id: formString(formData, "client_id"),
+    id: formString(formData, "id"),
+    type,
+    name,
+    env,
+    status,
+    managed_by_us: formData.get("managed_by_us") === "on",
+    url: formOptional(formData, "url"),
+    monitor_url: formOptional(formData, "monitor_url"),
+    notes: formOptional(formData, "notes"),
+  };
+}
+
+function parseWorkForm(formData: FormData) {
+  const status = formString(formData, "status");
+  const priority = formString(formData, "priority");
+
+  if (!isWorkStatus(status) || !isWorkPriority(priority)) {
+    throw new Error("Invalid work fields.");
+  }
+
+  return {
+    id: formString(formData, "id"),
+    client_id: formString(formData, "client_id"),
+    title: formString(formData, "title"),
+    status,
+    priority,
+    asset_id: formOptional(formData, "asset_id"),
+    description: formOptional(formData, "description"),
+    due_at: dateOrNull(formOptional(formData, "due_at")),
+  };
+}
+
+async function autoSendIfNewlySent(
+  invoiceId: string,
+  status: string,
+  previousStatus?: string | null,
+): Promise<void> {
+  if (status !== "sent" || previousStatus === "sent") return;
+  if (isAiEnabled()) return;
+  const result = await sendPendingInvoiceEmailAction(invoiceId);
+  if (!result.ok) {
+    console.warn("[invoice-email] send failed:", result.error);
+  }
+}
+
 export async function createClientAction(formData: FormData): Promise<void> {
   await requireAdmin();
 
@@ -72,6 +165,7 @@ export async function createClientAction(formData: FormData): Promise<void> {
   const primary_email = formString(formData, "primary_email");
   const status = formString(formData, "status");
   const billing_model = formString(formData, "billing_model");
+  const is_founding = formData.get("is_founding") === "on";
 
   if (!name || !primary_email) {
     throw new Error("Name and email are required.");
@@ -80,11 +174,26 @@ export async function createClientAction(formData: FormData): Promise<void> {
     throw new Error("Invalid status or billing model.");
   }
 
+  if (is_founding) {
+    const { count } = (await getServiceRoleClient()
+      ?.from("clients")
+      .select("*", { count: "exact", head: true })
+      .eq("is_founding", true)) ?? { count: 0 };
+    if ((count ?? 0) >= 2) {
+      throw new Error("Founding client quota reached (max 2).");
+    }
+  }
+
   const rateRaw = formOptional(formData, "default_rate");
   const default_rate_cents = rateRaw ? dollarsToCents(rateRaw) : null;
   if (rateRaw && default_rate_cents === null) {
     throw new Error("Invalid default rate.");
   }
+
+  const care_start = is_founding ? new Date().toISOString() : null;
+  const care_end = is_founding
+    ? new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
+    : null;
 
   const result = await createClient({
     name,
@@ -95,6 +204,9 @@ export async function createClientAction(formData: FormData): Promise<void> {
     default_rate_cents,
     payment_terms: formOptional(formData, "payment_terms") ?? "net_15",
     notes: formOptional(formData, "notes"),
+    is_founding,
+    care_start,
+    care_end,
   });
 
   if (result.error || !result.row) {
@@ -151,55 +263,22 @@ export async function updateClientAction(
 export async function createInvoiceAction(formData: FormData): Promise<void> {
   await requireAdmin();
 
-  const client_id = formString(formData, "client_id");
-  const number = formString(formData, "number");
-  const title = formString(formData, "title");
-  const status = formString(formData, "status");
-  const amount_cents = dollarsToCents(formString(formData, "amount"));
-
-  if (!client_id || !number || !title) {
+  const parsed = parseInvoiceForm(formData);
+  if (!parsed.client_id || !parsed.number || !parsed.title) {
     throw new Error("Client, number, and title required.");
   }
-  if (amount_cents === null) {
-    throw new Error("Invalid amount.");
-  }
-  if (!isInvoiceStatus(status)) {
-    throw new Error("Invalid invoice status.");
-  }
 
-  const paid_at =
-    status === "paid"
-      ? (dateOrNull(formOptional(formData, "paid_at")) ??
-        new Date().toISOString())
-      : null;
-
-  const result = await createInvoice({
-    client_id,
-    number,
-    title,
-    amount_cents,
-    currency: formOptional(formData, "currency") ?? "USD",
-    status,
-    issued_at: dateOrNull(formOptional(formData, "issued_at")),
-    due_at: dateOrNull(formOptional(formData, "due_at")),
-    paid_at,
-    external_url: formOptional(formData, "external_url"),
-    notes: formOptional(formData, "notes"),
-  });
+  const result = await createInvoice(parsed);
 
   if (result.error || !result.row) {
     throw new Error(result.error ?? "Create failed.");
   }
 
-  if (status === "sent") {
-    if (!isInvoiceCoverEnabled()) {
-      await maybeSendInvoiceEmail(result.row.id);
-    }
-  }
+  await autoSendIfNewlySent(result.row.id, parsed.status);
 
   revalidatePath("/admin/billing");
-  revalidatePath(`/admin/clients/${client_id}`);
-  redirect(`/admin/clients/${client_id}?tab=billing`);
+  revalidatePath(`/admin/clients/${parsed.client_id}`);
+  redirect(`/admin/clients/${parsed.client_id}?tab=billing`);
 }
 
 export async function startNewInvoiceAction(formData: FormData): Promise<void> {
@@ -217,57 +296,26 @@ export async function updateInvoiceAction(formData: FormData): Promise<void> {
   await requireAdmin();
 
   const id = formString(formData, "id");
-  const client_id = formString(formData, "client_id");
-  const number = formString(formData, "number");
-  const title = formString(formData, "title");
-  const status = formString(formData, "status");
-  const amount_cents = dollarsToCents(formString(formData, "amount"));
-
-  if (!id || !client_id || !number || !title) {
+  const parsed = parseInvoiceForm(formData);
+  if (!id || !parsed.client_id || !parsed.number || !parsed.title) {
     throw new Error("Invoice, client, number, and title required.");
-  }
-  if (amount_cents === null) {
-    throw new Error("Invalid amount.");
-  }
-  if (!isInvoiceStatus(status)) {
-    throw new Error("Invalid invoice status.");
   }
 
   const prior = await getInvoice(id);
   const previousStatus = prior.row?.status ?? null;
 
-  const paid_at =
-    status === "paid"
-      ? (dateOrNull(formOptional(formData, "paid_at")) ??
-        new Date().toISOString())
-      : null;
-
-  const result = await updateInvoice(id, {
-    number,
-    title,
-    amount_cents,
-    currency: formOptional(formData, "currency") ?? "USD",
-    status,
-    issued_at: dateOrNull(formOptional(formData, "issued_at")),
-    due_at: dateOrNull(formOptional(formData, "due_at")),
-    paid_at,
-    external_url: formOptional(formData, "external_url"),
-    notes: formOptional(formData, "notes"),
-  });
+  const { client_id: _clientId, ...fields } = parsed;
+  const result = await updateInvoice(id, fields);
 
   if (!result.ok) {
     throw new Error(result.error);
   }
 
-  if (status === "sent" && previousStatus !== "sent") {
-    if (!isInvoiceCoverEnabled()) {
-      await maybeSendInvoiceEmail(id);
-    }
-  }
+  await autoSendIfNewlySent(id, parsed.status, previousStatus);
 
   revalidatePath("/admin/billing");
-  revalidatePath(`/admin/clients/${client_id}`);
-  redirect(`/admin/clients/${client_id}?tab=billing`);
+  revalidatePath(`/admin/clients/${parsed.client_id}`);
+  redirect(`/admin/clients/${parsed.client_id}?tab=billing`);
 }
 
 export async function updateInvoiceStatusAction(
@@ -290,11 +338,7 @@ export async function updateInvoiceStatusAction(
   const result = await updateInvoiceStatus(id, status);
   if (!result.ok) return result;
 
-  if (status === "sent" && previousStatus !== "sent") {
-    if (!isInvoiceCoverEnabled()) {
-      await maybeSendInvoiceEmail(id);
-    }
-  }
+  await autoSendIfNewlySent(id, status, previousStatus);
 
   revalidatePath("/admin/billing");
   if (clientId) revalidatePath(`/admin/clients/${clientId}`);
@@ -304,7 +348,7 @@ export async function updateInvoiceStatusAction(
 export async function draftInvoiceCoverAction(invoiceId: string) {
   const user = await requireAdmin();
 
-  if (!isInvoiceCoverEnabled()) {
+  if (!isAiEnabled()) {
     return { ok: false as const, error: "Invoice cover AI is disabled." };
   }
 
@@ -337,7 +381,7 @@ export async function sendPendingInvoiceEmailAction(
   let subject: string | undefined;
   let coverNote: string | undefined;
   if (cover) {
-    if (!isInvoiceCoverEnabled()) {
+    if (!isAiEnabled()) {
       return { ok: false as const, error: "Invoice cover AI is disabled." };
     }
     const parsed = invoiceCoverSchema.safeParse(cover);
@@ -412,33 +456,6 @@ export async function generateInvoicePdfAction(
   revalidatePath(`/admin/clients/${clientId}/invoices/${invoiceId}/edit`);
 }
 
-async function maybeSendInvoiceEmail(invoiceId: string): Promise<void> {
-  const built = await buildInvoiceEmailContext(invoiceId);
-  if (!built.ok) {
-    console.warn("[invoice-email] context failed:", built.error);
-    return;
-  }
-  if (built.context.sentEmailedAt) return;
-
-  const sent = await sendInvoiceSentEmail({
-    to: built.context.to,
-    clientName: built.context.clientName,
-    number: built.context.number,
-    title: built.context.title,
-    amount_cents: built.context.amount_cents,
-    currency: built.context.currency,
-    due_at: built.context.due_at,
-    viewUrl: built.context.viewUrl,
-  });
-
-  if (!sent.ok) {
-    console.warn("[invoice-email] send failed:", sent.error);
-    return;
-  }
-
-  await updateInvoiceSentEmailedAt(invoiceId);
-}
-
 export async function createDocumentAction(formData: FormData): Promise<void> {
   await requireAdmin();
 
@@ -486,69 +503,32 @@ export async function createDocumentAction(formData: FormData): Promise<void> {
 export async function createAssetAction(formData: FormData): Promise<void> {
   await requireAdmin();
 
-  const client_id = formString(formData, "client_id");
-  const type = formString(formData, "type");
-  const name = formString(formData, "name");
-  const env = formString(formData, "env");
-  const status = formString(formData, "status");
-  const managed_by_us = formData.get("managed_by_us") === "on";
-
-  if (!client_id || !name) {
+  const parsed = parseAssetForm(formData);
+  if (!parsed.client_id || !parsed.name) {
     throw new Error("Client and name are required.");
   }
-  if (!isAssetType(type) || !isAssetEnv(env) || !isAssetStatus(status)) {
-    throw new Error("Invalid asset fields.");
-  }
 
-  const result = await createClientAsset({
-    client_id,
-    type,
-    name,
-    url: formOptional(formData, "url"),
-    monitor_url: formOptional(formData, "monitor_url"),
-    env,
-    managed_by_us,
-    notes: formOptional(formData, "notes"),
-    status,
-  });
+  const { id: _id, ...fields } = parsed;
+  const result = await createClientAsset(fields);
 
   if (result.error || !result.row) {
     throw new Error(result.error ?? "Create failed.");
   }
 
-  revalidatePath(`/admin/clients/${client_id}`);
-  redirect(`/admin/clients/${client_id}?tab=assets`);
+  revalidatePath(`/admin/clients/${parsed.client_id}`);
+  redirect(`/admin/clients/${parsed.client_id}?tab=assets`);
 }
 
 export async function updateAssetAction(formData: FormData): Promise<void> {
   await requireAdmin();
 
-  const id = formString(formData, "id");
-  const client_id = formString(formData, "client_id");
-  const type = formString(formData, "type");
-  const name = formString(formData, "name");
-  const env = formString(formData, "env");
-  const status = formString(formData, "status");
-  const managed_by_us = formData.get("managed_by_us") === "on";
-
-  if (!id || !client_id || !name) {
+  const parsed = parseAssetForm(formData);
+  if (!parsed.id || !parsed.client_id || !parsed.name) {
     throw new Error("Asset, client, and name are required.");
   }
-  if (!isAssetType(type) || !isAssetEnv(env) || !isAssetStatus(status)) {
-    throw new Error("Invalid asset fields.");
-  }
 
-  const result = await updateClientAsset({
-    id,
-    type,
-    name,
-    url: formOptional(formData, "url"),
-    monitor_url: formOptional(formData, "monitor_url"),
-    env,
-    managed_by_us,
-    notes: formOptional(formData, "notes"),
-    status,
-  });
+  const { client_id, ...fields } = parsed;
+  const result = await updateClientAsset(fields);
 
   if (!result.ok) {
     throw new Error(result.error);
@@ -575,63 +555,33 @@ export async function updateAssetStatusAction(
 export async function createWorkItemAction(formData: FormData): Promise<void> {
   await requireAdmin();
 
-  const client_id = formString(formData, "client_id");
-  const title = formString(formData, "title");
-  const status = formString(formData, "status");
-  const priority = formString(formData, "priority");
-  const asset_id = formOptional(formData, "asset_id");
-
-  if (!client_id || !title) {
+  const parsed = parseWorkForm(formData);
+  if (!parsed.client_id || !parsed.title) {
     throw new Error("Client and title are required.");
   }
-  if (!isWorkStatus(status) || !isWorkPriority(priority)) {
-    throw new Error("Invalid work fields.");
-  }
 
-  const result = await createWorkItem({
-    client_id,
-    asset_id,
-    title,
-    description: formOptional(formData, "description"),
-    status,
-    priority,
-    due_at: dateOrNull(formOptional(formData, "due_at")),
-  });
+  const { id: _id, ...fields } = parsed;
+  const result = await createWorkItem(fields);
 
   if (result.error || !result.row) {
     throw new Error(result.error ?? "Create failed.");
   }
 
   revalidatePath("/admin/work");
-  revalidatePath(`/admin/clients/${client_id}`);
-  redirect(`/admin/clients/${client_id}?tab=work`);
+  revalidatePath(`/admin/clients/${parsed.client_id}`);
+  redirect(`/admin/clients/${parsed.client_id}?tab=work`);
 }
 
 export async function updateWorkItemAction(formData: FormData): Promise<void> {
   await requireAdmin();
 
-  const id = formString(formData, "id");
-  const client_id = formString(formData, "client_id");
-  const title = formString(formData, "title");
-  const status = formString(formData, "status");
-  const priority = formString(formData, "priority");
-  const asset_id = formOptional(formData, "asset_id");
-
-  if (!id || !client_id || !title) {
+  const parsed = parseWorkForm(formData);
+  if (!parsed.id || !parsed.client_id || !parsed.title) {
     throw new Error("Work item, client, and title are required.");
   }
-  if (!isWorkStatus(status) || !isWorkPriority(priority)) {
-    throw new Error("Invalid work fields.");
-  }
 
-  const result = await updateWorkItem(id, {
-    title,
-    description: formOptional(formData, "description"),
-    status,
-    priority,
-    due_at: dateOrNull(formOptional(formData, "due_at")),
-    asset_id,
-  });
+  const { id, client_id, ...fields } = parsed;
+  const result = await updateWorkItem(id, fields);
 
   if (!result.ok) {
     throw new Error(result.error);

@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const requireAdmin = vi.fn();
 const draftOpsBrief = vi.fn();
-const isOpsBriefEnabled = vi.fn();
+const isAiEnabled = vi.fn();
 const loadTodayLoopCollection = vi.fn();
 const guardAdminAiDraft = vi.fn();
 const aiDraftError = vi.fn();
@@ -18,7 +18,7 @@ vi.mock("@/lib/admin/loops/load-today", () => ({
 
 vi.mock("@/lib/ai", () => ({
   draftOpsBrief: (...args: unknown[]) => draftOpsBrief(...args),
-  isOpsBriefEnabled: (...args: unknown[]) => isOpsBriefEnabled(...args),
+  isAiEnabled: (...args: unknown[]) => isAiEnabled(...args),
 }));
 
 vi.mock("@/lib/ai/admin-guard", () => ({
@@ -33,7 +33,7 @@ describe("draftOpsBriefAction", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     requireAdmin.mockResolvedValue(adminUser);
-    isOpsBriefEnabled.mockReturnValue(true);
+    isAiEnabled.mockReturnValue(true);
     guardAdminAiDraft.mockResolvedValue({ ok: true });
     loadTodayLoopCollection.mockResolvedValue({
       collection: { open: [], later: [], recentlyClosed: [] },
@@ -44,7 +44,7 @@ describe("draftOpsBriefAction", () => {
   });
 
   it("refuses when ops brief disabled", async () => {
-    isOpsBriefEnabled.mockReturnValue(false);
+    isAiEnabled.mockReturnValue(false);
     const { draftOpsBriefAction } = await import("./ops-brief-actions");
     const result = await draftOpsBriefAction();
     expect(result).toEqual({

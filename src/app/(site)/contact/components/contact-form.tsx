@@ -13,10 +13,10 @@ import { FormField } from "@/components/molecules/form-field";
 import { contactSchema, type ContactInput } from "@/lib/validations/contact";
 import { routes, serviceSlugs } from "@/lib/routes";
 import { serviceSummaries } from "@/lib/services";
+import { mapServiceToScope, calcPrice } from "@/lib/pricing";
 
-// ponytail: extend server schema client-side for phone/privacy; strip before POST.
+// ponytail: phone dropped until API stores it; privacyAccepted stripped before POST.
 const contactFormSchema = contactSchema.extend({
-  phone: z.string().max(20).optional(),
   privacyAccepted: z.boolean().refine((value) => value === true, {
     message: "You must agree to the Privacy Policy",
   }),
@@ -30,6 +30,9 @@ const budgetOptions = [
   { value: "15k-50k", label: "$15,000 – $50,000" },
   { value: "50k+", label: "$50,000+" },
 ];
+
+const selectClassName =
+  "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50";
 
 function slugToLabel(slug: string): string {
   const summary = serviceSummaries.find((service) => service.slug === slug);
@@ -48,12 +51,13 @@ function toApiPayload(data: FormValues): ContactInput {
     company: data.company,
     service: data.service,
     budget: data.budget,
+    timeline: data.timeline,
     message: data.message,
     website: data.website,
   };
 }
 
-export function ContactForm() {
+export function ContactForm({ calendlyUrl }: { calendlyUrl?: string }) {
   const [status, setStatus] = React.useState<
     "idle" | "loading" | "success" | "error"
   >("idle");
@@ -68,21 +72,29 @@ export function ContactForm() {
     register,
     reset,
     setFocus,
+    watch,
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(contactFormSchema),
     defaultValues: {
       name: "",
       email: "",
-      phone: "",
       company: "",
       service: undefined,
       budget: undefined,
+      timeline: undefined,
       message: "",
       website: "",
       privacyAccepted: false,
     },
   });
+
+  const watchedService = watch("service");
+  const watchedTimeline = watch("timeline");
+  const estimate =
+    watchedService && watchedTimeline
+      ? calcPrice(mapServiceToScope(watchedService), parseInt(watchedTimeline))
+      : null;
 
   const onSubmit = React.useCallback(
     async (data: FormValues) => {
@@ -105,6 +117,9 @@ export function ContactForm() {
           );
         }
 
+        (
+          window as Window & { umami?: { track: (name: string) => void } }
+        ).umami?.track("contact_submit");
         setSubmittedService(data.service);
         setStatus("success");
         reset();
@@ -139,6 +154,19 @@ export function ContactForm() {
         <p className="text-sm font-medium text-green-800 dark:text-green-100">
           Thanks — we will be in touch soon. We reply within one business day.
         </p>
+        {calendlyUrl ? (
+          <p className="text-sm">
+            <a
+              href={calendlyUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-umami-event="calendly_click"
+              className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
+            >
+              Book a scoping call now
+            </a>
+          </p>
+        ) : null}
         <p className="text-sm text-muted-foreground">While you wait:</p>
         <ul className="space-y-2 text-sm">
           <li>
@@ -229,22 +257,6 @@ export function ContactForm() {
       />
 
       <FormField
-        name="phone"
-        label="Phone (optional)"
-        control={control}
-        error={errors.phone}
-        render={(field) => (
-          <Input
-            id={field.name}
-            type="tel"
-            placeholder="+1 (555) 000-0000"
-            {...field}
-            value={field.value as string}
-          />
-        )}
-      />
-
-      <FormField
         name="company"
         label="Company (optional)"
         control={control}
@@ -273,7 +285,7 @@ export function ContactForm() {
             onChange={(event) =>
               field.onChange(event.target.value || undefined)
             }
-            className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+            className={selectClassName}
           >
             <option value="">Select a service</option>
             {serviceSlugs.map((slug) => (
@@ -298,7 +310,7 @@ export function ContactForm() {
             onChange={(event) =>
               field.onChange(event.target.value || undefined)
             }
-            className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+            className={selectClassName}
           >
             <option value="">Select a budget range</option>
             {budgetOptions.map((option) => (
@@ -309,6 +321,42 @@ export function ContactForm() {
           </select>
         )}
       />
+
+      <FormField
+        name="timeline"
+        label="Timeline (months) (optional)"
+        control={control}
+        error={errors.timeline}
+        render={(field) => (
+          <select
+            {...field}
+            id={field.name}
+            value={(field.value as string) || ""}
+            onChange={(event) =>
+              field.onChange(event.target.value || undefined)
+            }
+            className={selectClassName}
+          >
+            <option value="">Select timeline</option>
+            <option value="1">1 (rush)</option>
+            <option value="3">3</option>
+            <option value="6">6</option>
+            <option value="12">12+</option>
+          </select>
+        )}
+      />
+
+      {estimate && (
+        <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 text-center">
+          <p className="text-sm text-primary">Estimated range (ballpark)</p>
+          <p className="text-2xl font-mono text-primary">
+            ${estimate.min.toLocaleString()} – ${estimate.max.toLocaleString()}
+          </p>
+          <p className="text-xs text-muted-foreground mt-1">
+            {estimate.note}. Fixed quote after call.
+          </p>
+        </div>
+      )}
 
       <FormField
         name="message"

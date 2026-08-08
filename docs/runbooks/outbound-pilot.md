@@ -7,7 +7,8 @@
 ## Preflight
 
 - [ ] Instantly domain SPF/DKIM/DMARC green; warmup ≥14 days
-- [ ] `GOOGLE_PLACES_API_KEY` set; optional `HUNTER_API_KEY`
+- [ ] `GOOGLE_PLACES_API_KEY` set locally **and** on Vercel (map search); optional `HUNTER_API_KEY`
+- [ ] Apply `009_lead_geo.sql` (lat/lng on `lead_candidates`) for map pins
 - [ ] `data/lead-finder/do-not-contact.csv` current
 - [ ] Confirmed Listmonk will **not** receive this CSV
 
@@ -19,8 +20,13 @@ pnpm lead-finder --fixture
 
 # Live — all verticals (trades, pro, hospitality)
 pnpm lead-finder --min-score=0
+
+# Optional: AI re-rank top N (fit score + reason + Instantly one-liner)
+# Needs AI_GATEWAY_API_KEY. Does not send mail — CSV only.
+AI_GATEWAY_API_KEY=... pnpm lead-finder --ai-rank --ai-limit=40
 ```
 
+`--ai-rank` adds `aiScore`, `aiReason`, `personalization` columns. Admin import prefers `aiScore` for sort and stores personalization for HITL Instantly export.
 Outputs land in `data/lead-finder/out/`:
 
 | File                              | Use                                  |
@@ -32,11 +38,12 @@ Outputs land in `data/lead-finder/out/`:
 
 Prefer `/admin/outbound`:
 
-1. Upload `northport-leads-*.csv` (full lead-finder export).
-2. Approve / reject / suppress rows; edit missing emails inline.
-3. Download Instantly CSV from the Send section (approved + email only).
-4. Import into Instantly; sync `do-not-contact.csv` / admin Suppress into Instantly’s global block list.
-5. On Home Today, expand the weekly outbound loop → **Log handoff** with the import count.
+1. **Map (optional):** `/admin/outbound/map` — search this area or drop pin near Berry (Cripple Creek Rd), Add to outbound. Needs `GOOGLE_PLACES_API_KEY` on Vercel + mig `009_lead_geo`.
+2. Upload `northport-leads-*.csv` (full lead-finder export).
+3. Approve / reject / suppress rows; edit missing emails inline.
+4. Download Instantly CSV from the Send section (approved + email only).
+5. Import into Instantly; sync `do-not-contact.csv` / admin Suppress into Instantly’s global block list.
+6. On Home Today, expand the weekly outbound loop → **Log handoff** with the import count.
 
 ### Manual spreadsheet fallback
 

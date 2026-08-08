@@ -4,6 +4,10 @@ on:
   pull_request:
     branches: [main, staging]
 
+# Node 22+: jsdom→undici 8 needs worker_threads.markAsUncloneable (missing on Node 20).
+env:
+  NODE_VERSION: "22"
+
 jobs:
   lint-and-type:
     name: Lint & Type Check
@@ -15,7 +19,7 @@ jobs:
           version: 9
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
@@ -32,7 +36,7 @@ jobs:
           version: 9
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
@@ -58,7 +62,7 @@ jobs:
           version: 9
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
       - run: pnpm test:ci
@@ -74,7 +78,7 @@ jobs:
           version: 9
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
       # Rebuild for LHCI so canonicals match localhost (prod metadataBase
@@ -102,13 +106,19 @@ jobs:
           version: 9
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
       - uses: actions/download-artifact@v4
         with:
           name: next-build
           path: .next
+      # Playwright Chromium avoids ubuntu Chrome vs ChromeDriver skew that
+      # breaks `pnpm dlx @axe-core/cli` (driver 151 vs browser 150).
+      - run: npx playwright install --with-deps chromium
       - run: pnpm start &
       - run: npx wait-on http://localhost:3000
-      - run: pnpm dlx @axe-core/cli http://localhost:3000 --exit
+      - name: Axe scan (Playwright)
+        run: pnpm exec playwright test e2e/a11y.spec.ts --project=chromium-desktop
+        env:
+          PLAYWRIGHT_REUSE_SERVER: "1"

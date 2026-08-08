@@ -8,6 +8,7 @@ import {
   sendPendingInvoiceEmailAction,
 } from "@/app/admin/clients/actions";
 import { adminControlClass } from "@/components/admin/admin-form";
+import { HitlDraftShell } from "@/components/admin/hitl-draft-shell";
 import { Button } from "@/components/ui/button";
 
 type Props = {
@@ -33,11 +34,11 @@ export function InvoiceCoverDraftPanel({
 
   if (!needsCover) return null;
 
-  async function onFlush() {
+  async function sendCover(cover?: { subject: string; coverNote: string }) {
     setStatus("sending");
     setError(null);
     setWarning(null);
-    const result = await sendPendingInvoiceEmailAction(invoiceId);
+    const result = await sendPendingInvoiceEmailAction(invoiceId, cover);
     if (!result.ok) {
       setStatus("error");
       setError(result.error);
@@ -66,26 +67,6 @@ export function InvoiceCoverDraftPanel({
     setStatus("idle");
   }
 
-  async function onSend() {
-    setStatus("sending");
-    setError(null);
-    setWarning(null);
-    const result = await sendPendingInvoiceEmailAction(invoiceId, {
-      subject,
-      coverNote,
-    });
-    if (!result.ok) {
-      setStatus("error");
-      setError(result.error);
-      return;
-    }
-    setStatus("sent");
-    if (result.stampWarning) {
-      setWarning(result.stampWarning);
-    }
-    router.refresh();
-  }
-
   if (!enabled) {
     return (
       <div className="mt-2 w-full space-y-2 border-t border-border pt-2">
@@ -93,7 +74,7 @@ export function InvoiceCoverDraftPanel({
           type="button"
           size="sm"
           variant="outline"
-          onClick={onFlush}
+          onClick={() => void sendCover()}
           disabled={status === "sending" || status === "sent"}
         >
           {status === "sending" ? "Sending…" : "Send invoice email"}
@@ -117,94 +98,57 @@ export function InvoiceCoverDraftPanel({
 
   return (
     <div className="mt-2 w-full border-t border-border pt-2">
-      {!open ? (
-        <Button type="button" size="sm" variant="outline" onClick={onDraft}>
-          Draft cover note
-        </Button>
-      ) : null}
-
-      {open ? (
-        <div className="space-y-3">
-          <div className="flex flex-wrap items-center gap-2">
-            <p className="text-sm font-medium">Invoice cover draft</p>
-            {status === "drafting" ? (
-              <span className="text-xs text-muted-foreground">Drafting…</span>
-            ) : null}
-            {status === "sent" && !warning ? (
-              <span className="text-xs text-muted-foreground">Sent.</span>
-            ) : null}
-          </div>
-          <label className="flex flex-col gap-1 text-xs text-muted-foreground">
-            Subject
-            <input
-              className={adminControlClass}
-              value={subject}
-              onChange={(event) => setSubject(event.target.value)}
-              disabled={status === "drafting" || status === "sending"}
-            />
-          </label>
-          <label className="flex flex-col gap-1 text-xs text-muted-foreground">
-            Cover note
-            <textarea
-              className={`${adminControlClass} min-h-32`}
-              value={coverNote}
-              onChange={(event) => setCoverNote(event.target.value)}
-              disabled={status === "drafting" || status === "sending"}
-            />
-          </label>
-          {error ? (
-            <p className="text-sm text-destructive" role="alert">
-              {error}
-            </p>
-          ) : null}
-          {warning ? (
-            <p className="text-sm text-muted-foreground" role="status">
-              {warning}
-            </p>
-          ) : null}
-          <div className="flex flex-wrap gap-2">
-            <Button
-              type="button"
-              size="sm"
-              onClick={onSend}
-              disabled={
-                status === "drafting" ||
-                status === "sending" ||
-                status === "sent" ||
-                !subject.trim() ||
-                !coverNote.trim()
-              }
-            >
-              {status === "sending" ? "Sending…" : "Approve & Send"}
-            </Button>
-            <Button
-              type="button"
-              size="sm"
-              variant="ghost"
-              onClick={() => {
-                setOpen(false);
-                setSubject("");
-                setCoverNote("");
-                setError(null);
-                setWarning(null);
-                setStatus("idle");
-              }}
-              disabled={status === "sending"}
-            >
-              Discard
-            </Button>
-            <Button
-              type="button"
-              size="sm"
-              variant="secondary"
-              onClick={onDraft}
-              disabled={status === "drafting" || status === "sending"}
-            >
-              Redraft
-            </Button>
-          </div>
-        </div>
-      ) : null}
+      <HitlDraftShell
+        title="Invoice cover draft"
+        closedLabel="Draft cover note"
+        open={open}
+        status={status}
+        error={error}
+        warning={warning}
+        statusNote={
+          status === "sent" && !warning ? (
+            <span className="text-xs text-muted-foreground">Sent.</span>
+          ) : null
+        }
+        onDraft={onDraft}
+        onDiscard={() => {
+          setOpen(false);
+          setSubject("");
+          setCoverNote("");
+          setError(null);
+          setWarning(null);
+          setStatus("idle");
+        }}
+        primary={{
+          label: "Approve & Send",
+          busyLabel: "Sending…",
+          onClick: () => void sendCover({ subject, coverNote }),
+          disabled:
+            status === "sending" ||
+            status === "sent" ||
+            !subject.trim() ||
+            !coverNote.trim(),
+        }}
+      >
+        <label className="flex flex-col gap-1 text-xs text-muted-foreground">
+          Subject
+          <input
+            className={adminControlClass}
+            value={subject}
+            onChange={(event) => setSubject(event.target.value)}
+            disabled={status === "drafting" || status === "sending"}
+          />
+        </label>
+        <label className="flex flex-col gap-1 text-xs text-muted-foreground">
+          Cover note
+          <textarea
+            className={`${adminControlClass} min-h-32`}
+            value={coverNote}
+            onChange={(event) => setCoverNote(event.target.value)}
+            disabled={status === "drafting" || status === "sending"}
+          />
+        </label>
+      </HitlDraftShell>
     </div>
   );
 }

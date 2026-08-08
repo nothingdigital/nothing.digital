@@ -23,6 +23,40 @@ import {
 const selectClass =
   "rounded-md border border-input bg-background px-2 py-1 text-sm";
 
+function StatusSelect({
+  value,
+  options,
+  ariaLabel,
+  onChange,
+}: {
+  value: string;
+  options: readonly string[];
+  ariaLabel: string;
+  onChange: (next: string) => Promise<void>;
+}) {
+  const [pending, startTransition] = useTransition();
+
+  return (
+    <select
+      className={selectClass}
+      value={value}
+      disabled={pending}
+      aria-label={ariaLabel}
+      onChange={(event) => {
+        startTransition(async () => {
+          await onChange(event.target.value);
+        });
+      }}
+    >
+      {options.map((option) => (
+        <option key={option} value={option}>
+          {option}
+        </option>
+      ))}
+    </select>
+  );
+}
+
 export function InvoiceStatusSelect({
   id,
   status,
@@ -33,32 +67,16 @@ export function InvoiceStatusSelect({
   clientId?: string;
 }) {
   const router = useRouter();
-  const [pending, startTransition] = useTransition();
-  const value = isInvoiceStatus(status) ? status : "draft";
-
   return (
-    <select
-      className={selectClass}
-      value={value}
-      disabled={pending}
-      aria-label="Invoice status"
-      onChange={(event) => {
-        startTransition(async () => {
-          await updateInvoiceStatusAction(
-            id,
-            event.target.value as InvoiceStatus,
-            clientId,
-          );
-          router.refresh();
-        });
+    <StatusSelect
+      value={isInvoiceStatus(status) ? status : "draft"}
+      options={INVOICE_STATUSES}
+      ariaLabel="Invoice status"
+      onChange={async (next) => {
+        await updateInvoiceStatusAction(id, next as InvoiceStatus, clientId);
+        router.refresh();
       }}
-    >
-      {INVOICE_STATUSES.map((option) => (
-        <option key={option} value={option}>
-          {option}
-        </option>
-      ))}
-    </select>
+    />
   );
 }
 
@@ -71,31 +89,15 @@ export function AssetStatusSelect({
   status: string;
   clientId: string;
 }) {
-  const [pending, startTransition] = useTransition();
-  const value = isAssetStatus(status) ? status : "active";
-
   return (
-    <select
-      className={selectClass}
-      value={value}
-      disabled={pending}
-      aria-label="Asset status"
-      onChange={(event) => {
-        startTransition(async () => {
-          await updateAssetStatusAction(
-            id,
-            event.target.value as AssetStatus,
-            clientId,
-          );
-        });
+    <StatusSelect
+      value={isAssetStatus(status) ? status : "active"}
+      options={ASSET_STATUSES}
+      ariaLabel="Asset status"
+      onChange={async (next) => {
+        await updateAssetStatusAction(id, next as AssetStatus, clientId);
       }}
-    >
-      {ASSET_STATUSES.map((option) => (
-        <option key={option} value={option}>
-          {option}
-        </option>
-      ))}
-    </select>
+    />
   );
 }
 
@@ -108,30 +110,14 @@ export function WorkStatusSelect({
   status: string;
   clientId?: string;
 }) {
-  const [pending, startTransition] = useTransition();
-  const value = isWorkStatus(status) ? status : "backlog";
-
   return (
-    <select
-      className={selectClass}
-      value={value}
-      disabled={pending}
-      aria-label="Work status"
-      onChange={(event) => {
-        startTransition(async () => {
-          await updateWorkItemStatusAction(
-            id,
-            event.target.value as WorkStatus,
-            clientId,
-          );
-        });
+    <StatusSelect
+      value={isWorkStatus(status) ? status : "backlog"}
+      options={WORK_STATUSES}
+      ariaLabel="Work status"
+      onChange={async (next) => {
+        await updateWorkItemStatusAction(id, next as WorkStatus, clientId);
       }}
-    >
-      {WORK_STATUSES.map((option) => (
-        <option key={option} value={option}>
-          {option}
-        </option>
-      ))}
-    </select>
+    />
   );
 }

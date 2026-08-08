@@ -34,8 +34,27 @@ RETURNS boolean AS $$
   );
 $$ LANGUAGE sql SECURITY DEFINER;
 
--- Example: apply to clients (extend as needed)
--- ALTER TABLE clients ENABLE ROW LEVEL SECURITY;
--- CREATE POLICY "Staff can manage clients" ON clients FOR ALL TO authenticated USING (is_staff());
+-- RLS for all tables (extend is_staff() for staff access, anon INSERT for forms)
+ALTER TABLE contact_submissions ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Anon insert contact" ON contact_submissions FOR INSERT TO anon WITH CHECK (true);
+CREATE POLICY "Staff manage contact" ON contact_submissions FOR ALL TO authenticated USING (is_staff());
 
-COMMENT ON TABLE profiles IS 'Secretary phase B: least-privilege roles. Owner manages staff.';
+ALTER TABLE newsletter_subscribers ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Anon insert newsletter" ON newsletter_subscribers FOR INSERT TO anon WITH CHECK (true);
+CREATE POLICY "Staff manage newsletter" ON newsletter_subscribers FOR ALL TO authenticated USING (is_staff());
+
+ALTER TABLE clients ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Staff manage clients" ON clients FOR ALL TO authenticated USING (is_staff());
+
+ALTER TABLE invoices ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Staff manage invoices" ON invoices FOR ALL TO authenticated USING (is_staff());
+
+ALTER TABLE client_assets ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Staff manage assets" ON client_assets FOR ALL TO authenticated USING (is_staff());
+
+ALTER TABLE client_work_items ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Staff manage work" ON client_work_items FOR ALL TO authenticated USING (is_staff());
+
+ALTER TABLE contact_submissions ADD COLUMN IF NOT EXISTS timeline text;
+
+COMMENT ON TABLE profiles IS 'Secretary phase B: least-privilege roles. Owner manages staff. is_staff() for RLS.';

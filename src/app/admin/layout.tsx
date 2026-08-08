@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
+import { brandConfig } from "@/brand";
 import { SkipLink } from "@/components/atoms/skip-link";
 import { AdminNav } from "@/components/admin/admin-nav";
 import { AdminSignOutButton } from "@/components/admin/admin-sign-out";
+import { ModuleGate } from "@/components/admin/module-gate";
 import { getSessionUser } from "@/lib/admin/auth";
 import { isAdminEmail } from "@/lib/admin/config";
 
@@ -35,7 +37,7 @@ export default async function AdminLayout({
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-4">
           <div>
             <p className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground">
-              Nothing.Digital
+              {brandConfig.name}
             </p>
             <h1 className="font-display text-2xl tracking-tight">Admin</h1>
           </div>
@@ -51,7 +53,7 @@ export default async function AdminLayout({
       </header>
       <main id="main" className="mx-auto max-w-5xl space-y-6 px-4 py-8">
         {isAdmin ? <AdminNav /> : null}
-        {children}
+        <ModuleGate pathname={pathname}>{children}</ModuleGate>
       </main>
     </div>
   );

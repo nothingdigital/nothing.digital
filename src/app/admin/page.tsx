@@ -4,7 +4,7 @@ import Link from "next/link";
 import { LoopList, RecentlyClosedLoops } from "@/components/admin/loop-list";
 import { OpsBriefPanel } from "@/components/admin/ops-brief-panel";
 import { loadTodayLoopCollection } from "@/lib/admin/loops/load-today";
-import { isOpsBriefEnabled } from "@/lib/ai";
+import { isAiEnabled } from "@/lib/ai";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -50,7 +50,7 @@ export default async function AdminIndexPage() {
         </p>
       ) : null}
 
-      {isOpsBriefEnabled() ? <OpsBriefPanel /> : null}
+      {isAiEnabled() ? <OpsBriefPanel /> : null}
 
       <section className="space-y-3">
         <LoopList

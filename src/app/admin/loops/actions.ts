@@ -21,60 +21,42 @@ function snoozeUntil(choice: string, now = new Date()): string {
   return date.toISOString();
 }
 
-export async function closeLoopAction(formData: FormData): Promise<void> {
+async function recordLoop(
+  formData: FormData,
+  action: LoopActionKind,
+  extras?: { note?: string | null; snoozed_until?: string },
+): Promise<void> {
   await requireAdmin();
   const loopKey = String(formData.get("loop_key") ?? "").trim();
-  const note = String(formData.get("note") ?? "").trim() || null;
   if (!loopKey) throw new Error("loop_key required");
 
   const { error } = await insertLoopEvent({
     loop_key: loopKey,
-    action: "closed",
-    note,
+    action,
+    ...extras,
   });
   if (error) throw new Error(error);
   revalidatePath("/admin");
+}
+
+export async function closeLoopAction(formData: FormData): Promise<void> {
+  const note = String(formData.get("note") ?? "").trim() || null;
+  await recordLoop(formData, "closed", { note });
 }
 
 export async function reopenLoopAction(formData: FormData): Promise<void> {
-  await requireAdmin();
-  const loopKey = String(formData.get("loop_key") ?? "").trim();
-  if (!loopKey) throw new Error("loop_key required");
-
-  const { error } = await insertLoopEvent({
-    loop_key: loopKey,
-    action: "reopened",
-  });
-  if (error) throw new Error(error);
-  revalidatePath("/admin");
+  await recordLoop(formData, "reopened");
 }
 
 export async function snoozeLoopAction(formData: FormData): Promise<void> {
-  await requireAdmin();
-  const loopKey = String(formData.get("loop_key") ?? "").trim();
   const choice = String(formData.get("snooze") ?? "tomorrow").trim();
-  if (!loopKey) throw new Error("loop_key required");
-
-  const { error } = await insertLoopEvent({
-    loop_key: loopKey,
-    action: "snoozed",
+  await recordLoop(formData, "snoozed", {
     snoozed_until: snoozeUntil(choice),
   });
-  if (error) throw new Error(error);
-  revalidatePath("/admin");
 }
 
 export async function muteLoopAction(formData: FormData): Promise<void> {
-  await requireAdmin();
-  const loopKey = String(formData.get("loop_key") ?? "").trim();
-  if (!loopKey) throw new Error("loop_key required");
-
-  const { error } = await insertLoopEvent({
-    loop_key: loopKey,
-    action: "muted" satisfies LoopActionKind,
-  });
-  if (error) throw new Error(error);
-  revalidatePath("/admin");
+  await recordLoop(formData, "muted");
 }
 
 export async function logOutboundHandoffAction(

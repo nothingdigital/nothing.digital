@@ -1,7 +1,7 @@
-import { execFile } from "node:child_process";
+import { execFile as execFileCb } from "node:child_process";
 import { promisify } from "node:util";
 
-const exec = promisify(execFile);
+const execFile = promisify(execFileCb);
 
 const DOMAIN = "nothing.digital";
 
@@ -18,7 +18,7 @@ const QUERIES: Array<{ type: string; name: string }> = [
 
 async function dig(resolver: string, type: string, name: string) {
   try {
-    const { stdout } = await exec("dig", [
+    const { stdout } = await execFile("dig", [
       `@${resolver}`,
       name,
       type,

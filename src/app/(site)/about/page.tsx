@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { BrandMascot } from "@/components/atoms/brand-mascot";
 import { SectionContainer } from "@/components/atoms/section-container";
 import { JsonLd } from "@/components/atoms/json-ld";
 import { PageHero } from "@/components/molecules/page-hero";
@@ -50,7 +51,7 @@ const organizationJsonLd = {
   "@type": "Organization",
   name: siteConfig.name,
   url: siteConfig.url,
-  logo: `${siteConfig.url}/og/default.png`,
+  logo: `${siteConfig.url}/images/brand/wordmark-light.png`,
   sameAs,
   contactPoint: {
     "@type": "ContactPoint",
@@ -72,22 +73,29 @@ export default function AboutPage() {
       />
 
       <SectionContainer variant="muted">
-        <div className="mx-auto max-w-3xl">
-          <h2 className="mb-4 font-display text-3xl tracking-tight">
-            Our story
-          </h2>
-          <div className="space-y-4 leading-relaxed text-muted-foreground">
-            <p>
-              Nothing.Digital was founded on a simple idea: most digital work is
-              unnecessarily complicated. We wanted to build a studio that cuts
-              through the noise and ships work that actually performs.
-            </p>
-            <p>
-              From marketing sites to full product builds, we help startups,
-              agencies, and enterprise teams turn ideas into reliable, scalable
-              software. Our process is lean, our communication is direct, and
-              our work is built to last.
-            </p>
+        <div className="mx-auto flex max-w-3xl flex-col items-center gap-8 sm:flex-row sm:items-start">
+          <BrandMascot
+            expression="quiet"
+            size={140}
+            className="h-28 w-28 shrink-0 sm:h-32 sm:w-32"
+          />
+          <div>
+            <h2 className="mb-4 font-display text-3xl tracking-tight">
+              Our story
+            </h2>
+            <div className="space-y-4 leading-relaxed text-muted-foreground">
+              <p>
+                Nothing.Digital was founded on a simple idea: most digital work
+                is unnecessarily complicated. We wanted to build a studio that
+                cuts through the noise and ships work that actually performs.
+              </p>
+              <p>
+                From marketing sites to full product builds, we help startups,
+                agencies, and enterprise teams turn ideas into reliable,
+                scalable software. Our process is lean, our communication is
+                direct, and our work is built to last.
+              </p>
+            </div>
           </div>
         </div>
       </SectionContainer>

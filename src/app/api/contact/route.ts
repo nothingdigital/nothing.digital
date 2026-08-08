@@ -1,21 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
-import type { Resend } from "resend";
 
+import { brandConfig } from "@/brand";
 import { env } from "@/lib/env";
 
 import {
   contactConfirmationEmailTemplate,
   teamNotificationEmailTemplate,
+  nurtureDay0EmailTemplate,
 } from "@/lib/email/templates";
 import { notifyN8n } from "@/lib/n8n";
+import { scoreLead } from "@/lib/admin/client-ops";
 import { getRateLimiter } from "@/lib/rate-limit";
 import { getClientIp } from "@/lib/request";
 import { getResendClient } from "@/lib/resend";
 import { getServiceRoleClient } from "@/lib/supabase/server";
 import { contactSchema, type ContactInput } from "@/lib/validations/contact";
 
-const FROM_EMAIL = "Nothing.Digital <hello@nothing.digital>";
 const TEAM_EMAIL = env.private.CONTACT_NOTIFY_EMAIL ?? "team@nothing.digital";
+const CALENDLY =
+  env.private.CALENDLY_URL || "https://calendly.com/nothing-digital/30min";
 
 async function storeSubmission(data: ContactInput) {
   const supabase = getServiceRoleClient();
@@ -29,6 +32,7 @@ async function storeSubmission(data: ContactInput) {
       company: data.company ?? null,
       service: data.service ?? null,
       budget: data.budget ?? null,
+      timeline: data.timeline ?? null,
       message: data.message,
       status: "new",
     })
@@ -41,28 +45,6 @@ async function storeSubmission(data: ContactInput) {
   }
 
   return submission.id;
-}
-
-async function sendConfirmationEmail(resend: Resend, data: ContactInput) {
-  await resend.emails.send({
-    from: FROM_EMAIL,
-    to: data.email,
-    subject: "We received your message — Nothing.Digital",
-    html: contactConfirmationEmailTemplate(data),
-  });
-}
-
-async function sendTeamNotification(
-  resend: Resend,
-  data: ContactInput,
-  submissionId: string,
-) {
-  await resend.emails.send({
-    from: FROM_EMAIL,
-    to: TEAM_EMAIL,
-    subject: `New contact submission from ${data.name}`,
-    html: teamNotificationEmailTemplate(data, submissionId),
-  });
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -120,8 +102,27 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   }
 
   try {
-    await sendConfirmationEmail(resend, validated);
-    await sendTeamNotification(resend, validated, submissionId);
+    await resend.emails.send({
+      from: brandConfig.fromEmail,
+      to: validated.email,
+      subject: "We received your message — Nothing.Digital",
+      html: contactConfirmationEmailTemplate(validated, CALENDLY),
+    });
+    // Always Resend team notify; n8n is optional fan-out below (never replace).
+    await resend.emails.send({
+      from: brandConfig.fromEmail,
+      to: TEAM_EMAIL,
+      subject: `New contact submission from ${validated.name}`,
+      html: teamNotificationEmailTemplate(validated, submissionId),
+    });
+    if (scoreLead(validated) > 60) {
+      await resend.emails.send({
+        from: brandConfig.fromEmail,
+        to: validated.email,
+        subject: "Let's schedule a call — Nothing.Digital",
+        html: nurtureDay0EmailTemplate(validated, CALENDLY),
+      });
+    }
   } catch (error) {
     console.error("[contact] Email delivery failed:", error);
     return NextResponse.json(

@@ -112,34 +112,31 @@ CLI: `pnpm lead-finder` (needs `GOOGLE_PLACES_API_KEY`). Never import cold CSVs 
 
 ### 9. AI Gateway enablement (optional — code already on `main`)
 
-AI admin drafts (inbox, ops brief, invoice cover, outbound) are **shipped**. Enablement is env-only on Vercel (Production). There is no public contact AI.
+AI admin drafts (inbox, ops brief, invoice cover) are **shipped**. Enablement is env-only on Vercel (Production). There is no public contact AI. Outbound Instantly lines: lead-finder `--ai-rank` or manual edit in `/admin/outbound`.
 
 1. Vercel → team/project → **AI Gateway** (or [vercel.com/docs/ai-gateway](https://vercel.com/docs/ai-gateway)) → create an API key (set a monthly budget if offered).
 2. Project → **Settings** → **Environment Variables** → Production:
 
-   | Name                                  | Value                                              | Notes                                                   |
-   | ------------------------------------- | -------------------------------------------------- | ------------------------------------------------------- |
-   | `AI_GATEWAY_API_KEY`                  | (secret from step 1)                               | Required for AI features                                |
-   | `AI_MODEL`                            | `mistral/mistral-small` (or `openai/gpt-4.1-mini`) | Optional; app default is `openai/gpt-4.1-mini` if unset |
-   | `AI_INBOX_DRAFTS_ENABLED`             | `true`                                             | Admin `/admin/inbox` drafts                             |
-   | `AI_OPS_BRIEF_ENABLED`                | `true`                                             | Admin `/admin` today brief                              |
-   | `AI_INVOICE_COVER_ENABLED`            | `true`                                             | Invoice cover HITL before Resend                        |
-   | `AI_OUTBOUND_PERSONALIZATION_ENABLED` | `true`                                             | Instantly one-line before CSV                           |
+   | Name                 | Value                                              | Notes                                                   |
+   | -------------------- | -------------------------------------------------- | ------------------------------------------------------- |
+   | `AI_GATEWAY_API_KEY` | (secret from step 1)                               | Required for AI features                                |
+   | `AI_MODEL`           | `mistral/mistral-small` (or `openai/gpt-4.1-mini`) | Optional; app default is `openai/gpt-4.1-mini` if unset |
+   | `AI_ENABLED`         | `true`                                             | Master kill switch for admin HITL drafts                |
 
 3. **Redeploy** Production (env changes alone do not always hot-reload server flags).
 4. Confirm `https://nothing.digital/api/health` → `integrations.ai: true`.
 5. Smoke:
-   - `/admin/settings` → AI rows show gateway + effective flag state (on only when key + flag are set)
+   - `/admin/settings` → AI rows show gateway + `AI_ENABLED` effective state
    - `/admin/inbox` → open a submission → **Draft reply** appears → generate → edit → do **not** send a real client until you trust the draft.
    - `/admin` → **Draft today brief** (ops)
-   - Invoice cover + outbound personalization when those flags are on (outbound needs migration `007`)
-6. Kill switch: set any flag to `false` (or remove `AI_GATEWAY_API_KEY`) and redeploy — CTAs hide; Settings rows flip to `off`.
+   - Invoice cover when AI on
+6. Kill switch: set `AI_ENABLED=false` (or remove `AI_GATEWAY_API_KEY`) and redeploy — CTAs hide; Settings row flips to `off`.
 
 Local: mirror the same keys in `.env.local` (see `.env.local.example`).
 
 Admin AI drafts are rate-limited per admin email + feature (in-memory limiter).
 
-You can remove unused `AI_BRIEF_ASSISTANT_ENABLED` from Vercel if it is still set — it is no longer read.
+You can remove unused per-feature flags (`AI_INBOX_DRAFTS_ENABLED`, `AI_OPS_BRIEF_ENABLED`, `AI_INVOICE_COVER_ENABLED`, `AI_OUTBOUND_PERSONALIZATION_ENABLED`, `AI_BRIEF_ASSISTANT_ENABLED`) from Vercel — they are no longer read.
 
 ## Done when
 

@@ -21,11 +21,9 @@ const FILTERS = [
 export function OutboundReviewList({
   rows,
   filter,
-  personalizationEnabled = false,
 }: {
   rows: LeadCandidateRow[];
   filter: string;
-  personalizationEnabled?: boolean;
 }) {
   return (
     <div className="space-y-4">
@@ -142,15 +140,10 @@ export function OutboundReviewList({
                 </form>
               </div>
 
-              {personalizationEnabled ? (
-                <OutboundPersonalizationPanel
-                  leadId={row.id}
-                  initialLine={row.personalization}
-                  showMissingWarning={
-                    row.status === "approved" && Boolean(row.email)
-                  }
-                />
-              ) : null}
+              <OutboundPersonalizationPanel
+                leadId={row.id}
+                initialLine={row.personalization}
+              />
             </li>
           ))}
         </ul>

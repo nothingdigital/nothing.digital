@@ -1,4 +1,4 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 
 const serviceTitles = [
   "Website Development",
@@ -10,18 +10,14 @@ const serviceTitles = [
   "Coding & SQL",
 ];
 
-async function openHome(page: Page) {
-  await page.goto("/");
-}
-
 test("home page has the expected title", async ({ page }) => {
-  await openHome(page);
+  await page.goto("/");
 
   await expect(page).toHaveTitle(/Nothing\.Digital/);
 });
 
 test("home page displays all service cards", async ({ page }) => {
-  await openHome(page);
+  await page.goto("/");
 
   for (const title of serviceTitles) {
     await expect(
@@ -31,7 +27,7 @@ test("home page displays all service cards", async ({ page }) => {
 });
 
 test("home page CTA links to contact", async ({ page }) => {
-  await openHome(page);
+  await page.goto("/");
 
   await expect(
     page.getByRole("link", { name: /book a free scoping call/i }).first(),
@@ -39,7 +35,7 @@ test("home page CTA links to contact", async ({ page }) => {
 });
 
 test("home page includes newsletter section", async ({ page }) => {
-  await openHome(page);
+  await page.goto("/");
 
   const newsletter = page.locator("#newsletter");
   await expect(

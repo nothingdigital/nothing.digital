@@ -2,15 +2,10 @@ import type { ScoreResult } from "./types";
 
 const SOCIAL_HOSTS = new Set([
   "facebook.com",
-  "www.facebook.com",
-  "m.facebook.com",
   "fb.com",
   "instagram.com",
-  "www.instagram.com",
   "linktr.ee",
-  "www.linktr.ee",
   "yelp.com",
-  "www.yelp.com",
 ]);
 
 const PARK_PAGE_PATTERNS = [
@@ -46,7 +41,7 @@ export function classifyWebsiteUrl(
     const url = new URL(
       website.startsWith("http") ? website : `https://${website}`,
     );
-    const host = url.hostname.toLowerCase();
+    const host = url.hostname.toLowerCase().replace(/^(www|m)\./, "");
     if (SOCIAL_HOSTS.has(host) || host.endsWith(".facebook.com")) {
       return "social";
     }

@@ -14,8 +14,6 @@ export function UmamiScript() {
 
   return (
     <Script
-      async
-      defer
       src={scriptUrl}
       data-website-id={websiteId}
       strategy="afterInteractive"

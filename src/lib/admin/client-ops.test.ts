@@ -134,22 +134,22 @@ describe("work queue sort and due-soon", () => {
   });
 
   it("marks overdue and within 7 days as due soon", () => {
-    expect(
-      isWorkDueSoon({ due_at: "2026-07-01T00:00:00.000Z" }, now),
-    ).toBe(true);
-    expect(
-      isWorkDueSoon({ due_at: "2026-08-13T12:00:00.000Z" }, now),
-    ).toBe(true);
-    expect(
-      isWorkDueSoon({ due_at: "2026-08-06T12:00:00.000Z" }, now),
-    ).toBe(true);
+    expect(isWorkDueSoon({ due_at: "2026-07-01T00:00:00.000Z" }, now)).toBe(
+      true,
+    );
+    expect(isWorkDueSoon({ due_at: "2026-08-13T12:00:00.000Z" }, now)).toBe(
+      true,
+    );
+    expect(isWorkDueSoon({ due_at: "2026-08-06T12:00:00.000Z" }, now)).toBe(
+      true,
+    );
   });
 
   it("excludes null and far-future due dates", () => {
     expect(isWorkDueSoon({ due_at: null }, now)).toBe(false);
-    expect(
-      isWorkDueSoon({ due_at: "2026-08-14T12:00:00.000Z" }, now),
-    ).toBe(false);
+    expect(isWorkDueSoon({ due_at: "2026-08-14T12:00:00.000Z" }, now)).toBe(
+      false,
+    );
   });
 
   it("sorts by due ascending with nulls last", () => {
@@ -170,9 +170,7 @@ describe("work queue sort and due-soon", () => {
         created_at: "2026-01-01T00:00:00.000Z",
       },
     ];
-    const sorted = [...items].sort((a, b) =>
-      compareWorkItems(a, b, "due", now),
-    );
+    const sorted = [...items].sort((a, b) => compareWorkItems(a, b, "due"));
     expect(sorted.map((i) => i.due_at)).toEqual([
       "2026-08-10T00:00:00.000Z",
       "2026-08-20T00:00:00.000Z",
@@ -199,7 +197,7 @@ describe("work queue sort and due-soon", () => {
       },
     ];
     const sorted = [...items].sort((a, b) =>
-      compareWorkItems(a, b, "priority", now),
+      compareWorkItems(a, b, "priority"),
     );
     expect(sorted.map((i) => i.priority)).toEqual(["high", "med", "low"]);
   });
@@ -222,9 +220,7 @@ describe("work queue sort and due-soon", () => {
         created_at: "2026-02-01T00:00:00.000Z",
       },
     ];
-    const sorted = [...items].sort((a, b) =>
-      compareWorkItems(a, b, "created", now),
-    );
+    const sorted = [...items].sort((a, b) => compareWorkItems(a, b, "created"));
     expect(sorted.map((i) => i.created_at)).toEqual([
       "2026-03-01T00:00:00.000Z",
       "2026-02-01T00:00:00.000Z",

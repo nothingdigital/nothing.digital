@@ -6,8 +6,7 @@ export const AI_DRAFT_RATE_LIMIT_ERROR =
   "Too many AI drafts. Try again in an hour.";
 export const AI_DRAFT_FAILED_ERROR = "Draft failed. Try again.";
 
-export type AdminAiFeature =
-  "inbox" | "ops-brief" | "invoice-cover" | "outbound";
+export type AdminAiFeature = "inbox" | "ops-brief" | "invoice-cover";
 
 export async function guardAdminAiDraft(
   feature: AdminAiFeature,

@@ -85,6 +85,9 @@ export type CreateClientInput = {
   default_rate_cents?: number | null;
   payment_terms?: string | null;
   notes?: string | null;
+  is_founding?: boolean;
+  care_start?: string | null;
+  care_end?: string | null;
 };
 
 export async function createClient(
@@ -106,6 +109,9 @@ export async function createClient(
       default_rate_cents: input.default_rate_cents ?? null,
       payment_terms: input.payment_terms ?? "net_15",
       notes: input.notes ?? null,
+      is_founding: input.is_founding ?? false,
+      care_start: input.care_start,
+      care_end: input.care_end,
     })
     .select("*")
     .single();
@@ -277,18 +283,7 @@ export async function updateInvoiceSentEmailedAt(
   return { ok: true };
 }
 
-export type UpdateInvoiceInput = {
-  number: string;
-  title: string;
-  amount_cents: number;
-  currency?: string;
-  status: InvoiceStatus;
-  issued_at?: string | null;
-  due_at?: string | null;
-  paid_at?: string | null;
-  external_url?: string | null;
-  notes?: string | null;
-};
+export type UpdateInvoiceInput = Omit<CreateInvoiceInput, "client_id">;
 
 export async function updateInvoice(
   id: string,
@@ -394,16 +389,8 @@ export async function getClientAsset(
   return { row: data, error: null };
 }
 
-export type UpdateAssetInput = {
+export type UpdateAssetInput = Omit<CreateAssetInput, "client_id"> & {
   id: string;
-  type: AssetType;
-  name: string;
-  url?: string | null;
-  monitor_url?: string | null;
-  env: AssetEnv;
-  managed_by_us: boolean;
-  notes?: string | null;
-  status: AssetStatus;
 };
 
 export async function updateClientAsset(
@@ -561,14 +548,7 @@ export async function updateWorkItemStatus(
   return { ok: true };
 }
 
-export type UpdateWorkItemInput = {
-  title: string;
-  description?: string | null;
-  status: WorkStatus;
-  priority: WorkPriority;
-  due_at?: string | null;
-  asset_id?: string | null;
-};
+export type UpdateWorkItemInput = Omit<CreateWorkItemInput, "client_id">;
 
 export async function updateWorkItem(
   id: string,
