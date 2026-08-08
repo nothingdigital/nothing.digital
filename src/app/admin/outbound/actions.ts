@@ -1,3 +1,5 @@
+"use server";
+
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
@@ -46,7 +48,6 @@ function isStatus(value: string): value is LeadCandidateStatus {
 export async function importLeadsCsvAction(
   formData: FormData,
 ): Promise<{ ok: true; imported: number } | { ok: false; error: string }> {
-  "use server";
   await requireAdmin();
 
   const file = formData.get("csv");
@@ -74,7 +75,6 @@ export async function importLeadsCsvAction(
 }
 
 export async function setLeadStatusAction(formData: FormData): Promise<void> {
-  "use server";
   await requireAdmin();
 
   const id = String(formData.get("id") ?? "").trim();
@@ -104,7 +104,6 @@ export async function setLeadStatusAction(formData: FormData): Promise<void> {
 }
 
 export async function updateLeadEmailAction(formData: FormData): Promise<void> {
-  "use server";
   await requireAdmin();
 
   const id = String(formData.get("id") ?? "").trim();
@@ -126,7 +125,6 @@ export async function saveOutboundPersonalizationAction(
   leadId: string,
   line: string,
 ) {
-  "use server";
   await requireAdmin();
 
   const parsed = outboundPersonalizationSchema.safeParse({ line });
@@ -150,7 +148,6 @@ export async function addLeadFromMapAction(
   | { ok: true; id: string; alreadyInQueue?: boolean }
   | { ok: false; error: string }
 > {
-  "use server";
   await requireAdmin();
 
   const parsed = mapLeadSchema.safeParse(input);
