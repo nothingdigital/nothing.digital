@@ -11,20 +11,13 @@ import {
   findLeadByPlaceId,
   importLeadCandidates,
   insertLeadFromMap,
+  LEAD_CANDIDATE_STATUSES,
   listDoNotContact,
   updateLeadCandidate,
   type LeadCandidateStatus,
 } from "@/lib/admin/outbound/queries";
 import { MAP_HOME } from "@/lib/leads/places";
 import { outboundPersonalizationSchema } from "@/lib/ai/types";
-
-export const LEAD_CANDIDATE_STATUSES = [
-  "needs_email",
-  "ready",
-  "approved",
-  "rejected",
-  "suppressed",
-] as const satisfies readonly LeadCandidateStatus[];
 
 const mapLeadSchema = z.object({
   placeId: z.string().trim().min(1),

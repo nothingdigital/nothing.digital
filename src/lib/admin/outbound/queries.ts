@@ -9,6 +9,14 @@ export type LeadCandidateRow =
 export type LeadCandidateStatus =
   "needs_email" | "ready" | "approved" | "rejected" | "suppressed";
 
+export const LEAD_CANDIDATE_STATUSES = [
+  "needs_email",
+  "ready",
+  "approved",
+  "rejected",
+  "suppressed",
+] as const satisfies readonly LeadCandidateStatus[];
+
 export async function listLeadCandidates(filters?: {
   status?: LeadCandidateStatus;
   withGeo?: boolean;

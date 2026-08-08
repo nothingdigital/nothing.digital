@@ -9,11 +9,10 @@ import { getAdminToolLinks } from "@/lib/admin/config";
 import { listCheckedChecklistKeys } from "@/lib/admin/loops/queries";
 import { INSTANTLY_PREFLIGHT_ITEMS } from "@/lib/admin/loops/rules/runbook-setup";
 import {
+  LEAD_CANDIDATE_STATUSES,
   listLeadCandidates,
   type LeadCandidateStatus,
 } from "@/lib/admin/outbound/queries";
-
-import { LEAD_CANDIDATE_STATUSES } from "./actions";
 
 export const metadata: Metadata = {
   title: "Outbound",
