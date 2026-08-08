@@ -22,8 +22,11 @@ export function PricingCalculator() {
       </p>
       <div className="mt-6 space-y-4">
         <div>
-          <label className="text-sm block mb-1">Scope</label>
+          <label htmlFor="pricing-scope" className="mb-1 block text-sm">
+            Scope
+          </label>
           <select
+            id="pricing-scope"
             value={scope}
             onChange={(e) =>
               setScope(e.target.value as "small" | "medium" | "large")
@@ -36,8 +39,11 @@ export function PricingCalculator() {
           </select>
         </div>
         <div>
-          <label className="text-sm block mb-1">Timeline (months)</label>
+          <label htmlFor="pricing-timeline" className="mb-1 block text-sm">
+            Timeline (months)
+          </label>
           <input
+            id="pricing-timeline"
             type="range"
             min="1"
             max="12"
@@ -45,7 +51,7 @@ export function PricingCalculator() {
             onChange={(e) => setTimeline(+e.target.value)}
             className="w-full accent-primary"
           />
-          <p className="text-center text-sm font-mono mt-1">{timeline}</p>
+          <p className="mt-1 text-center font-mono text-sm">{timeline}</p>
         </div>
         <div className="rounded bg-muted p-6 text-center">
           <p className="text-4xl font-mono text-primary">
