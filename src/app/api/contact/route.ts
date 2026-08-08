@@ -102,19 +102,23 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   }
 
   try {
-    await resend.emails.send({
-      from: brandConfig.fromEmail,
-      to: validated.email,
-      subject: "We received your message — Nothing.Digital",
-      html: contactConfirmationEmailTemplate(validated, CALENDLY),
-    });
-    // Always Resend team notify; n8n is optional fan-out below (never replace).
-    await resend.emails.send({
-      from: brandConfig.fromEmail,
-      to: TEAM_EMAIL,
-      subject: `New contact submission from ${validated.name}`,
-      html: teamNotificationEmailTemplate(validated, submissionId),
-    });
+    // Send confirmation + team notify in parallel to cut response latency;
+    // any failure still 500s so the founder knows delivery broke.
+    await Promise.all([
+      resend.emails.send({
+        from: brandConfig.fromEmail,
+        to: validated.email,
+        subject: "We received your message — Nothing.Digital",
+        html: contactConfirmationEmailTemplate(validated, CALENDLY),
+      }),
+      // Always Resend team notify; n8n is optional fan-out below (never replace).
+      resend.emails.send({
+        from: brandConfig.fromEmail,
+        to: TEAM_EMAIL,
+        subject: `New contact submission from ${validated.name}`,
+        html: teamNotificationEmailTemplate(validated, submissionId),
+      }),
+    ]);
     if (scoreLead(validated) > 60) {
       await resend.emails.send({
         from: brandConfig.fromEmail,

@@ -132,6 +132,11 @@ export const env = {
       opt(z.string().min(1)),
       process.env.AI_GATEWAY_API_KEY,
     ),
+    GOOGLE_PLACES_API_KEY: parseField(
+      "GOOGLE_PLACES_API_KEY",
+      opt(z.string().min(1)),
+      process.env.GOOGLE_PLACES_API_KEY,
+    ),
     AI_MODEL: parseField(
       "AI_MODEL",
       opt(z.string().min(1)),

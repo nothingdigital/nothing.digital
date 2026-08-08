@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
-import { requireAdmin } from "@/lib/admin/auth";
+import { requireAdminApi } from "@/lib/admin/auth";
+import { env } from "@/lib/env";
 import { biasFromBounds, MAP_HOME, searchPlaces } from "@/lib/leads/places";
 
 const bodySchema = z.object({
@@ -21,9 +22,10 @@ const bodySchema = z.object({
 });
 
 export async function POST(request: Request) {
-  await requireAdmin();
+  const { error: authError } = await requireAdminApi();
+  if (authError) return authError;
 
-  const apiKey = process.env.GOOGLE_PLACES_API_KEY?.trim();
+  const apiKey = env.private.GOOGLE_PLACES_API_KEY;
   if (!apiKey) {
     return NextResponse.json(
       { error: "Set GOOGLE_PLACES_API_KEY on the server to search the map." },
