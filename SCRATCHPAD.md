@@ -9,7 +9,7 @@
 - [ ] Confirm migration `004_profiles.sql` → [§7](./docs/runbooks/ops-credentials.md)
 - [ ] Newsletter subscribe E2E (live form → Listmonk)
 - [ ] Listmonk welcome drip UI → [`listmonk-drip.md`](./docs/runbooks/listmonk-drip.md)
-- [ ] Optional: AI Gateway env + follow-on flags → [§9](./docs/runbooks/ops-credentials.md)
+- [ ] Optional: AI Gateway env + follow-on flags → [§9](./docs/runbooks/ops-credentials.md) (redeploy after setting; confirm `/api/health` → `ai: true`)
 - [ ] Apply migration `007_lead_personalization.sql` (before outbound personalization)
 - [ ] Week-1 glances → [`post-launch-monitoring.md`](./docs/runbooks/post-launch-monitoring.md)
 
