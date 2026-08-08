@@ -11,13 +11,14 @@
 | `/api/health`                                           | `status: ok`                                                                                                  |
 | `supabase` / `resend` / `sentry` / `umami` / `calendly` | `true`                                                                                                        |
 | `listmonk`                                              | **`true`**                                                                                                    |
-| `ai` (AI Gateway key)                                   | **pending** — set `AI_GATEWAY_API_KEY` on Vercel when enabling AI                                             |
+| `ai` (AI Gateway key)                                   | **`true`** (verified 2026-08-08)                                                                              |
 | Sitemap                                                 | `https://nothing.digital/sitemap.xml` → 200                                                                   |
 | Google Search Console                                   | **Done** — property verified + sitemap submitted (owner 2026-08-07)                                           |
 | SPF TXT                                                 | Prefer single record with `include:_spf.resend.com` — **remove duplicate** Fastmail-only SPF if still present |
 | Bing Webmaster Tools                                    | Site accessible; **sitemap submit remaining**                                                                 |
 | Migration `003_asset_monitor_url.sql`                   | **Applied** (owner 2026-08-07)                                                                                |
 | Migration `004_profiles.sql`                            | **Check** — may already be applied; confirm with SQL below                                                    |
+| Migration `007_lead_personalization.sql`                | **Applied** (owner confirmed)                                                                                 |
 | Site polish + admin wave                                | PRs **#7–#10** merged to `main` (2026-08-07)                                                                  |
 
 ## Remaining dashboard steps
@@ -79,10 +80,11 @@ Repo `nothingdigital/nothing.digital` → Settings → Branches + Code security.
 
 ### 7. Supabase migrations
 
-| Migration                   | Status                            |
-| --------------------------- | --------------------------------- |
-| `003_asset_monitor_url.sql` | **Applied** (owner 2026-08-07)    |
-| `004_profiles.sql`          | **Confirm** — run check SQL below |
+| Migration                      | Status                            |
+| ------------------------------ | --------------------------------- |
+| `003_asset_monitor_url.sql`    | **Applied** (owner 2026-08-07)    |
+| `004_profiles.sql`             | **Confirm** — run check SQL below |
+| `007_lead_personalization.sql` | **Applied** (owner confirmed)     |
 
 **Check whether `004` already ran** (SQL editor → production):
 
