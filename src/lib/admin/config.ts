@@ -1,3 +1,4 @@
+import { brandConfig } from "@/brand";
 import { env } from "@/lib/env";
 
 /** Inbox triage statuses from Phase F plan. */
@@ -27,7 +28,7 @@ export function isAdminEmail(email: string | undefined | null): boolean {
 
 export function getAdminToolLinks() {
   return {
-    site: env.public.NEXT_PUBLIC_SITE_URL ?? "https://nothing.digital",
+    site: brandConfig.url,
     calendly: env.private.CALENDLY_URL,
     umami: env.private.UMAMI_DASHBOARD_URL,
     listmonk: env.private.LISTMONK_DASHBOARD_URL,
