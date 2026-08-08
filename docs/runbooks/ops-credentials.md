@@ -76,7 +76,13 @@ Code already serves the sitemap. No app change needed.
 
 ### 6. GitHub branch protection / secret scanning
 
-Repo `nothingdigital/nothing.digital` → Settings → Branches + Code security. Review required checks and secret scanning (UI-only). Branch protection was **not** configured as of 2026-08-07 (API 404).
+Repo `nothingdigital/nothing.digital` → [Ruleset 20581845](https://github.com/nothingdigital/nothing.digital/rules/20581845) (**active**, 2026-08-08 via `gh`).
+
+- Branches: `main` (+ `staging` when it exists)
+- Required checks: `Lint & Type Check`, `Build`, `Test` (branch must be up to date)
+- PRs required; stale reviews dismissed; no force-push / no delete
+- Lighthouse + Accessibility **not** required yet (flake risk)
+- Secret scanning + push protection: **enabled**
 
 ### 7. Supabase migrations
 

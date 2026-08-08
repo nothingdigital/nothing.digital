@@ -33,7 +33,7 @@ export function BrandMascot({
       alt=""
       width={size}
       height={size}
-      className={cn("h-auto w-auto", className)}
+      className={cn("h-auto w-auto bg-transparent", className)}
       priority={priority}
     />
   );
